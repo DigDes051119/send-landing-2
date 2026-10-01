@@ -80,31 +80,35 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ ready = true, heroRef 
       <div className={`hero-bottom-stats-row ${ready ? 'revealed' : ''}`}>
         {/* Left Cluster (Frame 427321502: 598x76px, gap 120px) */}
         <div className="hero-stats-cluster cluster-left">
-          {/* Stat 1: 4096 символов */}
+          {/* Stat 1: Говорите открыто */}
           <div className="hero-stat-card stat-item-1">
-            <div className="hero-stat-value">4096</div>
-            <div className="hero-stat-desc">символов в одном сообщении</div>
+            <div className="hero-stat-value">Говорите открыто</div>
+            <div className="hero-stat-desc">полная защита каждого звонка и чата</div>
           </div>
 
-          {/* Stat 2: 10 минут */}
+          {/* Stat 2: Делитесь настоящим */}
           <div className="hero-stat-card stat-item-2">
-            <div className="hero-stat-value">10 минут</div>
-            <div className="hero-stat-desc">максимальная длина голосовых сообщений</div>
+            <div className="hero-stat-value">Делитесь настоящим</div>
+            <div className="hero-stat-desc">файлы любого формата без сжатия</div>
           </div>
         </div>
 
         {/* Right Cluster (Frame 427321503: 598x76px, gap 120px) */}
         <div className="hero-stats-cluster cluster-right">
-          {/* Stat 3: 200 вместимость */}
+          {/* Stat 3: Забудьте про шум */}
           <div className="hero-stat-card stat-item-3">
-            <div className="hero-stat-value">200</div>
-            <div className="hero-stat-desc">вместимость группового чата</div>
+            <div className="hero-stat-value">
+              Забудьте<br />про шум
+            </div>
+            <div className="hero-stat-desc">только важные люди и никакой рекламы</div>
           </div>
 
-          {/* Stat 4: 10 устройств */}
+          {/* Stat 4: Будьте на связи */}
           <div className="hero-stat-card stat-item-4">
-            <div className="hero-stat-value">10 устройств</div>
-            <div className="hero-stat-desc">одновременная работа на одном аккаунте</div>
+            <div className="hero-stat-value">
+              Будьте<br />на связи
+            </div>
+            <div className="hero-stat-desc">мгновенная доставка в любой точке мира</div>
           </div>
         </div>
       </div>
