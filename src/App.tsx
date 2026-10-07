@@ -557,9 +557,9 @@ export const App: React.FC = () => {
         : 0;
       phone.style.setProperty('--block2-progress', entryProgress.toFixed(3));
 
-      // Block 2 entered when user scrolls into second block (earlier smooth trigger on mobile)
+      // Block 2 entered when user scrolls into second block (on mobile, triggers exactly when reaching block 2)
       const hasEnteredBlock2 = isMobile
-        ? (block2Rect.top <= vh * 0.7)
+        ? (block2Rect.top <= 20)
         : (entryProgress >= 0.75 || block2Rect.top <= vh * 0.4);
       if (lastBlock2Entered !== hasEnteredBlock2) {
         lastBlock2Entered = hasEnteredBlock2;
