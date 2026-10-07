@@ -95,8 +95,9 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
         <div
           className={`header-menu-capsule ${isScrolled ? 'collapsed' : ''}`}
           onClick={(e) => {
-            // Trigger onOpenMenu if clicking on burger layer or outside nav links
-            if (isScrolled && !(e.target as HTMLElement).closest('.nav-pill-item')) {
+            // Trigger onOpenMenu on mobile, or on desktop when collapsed and outside nav links
+            const isMobile = typeof window !== 'undefined' && window.innerWidth <= 640;
+            if (isMobile || (isScrolled && !(e.target as HTMLElement).closest('.nav-pill-item'))) {
               onOpenMenu?.();
             }
           }}

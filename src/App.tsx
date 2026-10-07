@@ -203,11 +203,21 @@ export const App: React.FC = () => {
       const stageRect = stage.getBoundingClientRect();
       const vh = window.innerHeight;
 
+      const isMobile = window.innerWidth <= 640;
+      const phoneHeight = phone.offsetHeight || 600;
+
+      // On desktop, phone sits at hero.offsetTop + heroRect.height / 2
+      // On mobile (Figma 175:1153), phone top starts at hero.offsetTop + 219px.
+      // Since phone has transform: translate(-50%, -50%), its center in hero is at:
+      // hero.offsetTop + 219 + phoneHeight / 2
+      const heroPhoneCenterY = isMobile
+        ? heroRect.top + 219 + phoneHeight / 2
+        : heroRect.top + heroRect.height / 2;
+
       // 1. Hero to Block 2 Entry Transition
-      const heroCenterY = heroRect.top + heroRect.height / 2;
-      const entryDelta = heroCenterY - (block2Rect.top + vh / 2);
+      const entryDelta = heroPhoneCenterY - (block2Rect.top + vh / 2);
       const entryProgress = entryDelta !== 0 
-        ? Math.min(Math.max((vh / 2 - heroCenterY) / -entryDelta, 0), 1)
+        ? Math.min(Math.max((vh / 2 - heroPhoneCenterY) / -entryDelta, 0), 1)
         : 0;
       phone.style.setProperty('--block2-progress', entryProgress.toFixed(3));
 
@@ -231,22 +241,27 @@ export const App: React.FC = () => {
 
       // 3. Phone Pinned Positioning States
       const stageBottomY = stageRect.bottom;
+      const fixedCenterY = isMobile ? (vh / 2 - 32) : (vh / 2);
 
-      // Phase 1: Hero center is at or below viewport center -> phone sits in hero
-      if (heroCenterY >= vh / 2) {
+      // Phase 1: Phone is in Hero until its center reaches target fixed center
+      if (heroPhoneCenterY >= fixedCenterY) {
         phone.classList.remove('is-fixed', 'is-stuck-bottom');
-        const heroCenter = hero.offsetTop + heroRect.height / 2;
-        phone.style.top = heroCenter + 'px';
+        if (isMobile) {
+          phone.style.top = (hero.offsetTop + 219 + phoneHeight / 2) + 'px';
+        } else {
+          const heroCenter = hero.offsetTop + heroRect.height / 2;
+          phone.style.top = heroCenter + 'px';
+        }
         phone.style.removeProperty('bottom');
       }
       // Phase 3: Slide 5 / Block 2 complete (stage bottom reaches viewport bottom) -> phone docks in place on Block 2
       else if (stageBottomY <= vh) {
         phone.classList.remove('is-fixed');
         phone.classList.add('is-stuck-bottom');
-        phone.style.top = (stage.offsetHeight - vh / 2) + 'px';
+        phone.style.top = (stage.offsetHeight - fixedCenterY) + 'px';
         phone.style.removeProperty('bottom');
       }
-      // Phase 2: In between hero center & stage bottom -> phone pinned fixed at viewport center
+      // Phase 2: In between hero center & stage bottom -> phone pinned fixed at target center
       else {
         phone.classList.add('is-fixed');
         phone.classList.remove('is-stuck-bottom');

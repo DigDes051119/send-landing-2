@@ -118,7 +118,7 @@ const SLIDES: SlideData[] = [
   {
     id: 1,
     words: [
-      { text: 'лови', color: '#151515', left: '2.24%', top: '30.74%' },
+      { text: 'ловите', color: '#151515', left: '2.24%', top: '30.74%' },
       { text: 'момент', color: '#3063f7', left: '61.61%', top: '49.81%', accent: true },
     ],
     title: 'Ловите момент',

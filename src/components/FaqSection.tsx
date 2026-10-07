@@ -7,6 +7,7 @@ export interface FaqCapsuleData {
   text: string;
   fullQuestion: string;
   answer: string;
+  image: string;
   width: number;
   height: number;
   floatingX: number;
@@ -24,6 +25,7 @@ const DESKTOP_CAPSULES: FaqCapsuleData[] = [
     text: 'Узнает ли человек о блокировке',
     fullQuestion: 'Узнает ли человек, что я добавил его в чёрный список?',
     answer: 'Нет, блокировка происходит абсолютно бесшумно. Никаких оповещений: для контакта ваш статус перестаёт обновляться, а новые сообщения просто не доставляются',
+    image: encodeURI('/Узнает ли человек, что я добавил его в чёрный список_.webp'),
     width: 380,
     height: 64,
     floatingX: 430,
@@ -38,6 +40,7 @@ const DESKTOP_CAPSULES: FaqCapsuleData[] = [
     text: 'Видно ли текст на экране блокировки',
     fullQuestion: 'Увидят ли посторонние текст сообщений на заблокированном экране?',
     answer: 'Только если вы разрешите. Экран может показывать лишь факт сообщения, скрывая имя отправителя и весь текст, пока вы не разблокируете устройство',
+    image: encodeURI('/Увидят ли посторонние текст сообщений на заблокированном экране_.webp'),
     width: 480,
     height: 64,
     floatingX: 1470,
@@ -52,6 +55,7 @@ const DESKTOP_CAPSULES: FaqCapsuleData[] = [
     text: 'Читает ли кто-то мои сообщения',
     fullQuestion: 'Может ли кто-то прочитать мою переписку? Даже команда Send?',
     answer: 'Никто. Ваши сообщения защищены сквозным шифрованием — ключи есть только у вас и собеседника. Даже у наших разработчиков нет доступа к вашим чатам',
+    image: encodeURI('/Может ли кто-то прочитать мою переписку_ Даже команда Send_.webp'),
     width: 430,
     height: 64,
     floatingX: 380,
@@ -66,6 +70,7 @@ const DESKTOP_CAPSULES: FaqCapsuleData[] = [
     text: 'Остаются ли следы после удаления',
     fullQuestion: 'Остаются ли следы, если удалить сообщение у всех?',
     answer: 'Никаких. Сообщение стирается безвозвратно со всех устройств и серверов. Без пометок «сообщение удалено» и без скрытых копий',
+    image: encodeURI('/Остаются ли следы, если удалить сообщение у всех_.webp'),
     width: 420,
     height: 64,
     floatingX: 1530,
@@ -80,6 +85,7 @@ const DESKTOP_CAPSULES: FaqCapsuleData[] = [
     text: 'Увидят ли мой профиль при пересылке',
     fullQuestion: 'Увидят ли мой профиль, если перешлют сообщение из чата?',
     answer: 'Нет, если вы это отключите. Можно скрыть авторство при пересылке: останется только чистый текст без ссылки на ваш аккаунт',
+    image: encodeURI('/Увидят ли мой профиль, если перешлют сообщение из чата_.webp'),
     width: 480,
     height: 64,
     floatingX: 540,
@@ -94,6 +100,7 @@ const DESKTOP_CAPSULES: FaqCapsuleData[] = [
     text: 'Что будет с чатами при потере телефона',
     fullQuestion: 'Как защитить переписку, если потерялся телефон?',
     answer: 'Закройте доступ в один клик. Через веб-версию или с любого другого своего устройства завершите все активные сессии — доступ к чатам сразу заблокируется',
+    image: encodeURI('/Как защитить переписку, если потерялся телефон_.webp'),
     width: 490,
     height: 64,
     floatingX: 1410,
@@ -123,7 +130,12 @@ export const FaqSection: React.FC = () => {
   const [isTitleVisible, setIsTitleVisible] = useState(false);
   const [isPhysicsActive, setIsPhysicsActive] = useState(false);
   const isPhysicsActiveRef = useRef(false);
-  const [expandedCapsuleId, setExpandedCapsuleId] = useState<string | null>(null);
+  const [expandedCapsuleId, _setExpandedCapsuleId] = useState<string | null>(null);
+  const expandedCapsuleIdRef = useRef<string | null>(null);
+  const setExpandedCapsuleId = useCallback((id: string | null) => {
+    expandedCapsuleIdRef.current = id;
+    _setExpandedCapsuleId(id);
+  }, []);
   const animatingIndexRef = useRef<number | null>(null);
   const morphCardRef = useRef<HTMLDivElement>(null);
   const morphCapsuleViewRef = useRef<HTMLDivElement>(null);
@@ -131,6 +143,7 @@ export const FaqSection: React.FC = () => {
   const morphQuestionRef = useRef<HTMLHeadingElement>(null);
   const morphAnswerRef = useRef<HTMLParagraphElement>(null);
   const morphCapTextRef = useRef<HTMLSpanElement>(null);
+  const morphImagesRef = useRef<(HTMLImageElement | null)[]>([]);
   const morphGlowRef = useRef<HTMLDivElement>(null);
 
   const closingCardRef = useRef<HTMLDivElement>(null);
@@ -139,6 +152,7 @@ export const FaqSection: React.FC = () => {
   const closingQuestionRef = useRef<HTMLHeadingElement>(null);
   const closingAnswerRef = useRef<HTMLParagraphElement>(null);
   const closingCapTextRef = useRef<HTMLSpanElement>(null);
+  const closingImagesRef = useRef<(HTMLImageElement | null)[]>([]);
   const closingGlowRef = useRef<HTMLDivElement>(null);
   const closingIndexRef = useRef<number | null>(null);
   const closingTimeoutRef = useRef<number | null>(null);
@@ -483,17 +497,38 @@ export const FaqSection: React.FC = () => {
 
   // Collapse card back into a capsule and drop onto the other capsules with Matter.js gravity
   const handleCollapse = useCallback(() => {
-    const idx = animatingIndexRef.current;
-    if (idx === null || isCollapsingRef.current) return;
-    const cap = currentCapsulesRef.current[idx];
-    const info = morphStartInfoRef.current;
+    let idx = animatingIndexRef.current;
+    const currentId = expandedCapsuleIdRef.current;
+    if (idx === null && currentId) {
+      const foundIdx = currentCapsulesRef.current.findIndex((c) => c.id === currentId);
+      if (foundIdx !== -1) idx = foundIdx;
+    }
+
+    if (isCollapsingRef.current) return;
+
     const card = morphCardRef.current;
     const capView = morphCapsuleViewRef.current;
     const fullView = morphFullViewRef.current;
-    if (!cap || !info || !card || !capView || !fullView) {
+    const glow = morphGlowRef.current;
+
+    if (idx === null || !card || !capView || !fullView) {
+      if (card) card.style.display = 'none';
+      if (glow) glow.style.opacity = '0';
       animatingIndexRef.current = null;
       setExpandedCapsuleId(null);
       isCollapsingRef.current = false;
+      morphStartInfoRef.current = null;
+      return;
+    }
+
+    const cap = currentCapsulesRef.current[idx];
+    if (!cap) {
+      card.style.display = 'none';
+      if (glow) glow.style.opacity = '0';
+      animatingIndexRef.current = null;
+      setExpandedCapsuleId(null);
+      isCollapsingRef.current = false;
+      morphStartInfoRef.current = null;
       return;
     }
 
@@ -504,10 +539,11 @@ export const FaqSection: React.FC = () => {
       collapseTimeoutRef.current = null;
     }
 
+    const info = morphStartInfoRef.current;
     const mobile = window.innerWidth < 768;
-    const startW = info.startW;
-    const startH = info.startH;
-    const startRadius = info.startRadius;
+    const startW = info?.startW ?? (mobile ? Math.min(cap.width * 0.65, window.innerWidth - 48) : cap.width);
+    const startH = info?.startH ?? (mobile ? 50 : cap.height);
+    const startRadius = info?.startRadius ?? (startH / 2);
 
     // Drop position in mid-air center, above the floor pile
     const dropX = mobile ? (window.innerWidth - startW) / 2 : 1920 / 2 - startW / 2;
@@ -525,7 +561,6 @@ export const FaqSection: React.FC = () => {
     card.style.transform = `rotate(${dropAngle.toFixed(4)}rad)`;
 
     // Smoothly extinguish ambient backlight glow as card shrinks
-    const glow = morphGlowRef.current;
     if (glow) {
       glow.style.transition = 'opacity 350ms cubic-bezier(0.16, 1, 0.3, 1)';
       glow.style.opacity = '0';
@@ -583,22 +618,31 @@ export const FaqSection: React.FC = () => {
       isCollapsingRef.current = false;
       animatingIndexRef.current = null;
       setExpandedCapsuleId(null);
+      morphStartInfoRef.current = null;
     }, 480);
-  }, []);
+  }, [setExpandedCapsuleId]);
 
   // Scroll‑triggered collapse that returns the card to its original floating capsule position
   const handleScrollCollapse = useCallback(() => {
-    const idx = animatingIndexRef.current;
+    let idx = animatingIndexRef.current;
+    const currentId = expandedCapsuleIdRef.current;
+    if (idx === null && currentId) {
+      const foundIdx = currentCapsulesRef.current.findIndex((c) => c.id === currentId);
+      if (foundIdx !== -1) idx = foundIdx;
+    }
     if (idx === null || isCollapsingRef.current) return;
     const cap = currentCapsulesRef.current[idx];
-    const info = morphStartInfoRef.current;
     const card = morphCardRef.current;
     const capView = morphCapsuleViewRef.current;
     const fullView = morphFullViewRef.current;
-    if (!cap || !info || !card || !capView || !fullView) {
+    const glow = morphGlowRef.current;
+    if (!cap || !card || !capView || !fullView) {
+      if (card) card.style.display = 'none';
+      if (glow) glow.style.opacity = '0';
       animatingIndexRef.current = null;
       setExpandedCapsuleId(null);
       isCollapsingRef.current = false;
+      morphStartInfoRef.current = null;
       return;
     }
 
@@ -629,7 +673,6 @@ export const FaqSection: React.FC = () => {
     card.style.borderRadius = `${capsuleRadius}px`;
     card.style.transform = `rotate(${cap.floatingAngle.toFixed(4)}rad)`;
 
-    const glow = morphGlowRef.current;
     if (glow) {
       glow.style.transition = 'opacity 350ms cubic-bezier(0.16, 1, 0.3, 1)';
       glow.style.opacity = '0';
@@ -671,14 +714,18 @@ export const FaqSection: React.FC = () => {
       isCollapsingRef.current = false;
       animatingIndexRef.current = null;
       setExpandedCapsuleId(null);
+      morphStartInfoRef.current = null;
     }, 480);
-  }, []);
+  }, [setExpandedCapsuleId]);
 
   // Expand capsule into center card; if another capsule is open, smoothly collapse it while expanding new one
   const handleExpand = useCallback(
     (idx: number) => {
+      const cap = currentCapsulesRef.current[idx];
+      if (!cap) return;
+
       // 1. If clicking the currently active capsule, collapse it
-      if (animatingIndexRef.current === idx) {
+      if (animatingIndexRef.current === idx || expandedCapsuleIdRef.current === cap.id) {
         handleCollapse();
         return;
       }
@@ -687,10 +734,9 @@ export const FaqSection: React.FC = () => {
         clearTimeout(collapseTimeoutRef.current);
         collapseTimeoutRef.current = null;
       }
+      isCollapsingRef.current = false;
 
       const prevIdx = animatingIndexRef.current;
-      const cap = currentCapsulesRef.current[idx];
-      if (!cap) return;
 
       // 2. If another capsule is currently open, smoothly collapse it via closingCardRef
       if (prevIdx !== null && prevIdx !== idx) {
@@ -715,6 +761,9 @@ export const FaqSection: React.FC = () => {
           if (closingCapTextRef.current) {
             closingCapTextRef.current.textContent = prevCap.text;
           }
+          closingImagesRef.current.forEach((img, i) => {
+            if (img) img.style.display = i === prevIdx ? 'block' : 'none';
+          });
 
           // Initial placement matching main card position
           const comp = window.getComputedStyle(mainCard);
@@ -896,6 +945,9 @@ export const FaqSection: React.FC = () => {
       if (morphCapTextRef.current) {
         morphCapTextRef.current.textContent = cap.text;
       }
+      morphImagesRef.current.forEach((img, i) => {
+        if (img) img.style.display = i === idx ? 'block' : 'none';
+      });
 
       // Step 1: Set to initial capsule position with no transition
       card.style.transition = 'none';
@@ -956,6 +1008,19 @@ export const FaqSection: React.FC = () => {
     };
   }, []);
 
+  // Pre-load and pre-decode all FAQ WebP illustrations into GPU cache for butter-smooth 60/120fps morph animations
+  useEffect(() => {
+    DESKTOP_CAPSULES.forEach((cap) => {
+      if (cap.image) {
+        const img = new Image();
+        img.src = cap.image;
+        if (typeof img.decode === 'function') {
+          img.decode().catch(() => {});
+        }
+      }
+    });
+  }, []);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -1006,9 +1071,9 @@ export const FaqSection: React.FC = () => {
         }
       }
 
-      // 4. Automatically close expanded card when scrolling up (leaving 4th block) or scrolling past it
-      if (rect.top > 70 || rect.bottom <= vh * 0.15) {
-        if (animatingIndexRef.current !== null && !isCollapsingRef.current) {
+      // 4. Automatically close expanded card when scrolling away from FAQ block
+      if (rect.top > vh * 0.45 || rect.bottom <= vh * 0.2) {
+        if ((animatingIndexRef.current !== null || expandedCapsuleIdRef.current !== null) && !isCollapsingRef.current) {
           handleScrollCollapse();
         }
       }
@@ -1028,6 +1093,52 @@ export const FaqSection: React.FC = () => {
       }
     };
   }, [triggerPhysicsDrop, resetToFloating, handleScrollCollapse]);
+
+  // Global outside click listener: collapse expanded card when clicking anywhere on empty field of website
+  useEffect(() => {
+    if (!expandedCapsuleId) return;
+
+    const handleGlobalClick = (e: MouseEvent) => {
+      // Ignore if user was dragging a physics capsule
+      if (wasDraggingRef.current) {
+        return;
+      }
+
+      // Ignore if user is selecting text to copy
+      const selection = window.getSelection();
+      if (selection && selection.toString().trim().length > 0) {
+        return;
+      }
+
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+
+      // Physics capsules have their own click handlers (handleExpand)
+      if (target.closest('.faq-capsule')) {
+        return;
+      }
+
+      // If clicked inside the morph card:
+      // Clicking .faq-collapse-btn will be handled by its own button onClick (which calls handleCollapse)
+      // Clicks elsewhere inside the card (e.g. reading answer/question text) should NOT close it
+      if (morphCardRef.current && morphCardRef.current.contains(target)) {
+        return;
+      }
+
+      // Clicked on empty area of the website ("пустое поле сайта", background, any outside area)
+      handleCollapse();
+    };
+
+    // Delay listener attachment slightly so the click that expanded the capsule does not immediately trigger it
+    const timer = setTimeout(() => {
+      window.addEventListener('click', handleGlobalClick, { capture: true });
+    }, 60);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('click', handleGlobalClick, { capture: true });
+    };
+  }, [expandedCapsuleId, handleCollapse]);
 
   // Listen for instant teleport navigation to FAQ
   useEffect(() => {
@@ -1482,10 +1593,11 @@ export const FaqSection: React.FC = () => {
     };
   }, [releaseDrag]);
 
-  // Collapse expanded card when clicking anywhere in the FAQ block
+  // Collapse expanded card when clicking anywhere in the FAQ block (outside the morph card)
   const handleSectionClick = useCallback(
     (e: React.MouseEvent) => {
-      if (animatingIndexRef.current === null || isCollapsingRef.current) return;
+      if (isCollapsingRef.current) return;
+      if (animatingIndexRef.current === null && expandedCapsuleIdRef.current === null) return;
 
       // Ignore click if user was dragging a physics capsule
       if (wasDraggingRef.current) {
@@ -1499,8 +1611,14 @@ export const FaqSection: React.FC = () => {
         return;
       }
 
-      // Capsule clicks are handled individually by their own onClick handlers
       const target = e.target as HTMLElement;
+
+      // Clicks inside the expanded morph card should not collapse it (only the collapse button does)
+      if (morphCardRef.current && morphCardRef.current.contains(target)) {
+        return;
+      }
+
+      // Capsule clicks are handled individually by their own onClick handlers
       if (target.closest('.faq-capsule')) {
         return;
       }
@@ -1620,6 +1738,9 @@ export const FaqSection: React.FC = () => {
                 role="dialog"
                 aria-modal="true"
                 aria-label={activeCapsule?.fullQuestion || activeCapsule?.text}
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
               >
                 {/* Soft Ambient Blue Backlight */}
                 <div ref={morphGlowRef} className="faq-expanded-card-glow" aria-hidden="true" />
@@ -1643,6 +1764,23 @@ export const FaqSection: React.FC = () => {
                       <p ref={morphAnswerRef} className="faq-expanded-answer">
                         {activeCapsule?.answer}
                       </p>
+                    </div>
+
+                    <div className="faq-expanded-illustration-wrap" aria-hidden="true">
+                      {DESKTOP_CAPSULES.map((capItem, i) => (
+                        <img
+                          key={capItem.id}
+                          ref={(el) => {
+                            morphImagesRef.current[i] = el;
+                          }}
+                          src={capItem.image}
+                          alt=""
+                          className="faq-expanded-illustration"
+                          style={{ display: i === (animatingIndexRef.current ?? 0) ? 'block' : 'none' }}
+                          loading="eager"
+                          decoding="async"
+                        />
+                      ))}
                     </div>
 
                     <div className="faq-expanded-bottom">
@@ -1686,6 +1824,23 @@ export const FaqSection: React.FC = () => {
                     <div className="faq-expanded-top">
                       <h3 ref={closingQuestionRef} className="faq-expanded-question" />
                       <p ref={closingAnswerRef} className="faq-expanded-answer" />
+                    </div>
+
+                    <div className="faq-expanded-illustration-wrap" aria-hidden="true">
+                      {DESKTOP_CAPSULES.map((capItem, i) => (
+                        <img
+                          key={capItem.id}
+                          ref={(el) => {
+                            closingImagesRef.current[i] = el;
+                          }}
+                          src={capItem.image}
+                          alt=""
+                          className="faq-expanded-illustration"
+                          style={{ display: 'none' }}
+                          loading="eager"
+                          decoding="async"
+                        />
+                      ))}
                     </div>
 
                     <div className="faq-expanded-bottom">
