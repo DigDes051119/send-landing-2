@@ -597,11 +597,11 @@ export const App: React.FC = () => {
 
       if (isMobile) {
         // Mobile Hero: Phone starts below white plate (speech bubble) at hero.offsetTop + 219px (239px).
-        // Fixed phone top lifted to 48px on mobile to give plenty of room above bottom typography card
+        // Fixed phone top lifted to 46px on mobile to give plenty of room above bottom typography card
         // Pin threshold is when phone top reaches target fixed top on scroll:
-        // 239 - scrollY = 48 -> scrollY = 191px
+        // 239 - scrollY = 46 -> scrollY = 193px
         const initialMobilePhoneTop = hero.offsetTop + 219;
-        const targetFixedTop = 48;
+        const targetFixedTop = 46;
         const mobilePinScrollThreshold = initialMobilePhoneTop - targetFixedTop;
 
         const isStuck = stageBottomY <= vh;

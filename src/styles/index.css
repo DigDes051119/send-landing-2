@@ -1944,10 +1944,10 @@ main {
     backface-visibility: hidden !important;
   }
 
-  /* Fixed state with lifted position (top: 48px) for optimal mobile layout across all slides */
+  /* Fixed state with lifted position (top: 46px) for optimal mobile layout across all slides */
   .pinned-phone-wrap.is-fixed {
     position: fixed !important;
-    top: 48px !important;
+    top: 46px !important;
     left: 50% !important;
     transform: translate3d(-50%, 0, 0) !important;
     z-index: 50 !important;
@@ -1993,9 +1993,9 @@ main {
     opacity: 1 !important;
   }
 
-  /* Smooth scale down on scroll to Block 2: decreases smoothly to scale 0.84 from top origin */
+  /* Smooth scale down on scroll to Block 2: decreases smoothly to scale 0.83 from top origin */
   .pinned-phone-wrap.is-block2-entered .pinned-phone-entrance-box.is-entered {
-    transform: translate3d(0, 0, 0) scale(0.84) !important;
+    transform: translate3d(0, 0, 0) scale(0.83) !important;
   }
 
   .pinned-phone-screen-slot {
@@ -4185,8 +4185,8 @@ footer,
   /* Typography Card at Bottom (Exact Figma Frame 427321498 in 185:1158) */
   .block2-info-card {
     position: absolute !important;
-    bottom: 12px !important;
-    bottom: max(12px, env(safe-area-inset-bottom, 12px)) !important;
+    bottom: max(14px, calc(100dvh - 634px)) !important;
+    bottom: max(14px, calc(100dvh - 634px), env(safe-area-inset-bottom, 14px)) !important;
     top: auto !important;
     left: 50% !important;
     right: auto !important;
