@@ -4026,7 +4026,7 @@ footer,
     top: 0 !important;
     width: 100% !important;
     height: 100vh !important;
-    height: 100svh !important;
+    height: 100dvh !important;
     overflow: hidden !important;
     display: flex !important;
     justify-content: center !important;
@@ -4182,12 +4182,11 @@ footer,
     animation: mobileAmbientFloat3 5.3s ease-in-out infinite 1.8s !important;
   }
 
-  /* Typography Card at Bottom (Exact Figma Frame 427321498 in 185:1158) */
+  /* Typography Card below Phone (Exact Figma Frame 427321498 in 185:1158) */
   .block2-info-card {
     position: absolute !important;
-    bottom: 12px !important;
-    bottom: max(12px, env(safe-area-inset-bottom, 12px)) !important;
-    top: auto !important;
+    top: 590px !important;
+    bottom: auto !important;
     left: 50% !important;
     right: auto !important;
     transform: translate3d(-50%, 0, 0) !important;
@@ -4208,13 +4207,12 @@ footer,
     text-align: center !important;
     gap: 0 !important;
     box-sizing: border-box !important;
-    transition: transform 600ms cubic-bezier(0.19, 1, 0.22, 1),
-                opacity 500ms cubic-bezier(0.19, 1, 0.22, 1) !important;
+    transition: opacity 500ms cubic-bezier(0.19, 1, 0.22, 1) !important;
   }
 
   .block2-info-card.is-future {
     opacity: 0 !important;
-    transform: translate3d(-50%, 15px, 0) !important;
+    transform: translate3d(-50%, 0, 0) !important;
     pointer-events: none !important;
   }
 
