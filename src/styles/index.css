@@ -1936,10 +1936,10 @@ main {
     backface-visibility: hidden !important;
   }
 
-  /* Fixed state with exact 20px offset from header (header bottom: 24px + 64px = 88px -> top: 108px) */
+  /* Fixed state with lifted position (top: 52px) for optimal mobile layout across all slides */
   .pinned-phone-wrap.is-fixed {
     position: fixed !important;
-    top: 108px !important;
+    top: 52px !important;
     left: 50% !important;
     transform: translate3d(-50%, 0, 0) !important;
     z-index: 50 !important;

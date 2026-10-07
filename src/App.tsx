@@ -590,16 +590,15 @@ export const App: React.FC = () => {
 
       // 3. Phone Pinned Positioning States
       const stageBottomY = stageRect.bottom;
-      const fixedCenterY = isMobile ? 108 : (vh / 2);
+      const fixedCenterY = isMobile ? 52 : (vh / 2);
 
       if (isMobile) {
         // Mobile Hero: Phone starts below white plate (speech bubble) at hero.offsetTop + 219px (239px).
-        // Header bottom is 88px (24px top padding + 64px height).
-        // Fixed phone top below header is 108px (88px + 20px gap).
+        // Fixed phone top lifted to 52px on mobile to give plenty of room above bottom typography card
         // Pin threshold is when phone top reaches target fixed top on scroll:
-        // 239 - scrollY = 108 -> scrollY = 131px
+        // 239 - scrollY = 52 -> scrollY = 187px
         const initialMobilePhoneTop = hero.offsetTop + 219;
-        const targetFixedTop = 108;
+        const targetFixedTop = 52;
         const mobilePinScrollThreshold = initialMobilePhoneTop - targetFixedTop;
 
         if (window.scrollY < mobilePinScrollThreshold) {
