@@ -4026,7 +4026,6 @@ footer,
     top: 0 !important;
     width: 100% !important;
     height: 100vh !important;
-    height: 100dvh !important;
     overflow: hidden !important;
     display: flex !important;
     justify-content: center !important;
@@ -4185,8 +4184,8 @@ footer,
   /* Typography Card at Bottom (Exact Figma Frame 427321498 in 185:1158) */
   .block2-info-card {
     position: absolute !important;
-    bottom: max(14px, calc(100dvh - 700px)) !important;
-    bottom: max(14px, calc(100dvh - 700px), env(safe-area-inset-bottom, 14px)) !important;
+    bottom: 24px !important;
+    bottom: max(24px, env(safe-area-inset-bottom, 24px)) !important;
     top: auto !important;
     left: 50% !important;
     right: auto !important;
