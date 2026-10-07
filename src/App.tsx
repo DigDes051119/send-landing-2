@@ -12,6 +12,158 @@ import { ContactModal } from './components/ContactModal';
 import { MenuOverlay } from './components/MenuOverlay';
 import { ScrollPrompt } from './components/ScrollPrompt';
 
+interface MobileCardConfig {
+  src: string;
+  style: React.CSSProperties;
+}
+
+interface MobileSlideFloating {
+  back: MobileCardConfig[];
+  front: MobileCardConfig[];
+}
+
+const MOBILE_FLOATING_SLIDES: MobileSlideFloating[] = [
+  // Slide 0: "Общайтесь легко" (Exact Figma mobile-2 / Node 185:1158)
+  {
+    back: [
+      // image 4 in Figma: width 208px, x: 14px, y: 105px (behind phone)
+      {
+        src: '/block2-bubble-top.webp',
+        style: { left: '-62px', top: '-17px', width: '236px' },
+      },
+      // image 1 in Figma: width 291px, x: -57px, y: 496px (behind phone)
+      {
+        src: '/block2-search-import.webp',
+        style: { left: '-142px', top: '427px', width: '331px' },
+      },
+    ],
+    front: [
+      // image 5 in Figma: width 276px, x: 206px, y: 185px (OVER phone)
+      {
+        src: '/block2-input-bar.webp',
+        style: { left: '156px', top: '74px', width: '314px' },
+      },
+      // image 3 in Figma: width 284px, x: 186px, y: 346px (OVER phone)
+      {
+        src: '/block2-location-card.webp',
+        style: { left: '134px', top: '257px', width: '323px' },
+      },
+    ],
+  },
+
+  // Slide 1: "Ловите момент"
+  {
+    back: [
+      // Audio note (top-left)
+      {
+        src: '/slide2-audio.webp',
+        style: { left: '-80px', top: '-15px', width: '320px' },
+      },
+      // Bubble (top-right)
+      {
+        src: '/slide2-bubble.webp',
+        style: { left: '150px', top: '70px', width: '245px' },
+      },
+    ],
+    front: [
+      // Context menu with emoji reactions (mid-left over phone)
+      {
+        src: '/slide2-context-menu.webp',
+        style: { left: '-95px', top: '215px', width: '310px' },
+      },
+      // Tabs with emojis & stickers (bottom-right over phone)
+      {
+        src: '/slide2-tabs.webp',
+        style: { left: '125px', top: '335px', width: '320px' },
+      },
+    ],
+  },
+
+  // Slide 2: "Делитесь самым важным"
+  {
+    back: [
+      // Audio file (top-left)
+      {
+        src: '/slide3-audio.webp',
+        style: { left: '-80px', top: '-15px', width: '320px' },
+      },
+      // Photo 1 (top-right)
+      {
+        src: '/slide3-photo-1.webp',
+        style: { left: '160px', top: '45px', width: '195px' },
+      },
+    ],
+    front: [
+      // Photo 2 (mid-left over phone)
+      {
+        src: '/slide3-photo-2.webp',
+        style: { left: '-75px', top: '270px', width: '215px' },
+      },
+      // Photo 3 (bottom-right over phone)
+      {
+        src: '/slide3-photo-3.webp',
+        style: { left: '125px', top: '315px', width: '225px' },
+      },
+    ],
+  },
+
+  // Slide 3: "Берегите личное"
+  {
+    back: [
+      // Username card (top-left)
+      {
+        src: '/slide4-username.webp',
+        style: { left: '-80px', top: '-20px', width: '325px' },
+      },
+      // Country card (top-right)
+      {
+        src: '/slide4-country.webp',
+        style: { left: '145px', top: '55px', width: '300px' },
+      },
+    ],
+    front: [
+      // Phone number card (mid-left over phone)
+      {
+        src: '/slide4-phone.webp',
+        style: { left: '-115px', top: '305px', width: '330px' },
+      },
+      // Voice player (bottom-right over phone)
+      {
+        src: '/slide4-voice.webp',
+        style: { left: '125px', top: '310px', width: '315px' },
+      },
+    ],
+  },
+
+  // Slide 4: "Умные уведомления"
+  {
+    back: [
+      // Plus trigger (top-left)
+      {
+        src: '/slide5-plus.webp',
+        style: { left: '-35px', top: '-5px', width: '110px' },
+      },
+      // Silent alert (top-right)
+      {
+        src: '/slide5-silent.webp',
+        style: { left: '140px', top: '50px', width: '310px' },
+      },
+    ],
+    front: [
+      // Quick message input (mid-left over phone)
+      {
+        src: '/slide5-input.webp',
+        style: { left: '-115px', top: '315px', width: '330px' },
+      },
+      // Smart notifications toggle (bottom-right over phone)
+      {
+        src: '/slide5-toggle.webp',
+        style: { left: '120px', top: '295px', width: '315px' },
+      },
+    ],
+  },
+];
+
 export const App: React.FC = () => {
   const [ready, setReady] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -513,6 +665,28 @@ export const App: React.FC = () => {
             aria-hidden="true"
           >
             <div className={`pinned-phone-entrance-box ${ready ? 'is-entered' : 'is-entering'}`}>
+              {/* Mobile floating cards BEHIND phone */}
+              <div className="mobile-floating-layer layer-back" aria-hidden="true">
+                {MOBILE_FLOATING_SLIDES.map((slide, sIdx) => (
+                  <div
+                    key={`m-back-${sIdx}`}
+                    className={`mobile-cards-slide slide-${sIdx} ${isBlock2Entered && activeSlide === sIdx ? 'is-active' : ''}`}
+                  >
+                    {slide.back.map((card, cIdx) => (
+                      <img
+                        key={cIdx}
+                        src={card.src}
+                        alt=""
+                        className="mobile-floating-card card-back"
+                        style={card.style}
+                        loading="eager"
+                        decoding="async"
+                      />
+                    ))}
+                  </div>
+                ))}
+              </div>
+
               {/* Permanent white background underneath all switching screens */}
               <div className="pinned-phone-screen-slot slot-base" aria-hidden="true" />
 
@@ -614,6 +788,28 @@ export const App: React.FC = () => {
                 fetchPriority="high"
                 loading="eager"
               />
+
+              {/* Mobile floating cards OVER / IN FRONT OF phone */}
+              <div className="mobile-floating-layer layer-front" aria-hidden="true">
+                {MOBILE_FLOATING_SLIDES.map((slide, sIdx) => (
+                  <div
+                    key={`m-front-${sIdx}`}
+                    className={`mobile-cards-slide slide-${sIdx} ${isBlock2Entered && activeSlide === sIdx ? 'is-active' : ''}`}
+                  >
+                    {slide.front.map((card, cIdx) => (
+                      <img
+                        key={cIdx}
+                        src={card.src}
+                        alt=""
+                        className="mobile-floating-card card-front"
+                        style={card.style}
+                        loading="eager"
+                        decoding="async"
+                      />
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
