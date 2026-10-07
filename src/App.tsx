@@ -171,22 +171,35 @@ const MOBILE_FLOATING_SLIDES: MobileSlideFloating[] = [
         delayIn: 80,
         delayOut: 0,
       },
-      // 2. Photo 1: shoots from bottom-left (dxIn: -200, dyIn: +200)
+      // 2. Photo 1 (upper-right): shifted further right to 195px
       {
         src: '/slide3-photo-1.webp',
-        style: { left: '160px', top: '45px', width: '195px' },
-        dxIn: -200,
+        style: { left: '195px', top: '45px', width: '195px' },
+        dxIn: -230,
         dyIn: 200,
-        dxOut: 320,
+        dxOut: 350,
         dyOut: -280,
         rotIn: 5,
         rotOut: 8,
         delayIn: 280,
         delayOut: 160,
       },
+      // 3. Photo 3 (lower-right): rendered BEHIND phone and shifted right to 170px
+      {
+        src: '/slide3-photo-3.webp',
+        style: { left: '170px', top: '315px', width: '225px' },
+        dxIn: -230,
+        dyIn: -260,
+        dxOut: 360,
+        dyOut: 360,
+        rotIn: 3.5,
+        rotOut: 6,
+        delayIn: 680,
+        delayOut: 440,
+      },
     ],
     front: [
-      // 3. Photo 2: shoots from top-right (dxIn: +180, dyIn: -250)
+      // Photo 2: left-side photo over phone
       {
         src: '/slide3-photo-2.webp',
         style: { left: '-75px', top: '270px', width: '215px' },
@@ -198,19 +211,6 @@ const MOBILE_FLOATING_SLIDES: MobileSlideFloating[] = [
         rotOut: -7,
         delayIn: 480,
         delayOut: 300,
-      },
-      // 4. Photo 3: shoots from top-left (dxIn: -190, dyIn: -260)
-      {
-        src: '/slide3-photo-3.webp',
-        style: { left: '125px', top: '315px', width: '225px' },
-        dxIn: -190,
-        dyIn: -260,
-        dxOut: 320,
-        dyOut: 360,
-        rotIn: 3.5,
-        rotOut: 6,
-        delayIn: 680,
-        delayOut: 440,
       },
     ],
   },
