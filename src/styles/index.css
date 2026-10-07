@@ -4244,19 +4244,19 @@ footer,
 
   .block2-card-title {
     font-family: 'Onest', system-ui, sans-serif !important;
-    font-size: 24px !important;
+    font-size: 18px !important;
     font-weight: 400 !important;
-    line-height: 1.2 !important;
+    line-height: 1.25 !important;
     color: #151515 !important;
     text-align: center !important;
-    margin: 0 0 8px 0 !important;
+    margin: 0 0 6px 0 !important;
   }
 
   .block2-card-description {
     font-family: 'Onest', system-ui, sans-serif !important;
-    font-size: 16px !important;
+    font-size: 14px !important;
     font-weight: 400 !important;
-    line-height: 20.4px !important;
+    line-height: 1.35 !important;
     color: #151515 !important;
     text-align: center !important;
     margin: 0 !important;
