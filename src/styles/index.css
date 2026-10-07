@@ -1962,8 +1962,9 @@ main {
   }
 
   .pinned-phone-wrap.is-block2-entered::after {
-    transform: translateX(-50%) scale(0.88) !important;
-    opacity: 0.65 !important;
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
   }
 
   .pinned-phone-entrance-box {
@@ -4176,7 +4177,8 @@ footer,
   /* Typography Card at Bottom (Exact Figma Frame 427321498 in 185:1158) */
   .block2-info-card {
     position: absolute !important;
-    bottom: 24px !important;
+    bottom: 12px !important;
+    bottom: max(12px, env(safe-area-inset-bottom, 12px)) !important;
     top: auto !important;
     left: 50% !important;
     right: auto !important;
@@ -4214,7 +4216,7 @@ footer,
   }
 
   .block2-card-content {
-    min-height: 80px !important;
+    min-height: auto !important;
     width: 100% !important;
     text-align: center !important;
     display: flex !important;
@@ -4249,7 +4251,7 @@ footer,
     line-height: 1.25 !important;
     color: #151515 !important;
     text-align: center !important;
-    margin: 0 0 6px 0 !important;
+    margin: 0 0 3px 0 !important;
   }
 
   .block2-card-description {
@@ -4263,7 +4265,7 @@ footer,
   }
 
   .block2-progress-bars {
-    margin-top: 14px !important;
+    margin-top: 10px !important;
     width: 140px !important;
     gap: 6px !important;
     justify-content: center !important;
