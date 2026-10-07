@@ -215,7 +215,7 @@ const MOBILE_FLOATING_SLIDES: MobileSlideFloating[] = [
     ],
   },
 
-  // Slide 3: "Берегите личное" (Desktop Security Elements Pattern)
+  // Slide 3: "Берегите личное" (Desktop Security Elements Pattern - All behind phone on mobile)
   {
     back: [
       // 1. Username card: shoots from bottom-right (dxIn: +260, dyIn: +210)
@@ -231,6 +231,19 @@ const MOBILE_FLOATING_SLIDES: MobileSlideFloating[] = [
         delayIn: 240,
         delayOut: 0,
       },
+      // 2. Phone number: shoots from top-right (dxIn: +240, dyIn: -210)
+      {
+        src: '/slide4-phone.webp',
+        style: { left: '-115px', top: '305px', width: '330px' },
+        dxIn: 240,
+        dyIn: -210,
+        dxOut: -340,
+        dyOut: 300,
+        rotIn: -2,
+        rotOut: -4,
+        delayIn: 420,
+        delayOut: 180,
+      },
       // 3. Country card: shoots from left-middle (dxIn: -260, dyIn: +90)
       {
         src: '/slide4-country.webp',
@@ -244,21 +257,6 @@ const MOBILE_FLOATING_SLIDES: MobileSlideFloating[] = [
         delayIn: 760,
         delayOut: 360,
         targetOpacity: 0.55,
-      },
-    ],
-    front: [
-      // 2. Phone number: shoots from top-right (dxIn: +240, dyIn: -210)
-      {
-        src: '/slide4-phone.webp',
-        style: { left: '-115px', top: '305px', width: '330px' },
-        dxIn: 240,
-        dyIn: -210,
-        dxOut: -340,
-        dyOut: 300,
-        rotIn: -2,
-        rotOut: -4,
-        delayIn: 420,
-        delayOut: 180,
       },
       // 4. Voice player: shoots from top-left (dxIn: -250, dyIn: -230)
       {
@@ -274,9 +272,10 @@ const MOBILE_FLOATING_SLIDES: MobileSlideFloating[] = [
         delayOut: 540,
       },
     ],
+    front: [],
   },
 
-  // Slide 4: "Умные уведомления" (Desktop Smart Automation Pattern)
+  // Slide 4: "Умные уведомления" (Desktop Smart Automation Pattern - All behind phone on mobile)
   {
     back: [
       // 1. Plus trigger: shoots from bottom-right (dxIn: +190, dyIn: +200)
@@ -292,21 +291,6 @@ const MOBILE_FLOATING_SLIDES: MobileSlideFloating[] = [
         delayIn: 70,
         delayOut: 0,
       },
-      // 3. Silent alert: shoots from left-middle (dxIn: -270, dyIn: +70)
-      {
-        src: '/slide5-silent.webp',
-        style: { left: '140px', top: '50px', width: '310px' },
-        dxIn: -270,
-        dyIn: 70,
-        dxOut: 380,
-        dyOut: -120,
-        rotIn: 2,
-        rotOut: 4,
-        delayIn: 710,
-        delayOut: 360,
-      },
-    ],
-    front: [
       // 2. Toggle switch: shoots from top-left (dxIn: -270, dyIn: -210)
       {
         src: '/slide5-toggle.webp',
@@ -319,6 +303,19 @@ const MOBILE_FLOATING_SLIDES: MobileSlideFloating[] = [
         rotOut: 6,
         delayIn: 390,
         delayOut: 180,
+      },
+      // 3. Silent alert: shoots from left-middle (dxIn: -270, dyIn: +70)
+      {
+        src: '/slide5-silent.webp',
+        style: { left: '140px', top: '50px', width: '310px' },
+        dxIn: -270,
+        dyIn: 70,
+        dxOut: 380,
+        dyOut: -120,
+        rotIn: 2,
+        rotOut: 4,
+        delayIn: 710,
+        delayOut: 360,
       },
       // 4. Quick message input: shoots from top-right (dxIn: +280, dyIn: -230)
       {
@@ -334,6 +331,7 @@ const MOBILE_FLOATING_SLIDES: MobileSlideFloating[] = [
         delayOut: 540,
       },
     ],
+    front: [],
   },
 ];
 
