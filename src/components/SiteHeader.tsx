@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { SendLogo } from './SendLogo';
 
 interface SiteHeaderProps {
@@ -25,12 +25,32 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
 }) => {
   const [activeNav, setActiveNav] = useState('hero');
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileHidden, setIsMobileHidden] = useState(false);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY || window.pageYOffset;
       // When scrolled past 80px, collapse into sticky fixed floating header
       setIsScrolled(scrollY > 80);
+
+      // Mobile only: hide header on scroll down, show on scroll up
+      const isMobile = typeof window !== 'undefined' && window.innerWidth <= 640;
+      if (isMobile) {
+        const delta = scrollY - lastScrollY.current;
+        if (scrollY <= 20) {
+          setIsMobileHidden(false);
+        } else if (Math.abs(delta) > 5) {
+          if (delta > 0 && scrollY > 60) {
+            setIsMobileHidden(true);
+          } else if (delta < 0) {
+            setIsMobileHidden(false);
+          }
+        }
+      } else {
+        setIsMobileHidden(false);
+      }
+      lastScrollY.current = scrollY;
 
       // Section scroll spy to update active section in header
       const block2El = document.getElementById('chats-feature') || document.getElementById('features');
@@ -48,7 +68,14 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
       }
     };
 
+    const handleResize = () => {
+      if (window.innerWidth > 640) {
+        setIsMobileHidden(false);
+      }
+    };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleResize, { passive: true });
     const lenis = (window as any).lenis;
     if (lenis) {
       lenis.on('scroll', handleScroll);
@@ -56,6 +83,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
     handleScroll();
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
       if (lenis) {
         lenis.off('scroll', handleScroll);
       }
@@ -88,7 +116,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
 
   return (
     <header
-      className={`site-header ${ready ? 'is-ready' : 'is-entering'} ${isScrolled ? 'is-scrolled' : ''} ${isStoreDocked ? 'is-store-docked' : ''}`}
+      className={`site-header ${ready ? 'is-ready' : 'is-entering'} ${isScrolled ? 'is-scrolled' : ''} ${isStoreDocked ? 'is-store-docked' : ''} ${isMobileHidden ? 'is-mobile-hidden' : ''}`}
     >
       {/* Left Navigation: unified morphing pill (expands to 402px, retracts to 64px circle) */}
       <div className="header-left-slot">
