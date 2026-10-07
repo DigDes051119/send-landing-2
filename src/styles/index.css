@@ -1524,7 +1524,9 @@ main {
   .site-header #btn-header-appstore,
   .site-header #btn-header-googleplay,
   .site-header.is-ready:not(.is-scrolled) #btn-header-appstore,
-  .site-header.is-ready:not(.is-scrolled) #btn-header-googleplay {
+  .site-header.is-ready:not(.is-scrolled) #btn-header-googleplay,
+  .site-header.is-store-docked #btn-header-appstore,
+  .site-header.is-store-docked #btn-header-googleplay {
     width: 64px !important;
     height: 64px !important;
     min-width: 64px !important;
@@ -1536,6 +1538,12 @@ main {
     justify-content: center !important;
     background: #ffffff !important;
     box-shadow: 0 4px 20px rgba(10, 30, 80, 0.08) !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  .site-header.is-store-docked .header-right {
+    pointer-events: auto !important;
   }
 
   .header-store-btn .store-btn-text {

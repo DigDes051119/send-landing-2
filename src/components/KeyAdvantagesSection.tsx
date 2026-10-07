@@ -22,19 +22,33 @@ const KeyAdvCardItem: React.FC<AdvCardProps> = ({
   peVar,
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const cardRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    const card = cardRef.current;
+    if (!video || !card) return;
 
-    const playPromise = video.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(() => {});
-    }
+    // Only play video when visible in viewport to prevent mobile GPU and memory lag
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry && entry.isIntersecting) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(card);
+    return () => observer.disconnect();
   }, []);
 
   return (
     <article
+      ref={cardRef}
       className={`key-adv-card ${cardClass}`}
       tabIndex={0}
       style={{
@@ -57,11 +71,10 @@ const KeyAdvCardItem: React.FC<AdvCardProps> = ({
         <video
           ref={videoRef}
           src={videoSrc}
-          autoPlay
           loop
           muted
           playsInline
-          preload="auto"
+          preload="none"
           className="key-adv-card-video"
         >
           <source src={videoSrc} type="video/mp4" />
@@ -77,12 +90,40 @@ export const KeyAdvantagesSection: React.FC = () => {
 
   useEffect(() => {
     let rafId: number;
+    const section = sectionRef.current;
+    const stage = stageRef.current;
+    if (!section || !stage) return;
+
+    const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth <= 1024;
+
+    if (isMobileOrTablet) {
+      // Mobile & tablet: cards flow naturally via static CSS. Zero scroll listener overhead.
+      stage.style.removeProperty('transform');
+      stage.style.removeProperty('transform-origin');
+      section.style.setProperty('--c3-dy', '0px');
+      section.style.setProperty('--c3-op', '1');
+      section.style.setProperty('--c3-pe', 'auto');
+      section.style.setProperty('--c2-dy', '0px');
+      section.style.setProperty('--c2-op', '1');
+      section.style.setProperty('--c2-pe', 'auto');
+      section.style.setProperty('--c1-dy', '0px');
+      section.style.setProperty('--c1-op', '1');
+      section.style.setProperty('--c1-pe', 'auto');
+      section.style.setProperty('--w1-dx', '0px');
+      section.style.setProperty('--w1-op', '1');
+      section.style.setProperty('--w2-dx', '0px');
+      section.style.setProperty('--w2-op', '1');
+
+      const handleResize = () => {
+        if (window.innerWidth > 1024) {
+          window.location.reload();
+        }
+      };
+      window.addEventListener('resize', handleResize, { passive: true });
+      return () => window.removeEventListener('resize', handleResize);
+    }
 
     const updateScaleAndScroll = () => {
-      const section = sectionRef.current;
-      const stage = stageRef.current;
-      if (!section || !stage) return;
-
       const vh = window.innerHeight;
       const vw = window.innerWidth;
 
@@ -96,22 +137,6 @@ export const KeyAdvantagesSection: React.FC = () => {
         stage.style.transform = `scale(${scale.toFixed(4)})`;
         stage.style.transformOrigin = 'center center';
       } else {
-        stage.style.removeProperty('transform');
-        stage.style.removeProperty('transform-origin');
-        // Mobile fallback - cards flow naturally
-        section.style.setProperty('--c3-dy', '0px');
-        section.style.setProperty('--c3-op', '1');
-        section.style.setProperty('--c3-pe', 'auto');
-        section.style.setProperty('--c2-dy', '0px');
-        section.style.setProperty('--c2-op', '1');
-        section.style.setProperty('--c2-pe', 'auto');
-        section.style.setProperty('--c1-dy', '0px');
-        section.style.setProperty('--c1-op', '1');
-        section.style.setProperty('--c1-pe', 'auto');
-        section.style.setProperty('--w1-dx', '0px');
-        section.style.setProperty('--w1-op', '1');
-        section.style.setProperty('--w2-dx', '0px');
-        section.style.setProperty('--w2-op', '1');
         return;
       }
 

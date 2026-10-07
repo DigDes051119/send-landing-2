@@ -351,7 +351,29 @@ export const InstallSection: React.FC<InstallSectionProps> = ({
     const section = sectionRef.current;
     if (!section) return;
 
-    // Check initial scroll state: dock if scrolled to or past the Install block entrance
+    // Mobile and tablet: header store buttons must stay visible and static, no flying plates
+    const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth <= 1024;
+    if (isMobileOrTablet) {
+      isDockedRef.current = false;
+      setIsDocked(false);
+      onDockChange?.(false);
+      const btnAS = document.getElementById('btn-header-appstore');
+      const btnGP = document.getElementById('btn-header-googleplay');
+      if (btnAS) btnAS.style.opacity = '';
+      if (btnGP) btnGP.style.opacity = '';
+      if (cardAppStoreRef.current) cardAppStoreRef.current.style.opacity = '1';
+      if (cardGooglePlayRef.current) cardGooglePlayRef.current.style.opacity = '1';
+
+      const handleResize = () => {
+        if (window.innerWidth > 1024) {
+          window.location.reload();
+        }
+      };
+      window.addEventListener('resize', handleResize, { passive: true });
+      return () => window.removeEventListener('resize', handleResize);
+    }
+
+    // Desktop: Check initial scroll state: dock if scrolled to or past the Install block entrance
     const rect = section.getBoundingClientRect();
     const initialDockThreshold = Math.min(360, window.innerHeight * 0.45);
     const initialDock = rect.top <= initialDockThreshold;
