@@ -270,17 +270,32 @@ export const App: React.FC = () => {
       const fixedCenterY = isMobile ? 108 : (vh / 2);
 
       if (isMobile) {
-        // Mobile: exact 20px gap below header (header bottom: 24px + 64px = 88px -> top: 108px)
-        if (stageBottomY <= vh) {
+        // Mobile Hero: Phone starts below white plate (speech bubble) at hero.offsetTop + 219px (239px).
+        // Header bottom is 88px (24px top padding + 64px height).
+        // Fixed phone top below header is 108px (88px + 20px gap).
+        // Pin threshold is when phone top reaches target fixed top on scroll:
+        // 239 - scrollY = 108 -> scrollY = 131px
+        const initialMobilePhoneTop = hero.offsetTop + 219;
+        const targetFixedTop = 108;
+        const mobilePinScrollThreshold = initialMobilePhoneTop - targetFixedTop;
+
+        if (window.scrollY < mobilePinScrollThreshold) {
+          // Phase 1: Inside Hero, phone stays below white speech bubble plate
+          if (phone.classList.contains('is-fixed') || phone.classList.contains('is-stuck-bottom') || !phone.style.top) {
+            phone.classList.remove('is-fixed', 'is-stuck-bottom');
+            phone.style.top = initialMobilePhoneTop + 'px';
+            phone.style.removeProperty('bottom');
+          }
+        } else if (stageBottomY <= vh) {
           // Phase 3: Docked at bottom of Block 2
           if (!phone.classList.contains('is-stuck-bottom')) {
             phone.classList.remove('is-fixed');
             phone.classList.add('is-stuck-bottom');
-            phone.style.top = (stage.offsetHeight - (vh - 108)) + 'px';
+            phone.style.top = (stage.offsetHeight - (vh - targetFixedTop)) + 'px';
             phone.style.removeProperty('bottom');
           }
         } else {
-          // Phase 1 & 2: Fixed with exact 20px gap from header across Hero & Block 2
+          // Phase 2: Fixed 20px below header across Block 2
           if (!phone.classList.contains('is-fixed')) {
             phone.classList.add('is-fixed');
             phone.classList.remove('is-stuck-bottom');

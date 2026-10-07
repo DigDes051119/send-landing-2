@@ -1906,12 +1906,13 @@ main {
 }
 
 @media (max-width: 640px) {
-  /* Hardware Accelerated Stable Pinned Phone on Mobile */
+  /* Hardware Accelerated Stable Pinned Phone on Mobile (Initial position below white plate) */
   .pinned-phone-wrap {
     z-index: 50 !important;
     display: flex !important;
     margin-top: 0 !important;
     left: 50% !important;
+    top: 239px;
     transform: translate3d(-50%, 0, 0) !important;
     -webkit-backface-visibility: hidden !important;
     backface-visibility: hidden !important;
