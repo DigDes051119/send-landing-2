@@ -4184,8 +4184,8 @@ footer,
   /* Typography Card at Bottom (Exact Figma Frame 427321498 in 185:1158) */
   .block2-info-card {
     position: absolute !important;
-    bottom: 38px !important;
-    bottom: max(38px, calc(18px + env(safe-area-inset-bottom, 0px))) !important;
+    bottom: 60px !important;
+    bottom: max(60px, calc(36px + env(safe-area-inset-bottom, 0px))) !important;
     top: auto !important;
     left: 50% !important;
     right: auto !important;
@@ -4282,6 +4282,13 @@ footer,
   .block2-progress-seg {
     height: 3px !important;
     border-radius: 2px !important;
+  }
+
+  @media (max-height: 680px) {
+    .block2-info-card {
+      bottom: 28px !important;
+      bottom: max(28px, calc(10px + env(safe-area-inset-bottom, 0px))) !important;
+    }
   }
 }
 
