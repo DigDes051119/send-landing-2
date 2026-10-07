@@ -4063,14 +4063,6 @@ footer,
     position: absolute !important;
     inset: 0 !important;
     pointer-events: none !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
-    transition: opacity 400ms ease, visibility 400ms ease !important;
-  }
-
-  .mobile-cards-slide.is-active {
-    opacity: 1 !important;
-    visibility: visible !important;
   }
 
   .mobile-floating-card {
@@ -4080,7 +4072,17 @@ footer,
     -webkit-user-drag: none !important;
     -webkit-backface-visibility: hidden !important;
     backface-visibility: hidden !important;
-    transition: transform 550ms cubic-bezier(0.16, 1, 0.3, 1), opacity 400ms ease !important;
+    will-change: transform, opacity !important;
+    transition: transform 1400ms cubic-bezier(0.19, 1, 0.22, 1),
+                opacity 950ms cubic-bezier(0.19, 1, 0.22, 1) !important;
+  }
+
+  .mobile-floating-img {
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    pointer-events: none !important;
+    -webkit-user-drag: none !important;
   }
 
   /* Cards in front of phone pop with rich drop-shadow */
@@ -4093,14 +4095,25 @@ footer,
     filter: drop-shadow(0 6px 18px rgba(10, 30, 80, 0.08)) !important;
   }
 
-  .mobile-cards-slide.is-active .mobile-floating-card {
-    transform: translate3d(0, 0, 0) scale(1) !important;
-    opacity: 1 !important;
+  /* === FUTURE STATE: Starting Hidden Directly Behind Center Phone === */
+  .mobile-floating-card.is-future {
+    transform: translate3d(var(--dx-in, 0px), var(--dy-in, 0px), 0) scale(var(--scale-in, 0.15)) rotate(var(--rot-in, 0deg)) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
   }
 
-  .mobile-cards-slide:not(.is-active) .mobile-floating-card {
-    transform: translate3d(0, 10px, 0) scale(0.96) !important;
+  /* === ACTIVE STATE: Burst Out from Behind Phone into Settled Place === */
+  .mobile-floating-card.is-active {
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg) !important;
+    opacity: var(--target-opacity, 1) !important;
+    pointer-events: none !important;
+  }
+
+  /* === PAST STATE: Fly Away Far Past Viewport Borders when Scrolling Further === */
+  .mobile-floating-card.is-past {
+    transform: translate3d(var(--dx-out, 0px), var(--dy-out, 0px), 0) scale(var(--scale-out, 1.15)) rotate(var(--rot-out, 0deg)) !important;
     opacity: 0 !important;
+    pointer-events: none !important;
   }
 
   /* Typography Card at Bottom (Exact Figma Frame 427321498 in 185:1158) */

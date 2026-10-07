@@ -15,6 +15,17 @@ import { ScrollPrompt } from './components/ScrollPrompt';
 interface MobileCardConfig {
   src: string;
   style: React.CSSProperties;
+  dxIn: number;
+  dyIn: number;
+  dxOut: number;
+  dyOut: number;
+  rotIn?: number;
+  rotOut?: number;
+  scaleIn?: number;
+  scaleOut?: number;
+  delayIn?: number;
+  delayOut?: number;
+  targetOpacity?: number;
 }
 
 interface MobileSlideFloating {
@@ -30,11 +41,27 @@ const MOBILE_FLOATING_SLIDES: MobileSlideFloating[] = [
       {
         src: '/block2-bubble-top.webp',
         style: { left: '-62px', top: '-17px', width: '236px' },
+        dxIn: 91,
+        dyIn: 240,
+        dxOut: -260,
+        dyOut: -220,
+        rotIn: -4,
+        rotOut: -6,
+        delayIn: 80,
+        delayOut: 0,
       },
       // image 1 in Figma: width 291px, x: -57px, y: 496px (behind phone)
       {
         src: '/block2-search-import.webp',
         style: { left: '-142px', top: '427px', width: '331px' },
+        dxIn: 124,
+        dyIn: -241,
+        dxOut: -300,
+        dyOut: 240,
+        rotIn: -3,
+        rotOut: -5,
+        delayIn: 400,
+        delayOut: 180,
       },
     ],
     front: [
@@ -42,11 +69,27 @@ const MOBILE_FLOATING_SLIDES: MobileSlideFloating[] = [
       {
         src: '/block2-input-bar.webp',
         style: { left: '156px', top: '74px', width: '314px' },
+        dxIn: -166,
+        dyIn: 149,
+        dxOut: 320,
+        dyOut: -180,
+        rotIn: 3,
+        rotOut: 5,
+        delayIn: 240,
+        delayOut: 120,
       },
       // image 3 in Figma: width 284px, x: 186px, y: 346px (OVER phone)
       {
         src: '/block2-location-card.webp',
         style: { left: '134px', top: '257px', width: '323px' },
+        dxIn: -148,
+        dyIn: -39,
+        dxOut: 300,
+        dyOut: 260,
+        rotIn: 3.5,
+        rotOut: 6,
+        delayIn: 560,
+        delayOut: 300,
       },
     ],
   },
@@ -58,11 +101,28 @@ const MOBILE_FLOATING_SLIDES: MobileSlideFloating[] = [
       {
         src: '/slide2-audio.webp',
         style: { left: '-80px', top: '-15px', width: '320px' },
+        dxIn: 120,
+        dyIn: 240,
+        dxOut: -280,
+        dyOut: -220,
+        rotIn: -3,
+        rotOut: -5,
+        delayIn: 80,
+        delayOut: 0,
       },
       // Bubble (top-right)
       {
         src: '/slide2-bubble.webp',
         style: { left: '150px', top: '70px', width: '245px' },
+        dxIn: -150,
+        dyIn: 160,
+        dxOut: 280,
+        dyOut: -160,
+        rotIn: 3.5,
+        rotOut: 5,
+        delayIn: 240,
+        delayOut: 120,
+        targetOpacity: 0.55,
       },
     ],
     front: [
@@ -70,27 +130,59 @@ const MOBILE_FLOATING_SLIDES: MobileSlideFloating[] = [
       {
         src: '/slide2-context-menu.webp',
         style: { left: '-95px', top: '215px', width: '310px' },
+        dxIn: 140,
+        dyIn: 0,
+        dxOut: -300,
+        dyOut: 200,
+        rotIn: -3.5,
+        rotOut: -6,
+        delayIn: 400,
+        delayOut: 200,
       },
       // Tabs with emojis & stickers (bottom-right over phone)
       {
         src: '/slide2-tabs.webp',
         style: { left: '125px', top: '335px', width: '320px' },
+        dxIn: -160,
+        dyIn: -120,
+        dxOut: 320,
+        dyOut: 260,
+        rotIn: 2.5,
+        rotOut: 5,
+        delayIn: 560,
+        delayOut: 320,
       },
     ],
   },
 
-  // Slide 2: "Делитесь самым важным"
+  // Slide 2: "Делитесь самым важным без ограничений"
   {
     back: [
       // Audio file (top-left)
       {
         src: '/slide3-audio.webp',
         style: { left: '-80px', top: '-15px', width: '320px' },
+        dxIn: 120,
+        dyIn: 240,
+        dxOut: -280,
+        dyOut: -220,
+        rotIn: -3,
+        rotOut: -5,
+        delayIn: 80,
+        delayOut: 0,
       },
       // Photo 1 (top-right)
       {
         src: '/slide3-photo-1.webp',
         style: { left: '160px', top: '45px', width: '195px' },
+        dxIn: -150,
+        dyIn: 180,
+        dxOut: 280,
+        dyOut: -200,
+        rotIn: 4.5,
+        rotOut: 7,
+        delayIn: 240,
+        delayOut: 120,
       },
     ],
     front: [
@@ -98,11 +190,27 @@ const MOBILE_FLOATING_SLIDES: MobileSlideFloating[] = [
       {
         src: '/slide3-photo-2.webp',
         style: { left: '-75px', top: '270px', width: '215px' },
+        dxIn: 140,
+        dyIn: -30,
+        dxOut: -280,
+        dyOut: 240,
+        rotIn: -4,
+        rotOut: -7,
+        delayIn: 400,
+        delayOut: 220,
       },
       // Photo 3 (bottom-right over phone)
       {
         src: '/slide3-photo-3.webp',
         style: { left: '125px', top: '315px', width: '225px' },
+        dxIn: -140,
+        dyIn: -100,
+        dxOut: 290,
+        dyOut: 270,
+        rotIn: 3.5,
+        rotOut: 6,
+        delayIn: 560,
+        delayOut: 340,
       },
     ],
   },
@@ -114,11 +222,28 @@ const MOBILE_FLOATING_SLIDES: MobileSlideFloating[] = [
       {
         src: '/slide4-username.webp',
         style: { left: '-80px', top: '-20px', width: '325px' },
+        dxIn: 130,
+        dyIn: 250,
+        dxOut: -290,
+        dyOut: -230,
+        rotIn: -3,
+        rotOut: -6,
+        delayIn: 80,
+        delayOut: 0,
       },
       // Country card (top-right)
       {
         src: '/slide4-country.webp',
         style: { left: '145px', top: '55px', width: '300px' },
+        dxIn: -150,
+        dyIn: 170,
+        dxOut: 300,
+        dyOut: -170,
+        rotIn: 3,
+        rotOut: 5,
+        delayIn: 240,
+        delayOut: 120,
+        targetOpacity: 0.55,
       },
     ],
     front: [
@@ -126,11 +251,27 @@ const MOBILE_FLOATING_SLIDES: MobileSlideFloating[] = [
       {
         src: '/slide4-phone.webp',
         style: { left: '-115px', top: '305px', width: '330px' },
+        dxIn: 150,
+        dyIn: -80,
+        dxOut: -310,
+        dyOut: 250,
+        rotIn: -2,
+        rotOut: -4,
+        delayIn: 420,
+        delayOut: 220,
       },
       // Voice player (bottom-right over phone)
       {
         src: '/slide4-voice.webp',
         style: { left: '125px', top: '310px', width: '315px' },
+        dxIn: -140,
+        dyIn: -90,
+        dxOut: 300,
+        dyOut: 270,
+        rotIn: 2.5,
+        rotOut: 6,
+        delayIn: 600,
+        delayOut: 340,
       },
     ],
   },
@@ -142,11 +283,27 @@ const MOBILE_FLOATING_SLIDES: MobileSlideFloating[] = [
       {
         src: '/slide5-plus.webp',
         style: { left: '-35px', top: '-5px', width: '110px' },
+        dxIn: 120,
+        dyIn: 240,
+        dxOut: -240,
+        dyOut: -220,
+        rotIn: -8,
+        rotOut: -12,
+        delayIn: 70,
+        delayOut: 0,
       },
       // Silent alert (top-right)
       {
         src: '/slide5-silent.webp',
         style: { left: '140px', top: '50px', width: '310px' },
+        dxIn: -150,
+        dyIn: 170,
+        dxOut: 310,
+        dyOut: -180,
+        rotIn: 2,
+        rotOut: 4,
+        delayIn: 250,
+        delayOut: 120,
       },
     ],
     front: [
@@ -154,11 +311,27 @@ const MOBILE_FLOATING_SLIDES: MobileSlideFloating[] = [
       {
         src: '/slide5-input.webp',
         style: { left: '-115px', top: '315px', width: '330px' },
+        dxIn: 150,
+        dyIn: -90,
+        dxOut: -310,
+        dyOut: 250,
+        rotIn: -3,
+        rotOut: -6,
+        delayIn: 420,
+        delayOut: 220,
       },
       // Smart notifications toggle (bottom-right over phone)
       {
         src: '/slide5-toggle.webp',
         style: { left: '120px', top: '295px', width: '315px' },
+        dxIn: -140,
+        dyIn: -80,
+        dxOut: 310,
+        dyOut: 270,
+        rotIn: 3.5,
+        rotOut: 6,
+        delayIn: 600,
+        delayOut: 340,
       },
     ],
   },
@@ -667,24 +840,54 @@ export const App: React.FC = () => {
             <div className={`pinned-phone-entrance-box ${ready ? 'is-entered' : 'is-entering'}`}>
               {/* Mobile floating cards BEHIND phone */}
               <div className="mobile-floating-layer layer-back" aria-hidden="true">
-                {MOBILE_FLOATING_SLIDES.map((slide, sIdx) => (
-                  <div
-                    key={`m-back-${sIdx}`}
-                    className={`mobile-cards-slide slide-${sIdx} ${isBlock2Entered && activeSlide === sIdx ? 'is-active' : ''}`}
-                  >
-                    {slide.back.map((card, cIdx) => (
-                      <img
-                        key={cIdx}
-                        src={card.src}
-                        alt=""
-                        className="mobile-floating-card card-back"
-                        style={card.style}
-                        loading="eager"
-                        decoding="async"
-                      />
-                    ))}
-                  </div>
-                ))}
+                {MOBILE_FLOATING_SLIDES.map((slide, sIdx) => {
+                  const isCurrent = isBlock2Entered && activeSlide === sIdx;
+                  const isPast = isBlock2Entered && activeSlide > sIdx;
+                  const statusClass = isCurrent ? 'is-active' : isPast ? 'is-past' : 'is-future';
+
+                  return (
+                    <div
+                      key={`m-back-${sIdx}`}
+                      className={`mobile-cards-slide slide-${sIdx} ${statusClass}`}
+                    >
+                      {slide.back.map((card, cIdx) => {
+                        const currentDelay = isCurrent
+                          ? `${card.delayIn ?? 0}ms`
+                          : isPast
+                            ? `${card.delayOut ?? 0}ms`
+                            : '0ms';
+
+                        return (
+                          <div
+                            key={cIdx}
+                            className={`mobile-floating-card card-back ${statusClass}`}
+                            style={{
+                              ...card.style,
+                              '--target-opacity': card.targetOpacity ?? 1,
+                              '--dx-in': `${card.dxIn}px`,
+                              '--dy-in': `${card.dyIn}px`,
+                              '--dx-out': `${card.dxOut}px`,
+                              '--dy-out': `${card.dyOut}px`,
+                              '--rot-in': `${card.rotIn ?? 0}deg`,
+                              '--rot-out': `${card.rotOut ?? 0}deg`,
+                              '--scale-in': `${card.scaleIn ?? 0.15}`,
+                              '--scale-out': `${card.scaleOut ?? 1.15}`,
+                              transitionDelay: currentDelay,
+                            } as React.CSSProperties}
+                          >
+                            <img
+                              src={card.src}
+                              alt=""
+                              className="mobile-floating-img"
+                              loading="eager"
+                              decoding="async"
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
               </div>
 
               {/* Permanent white background underneath all switching screens */}
@@ -791,24 +994,54 @@ export const App: React.FC = () => {
 
               {/* Mobile floating cards OVER / IN FRONT OF phone */}
               <div className="mobile-floating-layer layer-front" aria-hidden="true">
-                {MOBILE_FLOATING_SLIDES.map((slide, sIdx) => (
-                  <div
-                    key={`m-front-${sIdx}`}
-                    className={`mobile-cards-slide slide-${sIdx} ${isBlock2Entered && activeSlide === sIdx ? 'is-active' : ''}`}
-                  >
-                    {slide.front.map((card, cIdx) => (
-                      <img
-                        key={cIdx}
-                        src={card.src}
-                        alt=""
-                        className="mobile-floating-card card-front"
-                        style={card.style}
-                        loading="eager"
-                        decoding="async"
-                      />
-                    ))}
-                  </div>
-                ))}
+                {MOBILE_FLOATING_SLIDES.map((slide, sIdx) => {
+                  const isCurrent = isBlock2Entered && activeSlide === sIdx;
+                  const isPast = isBlock2Entered && activeSlide > sIdx;
+                  const statusClass = isCurrent ? 'is-active' : isPast ? 'is-past' : 'is-future';
+
+                  return (
+                    <div
+                      key={`m-front-${sIdx}`}
+                      className={`mobile-cards-slide slide-${sIdx} ${statusClass}`}
+                    >
+                      {slide.front.map((card, cIdx) => {
+                        const currentDelay = isCurrent
+                          ? `${card.delayIn ?? 0}ms`
+                          : isPast
+                            ? `${card.delayOut ?? 0}ms`
+                            : '0ms';
+
+                        return (
+                          <div
+                            key={cIdx}
+                            className={`mobile-floating-card card-front ${statusClass}`}
+                            style={{
+                              ...card.style,
+                              '--target-opacity': card.targetOpacity ?? 1,
+                              '--dx-in': `${card.dxIn}px`,
+                              '--dy-in': `${card.dyIn}px`,
+                              '--dx-out': `${card.dxOut}px`,
+                              '--dy-out': `${card.dyOut}px`,
+                              '--rot-in': `${card.rotIn ?? 0}deg`,
+                              '--rot-out': `${card.rotOut ?? 0}deg`,
+                              '--scale-in': `${card.scaleIn ?? 0.15}`,
+                              '--scale-out': `${card.scaleOut ?? 1.15}`,
+                              transitionDelay: currentDelay,
+                            } as React.CSSProperties}
+                          >
+                            <img
+                              src={card.src}
+                              alt=""
+                              className="mobile-floating-img"
+                              loading="eager"
+                              decoding="async"
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
