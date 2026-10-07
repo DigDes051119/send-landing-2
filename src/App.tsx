@@ -111,7 +111,7 @@ const MOBILE_FLOATING_SLIDES: MobileSlideFloating[] = [
         delayOut: 0,
         targetOpacity: 0.55,
       },
-      // 3. Audio note: shoots from bottom-right (dxIn: +250, dyIn: +190)
+      // 2. Audio note: shoots from bottom-right (dxIn: +250, dyIn: +190)
       {
         src: '/slide2-audio.webp',
         style: { left: '-80px', top: '-15px', width: '320px' },
@@ -124,22 +124,7 @@ const MOBILE_FLOATING_SLIDES: MobileSlideFloating[] = [
         delayIn: 720,
         delayOut: 360,
       },
-    ],
-    front: [
-      // 2. Context menu: shoots from top-right across phone (dxIn: +240, dyIn: -180)
-      {
-        src: '/slide2-context-menu.webp',
-        style: { left: '-95px', top: '215px', width: '310px' },
-        dxIn: 240,
-        dyIn: -180,
-        dxOut: -340,
-        dyOut: 260,
-        rotIn: -3.5,
-        rotOut: -6,
-        delayIn: 400,
-        delayOut: 180,
-      },
-      // 4. Tabs: shoots from top-left (dxIn: -260, dyIn: -250)
+      // 3. Tabs: rendered BEHIND phone (shoots from top-left)
       {
         src: '/slide2-tabs.webp',
         style: { left: '125px', top: '335px', width: '320px' },
@@ -151,6 +136,21 @@ const MOBILE_FLOATING_SLIDES: MobileSlideFloating[] = [
         rotOut: 5,
         delayIn: 1040,
         delayOut: 540,
+      },
+    ],
+    front: [
+      // Context menu: lowered over phone (top: 310px) to not obscure chat messages
+      {
+        src: '/slide2-context-menu.webp',
+        style: { left: '-95px', top: '310px', width: '310px' },
+        dxIn: 240,
+        dyIn: -230,
+        dxOut: -340,
+        dyOut: 260,
+        rotIn: -3.5,
+        rotOut: -6,
+        delayIn: 400,
+        delayOut: 180,
       },
     ],
   },
