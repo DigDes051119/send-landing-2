@@ -553,7 +553,10 @@ export const App: React.FC = () => {
       const entryProgress = entryDelta !== 0 
         ? Math.min(Math.max((vh / 2 - heroPhoneCenterY) / -entryDelta, 0), 1)
         : 0;
-      phone.style.setProperty('--block2-progress', entryProgress.toFixed(3));
+      // Mobile CSS doesn't use this var; writing it every frame forces style recalc of the whole phone subtree
+      if (!isMobile) {
+        phone.style.setProperty('--block2-progress', entryProgress.toFixed(3));
+      }
 
       // Block 2 entered when user scrolls into second block (on mobile, triggers exactly when reaching block 2)
       const hasEnteredBlock2 = isMobile

@@ -5851,3 +5851,84 @@ footer,
     bottom: 2rem;
   }
 }
+
+/* ==========================================================================
+   MOBILE PERFORMANCE FIX (max-width: 640px only — desktop untouched)
+   Root cause of lag + vanishing header icons: too many permanent GPU layers
+   (≈20 floating cards with will-change + drop-shadow filters). When mobile
+   WebKit runs out of layer memory it drops textures (header SVGs disappear)
+   and scroll stutters. Here we keep only the active slide composited.
+   ========================================================================== */
+@media (max-width: 640px) {
+  /* --- Header: flat, non-composited buttons so icons can never be dropped --- */
+  .site-header {
+    will-change: auto !important;
+  }
+
+  .site-header .header-right,
+  .site-header .header-left-slot {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .site-header .header-store-btn,
+  .site-header #btn-header-appstore,
+  .site-header #btn-header-googleplay {
+    will-change: auto !important;
+    transform: none !important;
+    -webkit-backface-visibility: visible !important;
+    backface-visibility: visible !important;
+    overflow: visible !important;
+    transition: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .site-header .store-btn-icon-wrap,
+  .site-header .store-btn-svg {
+    will-change: auto !important;
+    transform: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+  }
+
+  /* --- Floating cards: only active slide is composited & visible --- */
+  .mobile-floating-card {
+    will-change: auto !important;
+    filter: none !important;
+    -webkit-backface-visibility: visible !important;
+    backface-visibility: visible !important;
+  }
+
+  /* Hidden states: visibility is discrete — stays visible for the whole 1400ms
+     exit animation, then the card drops out of rendering entirely */
+  .mobile-floating-card,
+  .mobile-floating-card.is-future,
+  .mobile-floating-card.is-past,
+  .mobile-floating-card.is-active {
+    transition: transform 1400ms cubic-bezier(0.19, 1, 0.22, 1),
+                opacity 950ms cubic-bezier(0.19, 1, 0.22, 1),
+                visibility 1400ms linear !important;
+  }
+
+  .mobile-floating-card.is-future,
+  .mobile-floating-card.is-past {
+    visibility: hidden !important;
+  }
+
+  .mobile-floating-card.is-active {
+    visibility: visible !important;
+    will-change: transform, opacity !important;
+  }
+
+  /* Light shadow only for the few active cards lying over the phone */
+  .mobile-floating-card.card-front.is-active {
+    filter: drop-shadow(0 10px 20px rgba(10, 30, 80, 0.16)) !important;
+  }
+
+  /* No infinite float animation on hidden cards */
+  .mobile-floating-card:not(.is-active) .mobile-floating-float-wrap {
+    animation: none !important;
+  }
+}
