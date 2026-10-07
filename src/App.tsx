@@ -232,8 +232,10 @@ export const App: React.FC = () => {
         : 0;
       phone.style.setProperty('--block2-progress', entryProgress.toFixed(3));
 
-      // Block 2 entered when user scrolls into second block
-      const hasEnteredBlock2 = entryProgress >= 0.75 || block2Rect.top <= vh * 0.4;
+      // Block 2 entered when user scrolls into second block (earlier smooth trigger on mobile)
+      const hasEnteredBlock2 = isMobile
+        ? (block2Rect.top <= vh * 0.7)
+        : (entryProgress >= 0.75 || block2Rect.top <= vh * 0.4);
       if (lastBlock2Entered !== hasEnteredBlock2) {
         lastBlock2Entered = hasEnteredBlock2;
         setIsBlock2Entered(hasEnteredBlock2);
@@ -255,46 +257,60 @@ export const App: React.FC = () => {
         setActiveSlide(currentSlideIdx);
       }
 
-      // Discrete progress step update (step: 0.025) to avoid re-rendering entire App on every pixel
-      const progRounded = Math.round(currentSlideProg * 40) / 40;
-      if (Math.abs(lastProgressRounded - progRounded) >= 0.025) {
+      // Discrete progress step update (step: 0.025 on desktop, step: 0.1 on mobile) to avoid mobile frame drops
+      const stepSize = isMobile ? 0.1 : 0.025;
+      const progRounded = Math.round(currentSlideProg / stepSize) * stepSize;
+      if (Math.abs(lastProgressRounded - progRounded) >= stepSize) {
         lastProgressRounded = progRounded;
         setSlideProgress(progRounded);
       }
 
       // 3. Phone Pinned Positioning States
       const stageBottomY = stageRect.bottom;
-      const fixedCenterY = isMobile ? (vh / 2 - 32) : (vh / 2);
+      const fixedCenterY = isMobile ? 116 : (vh / 2);
 
-      // Phase 1: Phone is in Hero until its center reaches target fixed center
-      if (heroPhoneCenterY >= fixedCenterY) {
-        if (phone.classList.contains('is-fixed') || phone.classList.contains('is-stuck-bottom') || !phone.style.top) {
-          phone.classList.remove('is-fixed', 'is-stuck-bottom');
-          if (isMobile) {
-            phone.style.top = (hero.offsetTop + 219 + phoneHeight / 2) + 'px';
-          } else {
+      if (isMobile) {
+        // Mobile: exact 20px gap below header (header bottom: 32px + 64px = 96px -> top: 116px)
+        if (stageBottomY <= vh) {
+          // Phase 3: Docked at bottom of Block 2
+          if (!phone.classList.contains('is-stuck-bottom')) {
+            phone.classList.remove('is-fixed');
+            phone.classList.add('is-stuck-bottom');
+            phone.style.top = (stage.offsetHeight - (vh - 116)) + 'px';
+            phone.style.removeProperty('bottom');
+          }
+        } else {
+          // Phase 1 & 2: Fixed with exact 20px gap from header across Hero & Block 2
+          if (!phone.classList.contains('is-fixed')) {
+            phone.classList.add('is-fixed');
+            phone.classList.remove('is-stuck-bottom');
+            phone.style.removeProperty('top');
+            phone.style.removeProperty('bottom');
+          }
+        }
+      } else {
+        // Desktop: Center viewport pinning
+        if (heroPhoneCenterY >= fixedCenterY) {
+          if (phone.classList.contains('is-fixed') || phone.classList.contains('is-stuck-bottom') || !phone.style.top) {
+            phone.classList.remove('is-fixed', 'is-stuck-bottom');
             const heroCenter = hero.offsetTop + heroRect.height / 2;
             phone.style.top = heroCenter + 'px';
+            phone.style.removeProperty('bottom');
           }
-          phone.style.removeProperty('bottom');
-        }
-      }
-      // Phase 3: Slide 5 / Block 2 complete (stage bottom reaches viewport bottom) -> phone docks in place on Block 2
-      else if (stageBottomY <= vh) {
-        if (!phone.classList.contains('is-stuck-bottom')) {
-          phone.classList.remove('is-fixed');
-          phone.classList.add('is-stuck-bottom');
-          phone.style.top = (stage.offsetHeight - fixedCenterY) + 'px';
-          phone.style.removeProperty('bottom');
-        }
-      }
-      // Phase 2: In between hero center & stage bottom -> phone pinned fixed at target center
-      else {
-        if (!phone.classList.contains('is-fixed')) {
-          phone.classList.add('is-fixed');
-          phone.classList.remove('is-stuck-bottom');
-          phone.style.removeProperty('top');
-          phone.style.removeProperty('bottom');
+        } else if (stageBottomY <= vh) {
+          if (!phone.classList.contains('is-stuck-bottom')) {
+            phone.classList.remove('is-fixed');
+            phone.classList.add('is-stuck-bottom');
+            phone.style.top = (stage.offsetHeight - fixedCenterY) + 'px';
+            phone.style.removeProperty('bottom');
+          }
+        } else {
+          if (!phone.classList.contains('is-fixed')) {
+            phone.classList.add('is-fixed');
+            phone.classList.remove('is-stuck-bottom');
+            phone.style.removeProperty('top');
+            phone.style.removeProperty('bottom');
+          }
         }
       }
     };
@@ -485,11 +501,10 @@ export const App: React.FC = () => {
               {/* Permanent white background underneath all switching screens */}
               <div className="pinned-phone-screen-slot slot-base" aria-hidden="true" />
 
-              {/* Screen 0: Chat List (Visible in Hero block, fades/blurs out when entering Block 2) */}
+              {/* Screen 0: Chat List (Visible in Hero block, smoothly fades out when entering Block 2) */}
               <div 
-                className="pinned-phone-screen-slot slot-hero" 
+                className={`pinned-phone-screen-slot slot-hero ${isBlock2Entered ? 'is-faded' : ''}`} 
                 aria-hidden={isBlock2Entered}
-                style={{ display: isBlock2Entered ? 'none' : undefined }}
               >
                 <img
                   src="/figma-1540841b2d.webp"
@@ -503,8 +518,8 @@ export const App: React.FC = () => {
 
               {/* Screen 1: Slide 1 Active Chat Screen */}
               <div 
-                className={`pinned-phone-screen-slot slot-slide-0 ${activeSlide === 0 ? 'is-active' : ''}`} 
-                aria-hidden={activeSlide !== 0}
+                className={`pinned-phone-screen-slot slot-slide-0 ${isBlock2Entered && activeSlide === 0 ? 'is-active' : ''}`} 
+                aria-hidden={!isBlock2Entered || activeSlide !== 0}
               >
                 <img
                   src="/figma-6dc9c6c99d.webp"
@@ -518,8 +533,8 @@ export const App: React.FC = () => {
 
               {/* Screen 2: Slide 2 Context Menu Screen */}
               <div 
-                className={`pinned-phone-screen-slot slot-slide-1 ${activeSlide === 1 ? 'is-active' : ''}`} 
-                aria-hidden={activeSlide !== 1}
+                className={`pinned-phone-screen-slot slot-slide-1 ${isBlock2Entered && activeSlide === 1 ? 'is-active' : ''}`} 
+                aria-hidden={!isBlock2Entered || activeSlide !== 1}
               >
                 <img
                   src="/figma-5295e5c095.webp"
@@ -533,8 +548,8 @@ export const App: React.FC = () => {
 
               {/* Screen 3: Slide 3 Attachments Screen */}
               <div 
-                className={`pinned-phone-screen-slot slot-slide-2 ${activeSlide === 2 ? 'is-active' : ''}`} 
-                aria-hidden={activeSlide !== 2}
+                className={`pinned-phone-screen-slot slot-slide-2 ${isBlock2Entered && activeSlide === 2 ? 'is-active' : ''}`} 
+                aria-hidden={!isBlock2Entered || activeSlide !== 2}
               >
                 <img
                   src="/figma-d8b9316cdc.webp"
@@ -548,8 +563,8 @@ export const App: React.FC = () => {
 
               {/* Screen 4: Slide 4 Profile Screen */}
               <div 
-                className={`pinned-phone-screen-slot slot-slide-3 ${activeSlide === 3 ? 'is-active' : ''}`} 
-                aria-hidden={activeSlide !== 3}
+                className={`pinned-phone-screen-slot slot-slide-3 ${isBlock2Entered && activeSlide === 3 ? 'is-active' : ''}`} 
+                aria-hidden={!isBlock2Entered || activeSlide !== 3}
               >
                 <img
                   src="/figma-f1b3bbd956.webp"
@@ -563,8 +578,8 @@ export const App: React.FC = () => {
 
               {/* Screen 5: Slide 5 Settings Screen */}
               <div 
-                className={`pinned-phone-screen-slot slot-slide-4 ${activeSlide === 4 ? 'is-active' : ''}`} 
-                aria-hidden={activeSlide !== 4}
+                className={`pinned-phone-screen-slot slot-slide-4 ${isBlock2Entered && activeSlide === 4 ? 'is-active' : ''}`} 
+                aria-hidden={!isBlock2Entered || activeSlide !== 4}
               >
                 <img
                   src="/figma-abbbc2c9dd.webp"

@@ -1906,42 +1906,48 @@ main {
 }
 
 @media (max-width: 640px) {
-  /* Hardware Accelerated Stable Pinned Phone */
+  /* Stable Mobile Header Positioning (Exact Figma 175:1153: top 32px, height 64px -> bottom 96px) */
+  .site-header,
+  .site-header.is-scrolled {
+    padding: 32px 20px 0 !important;
+  }
+
+  /* Hardware Accelerated Stable Pinned Phone on Mobile */
   .pinned-phone-wrap {
     z-index: 50 !important;
     display: flex !important;
     margin-top: 0 !important;
-    transform: translate3d(-50%, -50%, 0) !important;
-    will-change: transform, top !important;
+    left: 50% !important;
+    transform: translate3d(-50%, 0, 0) !important;
     -webkit-backface-visibility: hidden !important;
     backface-visibility: hidden !important;
-    transform-style: preserve-3d !important;
   }
 
+  /* Fixed state with exact 20px offset from header (header bottom: 32px + 64px = 96px -> top: 116px) */
   .pinned-phone-wrap.is-fixed {
     position: fixed !important;
-    top: calc(50% - 32px) !important;
+    top: 116px !important;
     left: 50% !important;
-    transform: translate3d(-50%, -50%, 0) !important;
+    transform: translate3d(-50%, 0, 0) !important;
     z-index: 50 !important;
   }
 
   .pinned-phone-wrap.is-stuck-bottom {
     position: absolute !important;
     left: 50% !important;
-    transform: translate3d(-50%, -50%, 0) !important;
+    transform: translate3d(-50%, 0, 0) !important;
     z-index: 50 !important;
   }
 
   .pinned-phone-wrap::after {
-    height: 10%;
-    filter: blur(14px);
-    opacity: 0.8;
-    transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1), opacity 650ms ease !important;
+    bottom: -3% !important;
+    height: 10% !important;
+    filter: blur(14px) !important;
+    opacity: 0.8 !important;
+    transform: translateX(-50%) !important;
+    transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1), opacity 600ms ease !important;
   }
 
-  .pinned-phone-wrap.is-fixed::after,
-  .pinned-phone-wrap.is-stuck-bottom::after,
   .pinned-phone-wrap.is-block2-entered::after {
     transform: translateX(-50%) scale(0.88) !important;
     opacity: 0.65 !important;
@@ -1953,10 +1959,10 @@ main {
     height: 600px !important;
     max-height: 600px !important;
     aspect-ratio: 294 / 600 !important;
+    transform-origin: top center !important;
     -webkit-backface-visibility: hidden !important;
     backface-visibility: hidden !important;
-    transform-style: preserve-3d !important;
-    transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1), opacity 500ms ease !important;
+    transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1), opacity 500ms ease !important;
   }
 
   /* Default in Hero: scale 1 */
@@ -1965,9 +1971,7 @@ main {
     opacity: 1 !important;
   }
 
-  /* Smooth scale down on scroll to Block 2: decreases slightly to scale 0.88 */
-  .pinned-phone-wrap.is-fixed .pinned-phone-entrance-box.is-entered,
-  .pinned-phone-wrap.is-stuck-bottom .pinned-phone-entrance-box.is-entered,
+  /* Smooth scale down on scroll to Block 2: decreases smoothly to scale 0.88 from top origin */
   .pinned-phone-wrap.is-block2-entered .pinned-phone-entrance-box.is-entered {
     transform: translate3d(0, 0, 0) scale(0.88) !important;
   }
@@ -1983,18 +1987,54 @@ main {
     pointer-events: none !important;
     -webkit-backface-visibility: hidden !important;
     backface-visibility: hidden !important;
+    transform: translate3d(0, 0, 0) !important;
   }
 
-  /* Disable expensive GPU blur animation on screen transition for mobile */
+  /* Smooth opacity crossfade for mobile without blur overhead */
   .pinned-phone-screen-slot.slot-hero {
     filter: none !important;
-    transition: opacity 200ms ease !important;
+    z-index: 5 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transition: opacity 350ms ease, visibility 350ms ease !important;
   }
 
+  .pinned-phone-screen-slot.slot-hero.is-faded {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  /* Inactive slide screens are hidden on mobile GPU to preserve texture memory */
+  .pinned-phone-screen-slot.slot-slide-0,
+  .pinned-phone-screen-slot.slot-slide-1,
+  .pinned-phone-screen-slot.slot-slide-2,
+  .pinned-phone-screen-slot.slot-slide-3,
+  .pinned-phone-screen-slot.slot-slide-4 {
+    z-index: 3 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    filter: none !important;
+    transition: opacity 350ms ease, visibility 350ms ease !important;
+  }
+
+  .pinned-phone-screen-slot.slot-slide-0.is-active,
+  .pinned-phone-screen-slot.slot-slide-1.is-active,
+  .pinned-phone-screen-slot.slot-slide-2.is-active,
+  .pinned-phone-screen-slot.slot-slide-3.is-active,
+  .pinned-phone-screen-slot.slot-slide-4.is-active {
+    opacity: 1 !important;
+    visibility: visible !important;
+    filter: none !important;
+    z-index: 4 !important;
+  }
+
+  /* Remove heavy 3x drop-shadow on moving phone image to eliminate mobile GPU lag */
   .pinned-phone-img {
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.12)) drop-shadow(0 8px 16px rgba(4, 12, 38, 0.18)) drop-shadow(0 20px 32px rgba(2, 8, 28, 0.22)) !important;
+    filter: none !important;
     -webkit-backface-visibility: hidden !important;
     backface-visibility: hidden !important;
+    transform: translate3d(0, 0, 0) !important;
   }
 
   /* Fix flickering on Hero Background Frame on mobile */
