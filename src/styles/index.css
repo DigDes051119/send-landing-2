@@ -1937,6 +1937,14 @@ main {
     height: 10%;
     filter: blur(14px);
     opacity: 0.8;
+    transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1), opacity 650ms ease !important;
+  }
+
+  .pinned-phone-wrap.is-fixed::after,
+  .pinned-phone-wrap.is-stuck-bottom::after,
+  .pinned-phone-wrap.is-block2-entered::after {
+    transform: translateX(-50%) scale(0.88) !important;
+    opacity: 0.65 !important;
   }
 
   .pinned-phone-entrance-box {
@@ -1948,6 +1956,20 @@ main {
     -webkit-backface-visibility: hidden !important;
     backface-visibility: hidden !important;
     transform-style: preserve-3d !important;
+    transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1), opacity 500ms ease !important;
+  }
+
+  /* Default in Hero: scale 1 */
+  .pinned-phone-entrance-box.is-entered {
+    transform: translate3d(0, 0, 0) scale(1) !important;
+    opacity: 1 !important;
+  }
+
+  /* Smooth scale down on scroll to Block 2: decreases slightly to scale 0.88 */
+  .pinned-phone-wrap.is-fixed .pinned-phone-entrance-box.is-entered,
+  .pinned-phone-wrap.is-stuck-bottom .pinned-phone-entrance-box.is-entered,
+  .pinned-phone-wrap.is-block2-entered .pinned-phone-entrance-box.is-entered {
+    transform: translate3d(0, 0, 0) scale(0.88) !important;
   }
 
   .pinned-phone-screen-slot {

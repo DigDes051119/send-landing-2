@@ -477,7 +477,7 @@ export const App: React.FC = () => {
         <div className="hero-trust-pinned-stage" ref={stageRef}>
           {/* Shared Phone that pins across Hero & Block 2 */}
           <div
-            className={`pinned-phone-wrap ${ready ? 'is-ready' : ''}`}
+            className={`pinned-phone-wrap ${ready ? 'is-ready' : ''} ${isBlock2Entered ? 'is-block2-entered' : ''}`}
             ref={phoneWrapRef}
             aria-hidden="true"
           >
