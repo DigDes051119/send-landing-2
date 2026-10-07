@@ -34,304 +34,304 @@ interface MobileSlideFloating {
 }
 
 const MOBILE_FLOATING_SLIDES: MobileSlideFloating[] = [
-  // Slide 0: "Общайтесь легко" (Exact Figma mobile-2 / Node 185:1158)
+  // Slide 0: "Общайтесь легко" (Exact Figma mobile-2 / Node 185:1158 + Desktop Chaotic Flow)
   {
     back: [
-      // image 4 in Figma: width 208px, x: 14px, y: 105px (behind phone)
+      // 1. Bubble top: swoops from bottom-right (dxIn: +200, dyIn: +210)
       {
         src: '/block2-bubble-top.webp',
         style: { left: '-62px', top: '-17px', width: '236px' },
-        dxIn: 91,
-        dyIn: 240,
-        dxOut: -260,
-        dyOut: -220,
-        rotIn: -4,
+        dxIn: 200,
+        dyIn: 210,
+        dxOut: -320,
+        dyOut: -320,
+        rotIn: -3,
         rotOut: -6,
-        delayIn: 80,
+        delayIn: 100,
         delayOut: 0,
       },
-      // image 1 in Figma: width 291px, x: -57px, y: 496px (behind phone)
+      // 3. Search import: swoops from top-right (dxIn: +260, dyIn: -220)
       {
         src: '/block2-search-import.webp',
         style: { left: '-142px', top: '427px', width: '331px' },
-        dxIn: 124,
-        dyIn: -241,
-        dxOut: -300,
-        dyOut: 240,
-        rotIn: -3,
+        dxIn: 260,
+        dyIn: -220,
+        dxOut: -360,
+        dyOut: 300,
+        rotIn: -2,
         rotOut: -5,
-        delayIn: 400,
-        delayOut: 180,
+        delayIn: 740,
+        delayOut: 360,
       },
     ],
     front: [
-      // image 5 in Figma: width 276px, x: 206px, y: 185px (OVER phone)
+      // 2. Input bar: shoots across phone from far left (dxIn: -280, dyIn: +50)
       {
         src: '/block2-input-bar.webp',
         style: { left: '156px', top: '74px', width: '314px' },
-        dxIn: -166,
-        dyIn: 149,
-        dxOut: 320,
-        dyOut: -180,
-        rotIn: 3,
-        rotOut: 5,
-        delayIn: 240,
-        delayOut: 120,
+        dxIn: -280,
+        dyIn: 50,
+        dxOut: 380,
+        dyOut: -80,
+        rotIn: 2.5,
+        rotOut: 4,
+        delayIn: 420,
+        delayOut: 180,
       },
-      // image 3 in Figma: width 284px, x: 186px, y: 346px (OVER phone)
+      // 4. Location card: swoops from top-left (dxIn: -180, dyIn: -260)
       {
         src: '/block2-location-card.webp',
         style: { left: '134px', top: '257px', width: '323px' },
-        dxIn: -148,
-        dyIn: -39,
-        dxOut: 300,
-        dyOut: 260,
-        rotIn: 3.5,
+        dxIn: -180,
+        dyIn: -260,
+        dxOut: 320,
+        dyOut: 360,
+        rotIn: 3,
         rotOut: 6,
-        delayIn: 560,
-        delayOut: 300,
+        delayIn: 1060,
+        delayOut: 540,
       },
     ],
   },
 
-  // Slide 1: "Ловите момент"
+  // Slide 1: "Ловите момент" (Desktop Chaotic Action Pattern)
   {
     back: [
-      // Audio note (top-left)
-      {
-        src: '/slide2-audio.webp',
-        style: { left: '-80px', top: '-15px', width: '320px' },
-        dxIn: 120,
-        dyIn: 240,
-        dxOut: -280,
-        dyOut: -220,
-        rotIn: -3,
-        rotOut: -5,
-        delayIn: 80,
-        delayOut: 0,
-      },
-      // Bubble (top-right)
+      // 1. Bubble: shoots from left-middle (dxIn: -200, dyIn: +60)
       {
         src: '/slide2-bubble.webp',
         style: { left: '150px', top: '70px', width: '245px' },
-        dxIn: -150,
-        dyIn: 160,
-        dxOut: 280,
-        dyOut: -160,
-        rotIn: 3.5,
+        dxIn: -200,
+        dyIn: 60,
+        dxOut: 340,
+        dyOut: -120,
+        rotIn: 4,
         rotOut: 5,
-        delayIn: 240,
-        delayOut: 120,
+        delayIn: 80,
+        delayOut: 0,
         targetOpacity: 0.55,
+      },
+      // 3. Audio note: shoots from bottom-right (dxIn: +250, dyIn: +190)
+      {
+        src: '/slide2-audio.webp',
+        style: { left: '-80px', top: '-15px', width: '320px' },
+        dxIn: 250,
+        dyIn: 190,
+        dxOut: -350,
+        dyOut: -260,
+        rotIn: -2.5,
+        rotOut: -5,
+        delayIn: 720,
+        delayOut: 360,
       },
     ],
     front: [
-      // Context menu with emoji reactions (mid-left over phone)
+      // 2. Context menu: shoots from top-right across phone (dxIn: +240, dyIn: -180)
       {
         src: '/slide2-context-menu.webp',
         style: { left: '-95px', top: '215px', width: '310px' },
-        dxIn: 140,
-        dyIn: 0,
-        dxOut: -300,
-        dyOut: 200,
+        dxIn: 240,
+        dyIn: -180,
+        dxOut: -340,
+        dyOut: 260,
         rotIn: -3.5,
         rotOut: -6,
         delayIn: 400,
-        delayOut: 200,
+        delayOut: 180,
       },
-      // Tabs with emojis & stickers (bottom-right over phone)
+      // 4. Tabs: shoots from top-left (dxIn: -260, dyIn: -250)
       {
         src: '/slide2-tabs.webp',
         style: { left: '125px', top: '335px', width: '320px' },
-        dxIn: -160,
-        dyIn: -120,
-        dxOut: 320,
-        dyOut: 260,
-        rotIn: 2.5,
+        dxIn: -260,
+        dyIn: -250,
+        dxOut: 360,
+        dyOut: 350,
+        rotIn: 2,
         rotOut: 5,
-        delayIn: 560,
-        delayOut: 320,
+        delayIn: 1040,
+        delayOut: 540,
       },
     ],
   },
 
-  // Slide 2: "Делитесь самым важным без ограничений"
+  // Slide 2: "Делитесь самым важным без ограничений" (Desktop Photo Cascade Pattern)
   {
     back: [
-      // Audio file (top-left)
+      // 1. Audio note: shoots from bottom-right (dxIn: +250, dyIn: +190)
       {
         src: '/slide3-audio.webp',
         style: { left: '-80px', top: '-15px', width: '320px' },
-        dxIn: 120,
-        dyIn: 240,
-        dxOut: -280,
-        dyOut: -220,
+        dxIn: 250,
+        dyIn: 190,
+        dxOut: -350,
+        dyOut: -260,
         rotIn: -3,
         rotOut: -5,
         delayIn: 80,
         delayOut: 0,
       },
-      // Photo 1 (top-right)
+      // 2. Photo 1: shoots from bottom-left (dxIn: -200, dyIn: +200)
       {
         src: '/slide3-photo-1.webp',
         style: { left: '160px', top: '45px', width: '195px' },
-        dxIn: -150,
-        dyIn: 180,
-        dxOut: 280,
-        dyOut: -200,
-        rotIn: 4.5,
-        rotOut: 7,
-        delayIn: 240,
-        delayOut: 120,
+        dxIn: -200,
+        dyIn: 200,
+        dxOut: 320,
+        dyOut: -280,
+        rotIn: 5,
+        rotOut: 8,
+        delayIn: 280,
+        delayOut: 160,
       },
     ],
     front: [
-      // Photo 2 (mid-left over phone)
+      // 3. Photo 2: shoots from top-right (dxIn: +180, dyIn: -250)
       {
         src: '/slide3-photo-2.webp',
         style: { left: '-75px', top: '270px', width: '215px' },
-        dxIn: 140,
-        dyIn: -30,
-        dxOut: -280,
-        dyOut: 240,
+        dxIn: 180,
+        dyIn: -250,
+        dxOut: -300,
+        dyOut: 340,
         rotIn: -4,
         rotOut: -7,
-        delayIn: 400,
-        delayOut: 220,
+        delayIn: 480,
+        delayOut: 300,
       },
-      // Photo 3 (bottom-right over phone)
+      // 4. Photo 3: shoots from top-left (dxIn: -190, dyIn: -260)
       {
         src: '/slide3-photo-3.webp',
         style: { left: '125px', top: '315px', width: '225px' },
-        dxIn: -140,
-        dyIn: -100,
-        dxOut: 290,
-        dyOut: 270,
+        dxIn: -190,
+        dyIn: -260,
+        dxOut: 320,
+        dyOut: 360,
         rotIn: 3.5,
         rotOut: 6,
-        delayIn: 560,
-        delayOut: 340,
+        delayIn: 680,
+        delayOut: 440,
       },
     ],
   },
 
-  // Slide 3: "Берегите личное"
+  // Slide 3: "Берегите личное" (Desktop Security Elements Pattern)
   {
     back: [
-      // Username card (top-left)
+      // 1. Username card: shoots from bottom-right (dxIn: +260, dyIn: +210)
       {
         src: '/slide4-username.webp',
         style: { left: '-80px', top: '-20px', width: '325px' },
-        dxIn: 130,
-        dyIn: 250,
-        dxOut: -290,
-        dyOut: -230,
+        dxIn: 260,
+        dyIn: 210,
+        dxOut: -360,
+        dyOut: -280,
         rotIn: -3,
         rotOut: -6,
-        delayIn: 80,
+        delayIn: 240,
         delayOut: 0,
       },
-      // Country card (top-right)
+      // 3. Country card: shoots from left-middle (dxIn: -260, dyIn: +90)
       {
         src: '/slide4-country.webp',
         style: { left: '145px', top: '55px', width: '300px' },
-        dxIn: -150,
-        dyIn: 170,
-        dxOut: 300,
-        dyOut: -170,
+        dxIn: -260,
+        dyIn: 90,
+        dxOut: 380,
+        dyOut: -140,
         rotIn: 3,
         rotOut: 5,
-        delayIn: 240,
-        delayOut: 120,
+        delayIn: 760,
+        delayOut: 360,
         targetOpacity: 0.55,
       },
     ],
     front: [
-      // Phone number card (mid-left over phone)
+      // 2. Phone number: shoots from top-right (dxIn: +240, dyIn: -210)
       {
         src: '/slide4-phone.webp',
         style: { left: '-115px', top: '305px', width: '330px' },
-        dxIn: 150,
-        dyIn: -80,
-        dxOut: -310,
-        dyOut: 250,
+        dxIn: 240,
+        dyIn: -210,
+        dxOut: -340,
+        dyOut: 300,
         rotIn: -2,
         rotOut: -4,
         delayIn: 420,
-        delayOut: 220,
+        delayOut: 180,
       },
-      // Voice player (bottom-right over phone)
+      // 4. Voice player: shoots from top-left (dxIn: -250, dyIn: -230)
       {
         src: '/slide4-voice.webp',
         style: { left: '125px', top: '310px', width: '315px' },
-        dxIn: -140,
-        dyIn: -90,
-        dxOut: 300,
-        dyOut: 270,
+        dxIn: -250,
+        dyIn: -230,
+        dxOut: 350,
+        dyOut: 340,
         rotIn: 2.5,
         rotOut: 6,
-        delayIn: 600,
-        delayOut: 340,
+        delayIn: 1100,
+        delayOut: 540,
       },
     ],
   },
 
-  // Slide 4: "Умные уведомления"
+  // Slide 4: "Умные уведомления" (Desktop Smart Automation Pattern)
   {
     back: [
-      // Plus trigger (top-left)
+      // 1. Plus trigger: shoots from bottom-right (dxIn: +190, dyIn: +200)
       {
         src: '/slide5-plus.webp',
         style: { left: '-35px', top: '-5px', width: '110px' },
-        dxIn: 120,
-        dyIn: 240,
-        dxOut: -240,
-        dyOut: -220,
+        dxIn: 190,
+        dyIn: 200,
+        dxOut: -280,
+        dyOut: -280,
         rotIn: -8,
         rotOut: -12,
         delayIn: 70,
         delayOut: 0,
       },
-      // Silent alert (top-right)
+      // 3. Silent alert: shoots from left-middle (dxIn: -270, dyIn: +70)
       {
         src: '/slide5-silent.webp',
         style: { left: '140px', top: '50px', width: '310px' },
-        dxIn: -150,
-        dyIn: 170,
-        dxOut: 310,
-        dyOut: -180,
+        dxIn: -270,
+        dyIn: 70,
+        dxOut: 380,
+        dyOut: -120,
         rotIn: 2,
         rotOut: 4,
-        delayIn: 250,
-        delayOut: 120,
+        delayIn: 710,
+        delayOut: 360,
       },
     ],
     front: [
-      // Quick message input (mid-left over phone)
-      {
-        src: '/slide5-input.webp',
-        style: { left: '-115px', top: '315px', width: '330px' },
-        dxIn: 150,
-        dyIn: -90,
-        dxOut: -310,
-        dyOut: 250,
-        rotIn: -3,
-        rotOut: -6,
-        delayIn: 420,
-        delayOut: 220,
-      },
-      // Smart notifications toggle (bottom-right over phone)
+      // 2. Toggle switch: shoots from top-left (dxIn: -270, dyIn: -210)
       {
         src: '/slide5-toggle.webp',
         style: { left: '120px', top: '295px', width: '315px' },
-        dxIn: -140,
-        dyIn: -80,
-        dxOut: 310,
-        dyOut: 270,
+        dxIn: -270,
+        dyIn: -210,
+        dxOut: 380,
+        dyOut: 320,
         rotIn: 3.5,
         rotOut: 6,
-        delayIn: 600,
-        delayOut: 340,
+        delayIn: 390,
+        delayOut: 180,
+      },
+      // 4. Quick message input: shoots from top-right (dxIn: +280, dyIn: -230)
+      {
+        src: '/slide5-input.webp',
+        style: { left: '-115px', top: '315px', width: '330px' },
+        dxIn: 280,
+        dyIn: -230,
+        dxOut: -380,
+        dyOut: 320,
+        rotIn: -3,
+        rotOut: -6,
+        delayIn: 1030,
+        delayOut: 540,
       },
     ],
   },
@@ -875,13 +875,15 @@ export const App: React.FC = () => {
                               transitionDelay: currentDelay,
                             } as React.CSSProperties}
                           >
-                            <img
-                              src={card.src}
-                              alt=""
-                              className="mobile-floating-img"
-                              loading="eager"
-                              decoding="async"
-                            />
+                            <div className={`mobile-floating-float-wrap chan-${cIdx % 4}`}>
+                              <img
+                                src={card.src}
+                                alt=""
+                                className="mobile-floating-img"
+                                loading="eager"
+                                decoding="async"
+                              />
+                            </div>
                           </div>
                         );
                       })}
@@ -1029,13 +1031,15 @@ export const App: React.FC = () => {
                               transitionDelay: currentDelay,
                             } as React.CSSProperties}
                           >
-                            <img
-                              src={card.src}
-                              alt=""
-                              className="mobile-floating-img"
-                              loading="eager"
-                              decoding="async"
-                            />
+                            <div className={`mobile-floating-float-wrap chan-${cIdx % 4}`}>
+                              <img
+                                src={card.src}
+                                alt=""
+                                className="mobile-floating-img"
+                                loading="eager"
+                                decoding="async"
+                              />
+                            </div>
                           </div>
                         );
                       })}

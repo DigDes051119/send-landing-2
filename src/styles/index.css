@@ -4116,6 +4116,50 @@ footer,
     pointer-events: none !important;
   }
 
+  /* Organic Chaotic Ambient Buoyant Float (Exact match to Desktop harmonic breathing) */
+  @keyframes mobileAmbientFloat0 {
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+    50% { transform: translate3d(3px, -5px, 0) rotate(1.2deg); }
+  }
+
+  @keyframes mobileAmbientFloat1 {
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+    50% { transform: translate3d(-4px, 4px, 0) rotate(-1.4deg); }
+  }
+
+  @keyframes mobileAmbientFloat2 {
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+    50% { transform: translate3d(4px, 3px, 0) rotate(1deg); }
+  }
+
+  @keyframes mobileAmbientFloat3 {
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+    50% { transform: translate3d(-3px, -4px, 0) rotate(-1.1deg); }
+  }
+
+  .mobile-floating-float-wrap {
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+    transform-origin: center center !important;
+  }
+
+  .mobile-floating-card.is-active .mobile-floating-float-wrap.chan-0 {
+    animation: mobileAmbientFloat0 4.2s ease-in-out infinite !important;
+  }
+
+  .mobile-floating-card.is-active .mobile-floating-float-wrap.chan-1 {
+    animation: mobileAmbientFloat1 4.9s ease-in-out infinite 0.6s !important;
+  }
+
+  .mobile-floating-card.is-active .mobile-floating-float-wrap.chan-2 {
+    animation: mobileAmbientFloat2 4.5s ease-in-out infinite 1.2s !important;
+  }
+
+  .mobile-floating-card.is-active .mobile-floating-float-wrap.chan-3 {
+    animation: mobileAmbientFloat3 5.3s ease-in-out infinite 1.8s !important;
+  }
+
   /* Typography Card at Bottom (Exact Figma Frame 427321498 in 185:1158) */
   .block2-info-card {
     position: absolute !important;
