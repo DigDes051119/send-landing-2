@@ -84,19 +84,38 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ ready = true, heroRef 
     }
   };
 
-  // Parallax subtle interaction on scroll
+  // Parallax subtle interaction on scroll (desktop only, disabled on mobile to prevent GPU flickering)
   useEffect(() => {
+    if (typeof window !== 'undefined' && window.innerWidth <= 640) {
+      if (heroPlateRef.current) {
+        heroPlateRef.current.style.transform = 'translate3d(0, 0, 0)';
+      }
+      return;
+    }
+
+    let rafId: number | null = null;
+    let isScheduled = false;
+
     const handleScroll = () => {
-      const scrollY = window.scrollY || window.pageYOffset;
-      const heroHeight = window.innerHeight;
-      if (scrollY <= heroHeight * 1.5 && heroPlateRef.current) {
-        const progress = Math.min(Math.max(scrollY / heroHeight, 0), 1);
-        heroPlateRef.current.style.transform = `translate3d(0, ${(progress * 8).toFixed(2)}%, 0)`;
+      if (!isScheduled) {
+        isScheduled = true;
+        rafId = requestAnimationFrame(() => {
+          isScheduled = false;
+          const scrollY = window.scrollY || window.pageYOffset;
+          const heroHeight = window.innerHeight;
+          if (scrollY <= heroHeight * 1.5 && heroPlateRef.current) {
+            const progress = Math.min(Math.max(scrollY / heroHeight, 0), 1);
+            heroPlateRef.current.style.transform = `translate3d(0, ${(progress * 8).toFixed(2)}%, 0)`;
+          }
+        });
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   return (

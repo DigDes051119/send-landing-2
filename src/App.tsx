@@ -194,17 +194,28 @@ export const App: React.FC = () => {
     const stage = stageRef.current;
     if (!phone || !hero || !block2 || !stage) return;
 
+    let rafId: number | null = null;
+    let isScheduled = false;
+
+    // Cache to prevent excessive React state re-renders on every single scroll pixel
+    let lastSlideIdx = -1;
+    let lastProgressRounded = -1;
+    let lastBlock2Entered = false;
+
     const update = () => {
+      isScheduled = false;
       // If jumping across sections via header menu, skip churning intermediate 5-slide state
       if ((window as any).__isMenuNavigating) return;
+
+      const isMobile = window.innerWidth <= 640;
+      const vh = window.innerHeight;
 
       const heroRect = hero.getBoundingClientRect();
       const block2Rect = block2.getBoundingClientRect();
       const stageRect = stage.getBoundingClientRect();
-      const vh = window.innerHeight;
 
-      const isMobile = window.innerWidth <= 640;
-      const phoneHeight = phone.offsetHeight || 600;
+      // Avoid forced layout thrashing (phone.offsetHeight causes synchronous reflow)
+      const phoneHeight = isMobile ? 600 : (phone.offsetHeight || 600);
 
       // On desktop, phone sits at hero.offsetTop + heroRect.height / 2
       // On mobile (Figma 175:1153), phone top starts at hero.offsetTop + 219px.
@@ -223,7 +234,10 @@ export const App: React.FC = () => {
 
       // Block 2 entered when user scrolls into second block
       const hasEnteredBlock2 = entryProgress >= 0.75 || block2Rect.top <= vh * 0.4;
-      setIsBlock2Entered(hasEnteredBlock2);
+      if (lastBlock2Entered !== hasEnteredBlock2) {
+        lastBlock2Entered = hasEnteredBlock2;
+        setIsBlock2Entered(hasEnteredBlock2);
+      }
 
       // 2. Block 2 Multi-Slide Sequence Tracking
       const block2Scrollable = Math.max(block2Rect.height - vh, 1);
@@ -236,8 +250,17 @@ export const App: React.FC = () => {
       const currentSlideIdx = Math.min(Math.floor(scaledStep), TOTAL_SLIDES - 1);
       const currentSlideProg = scaledStep - currentSlideIdx;
 
-      setActiveSlide(currentSlideIdx);
-      setSlideProgress(currentSlideProg);
+      if (lastSlideIdx !== currentSlideIdx) {
+        lastSlideIdx = currentSlideIdx;
+        setActiveSlide(currentSlideIdx);
+      }
+
+      // Discrete progress step update (step: 0.025) to avoid re-rendering entire App on every pixel
+      const progRounded = Math.round(currentSlideProg * 40) / 40;
+      if (Math.abs(lastProgressRounded - progRounded) >= 0.025) {
+        lastProgressRounded = progRounded;
+        setSlideProgress(progRounded);
+      }
 
       // 3. Phone Pinned Positioning States
       const stageBottomY = stageRect.bottom;
@@ -245,38 +268,52 @@ export const App: React.FC = () => {
 
       // Phase 1: Phone is in Hero until its center reaches target fixed center
       if (heroPhoneCenterY >= fixedCenterY) {
-        phone.classList.remove('is-fixed', 'is-stuck-bottom');
-        if (isMobile) {
-          phone.style.top = (hero.offsetTop + 219 + phoneHeight / 2) + 'px';
-        } else {
-          const heroCenter = hero.offsetTop + heroRect.height / 2;
-          phone.style.top = heroCenter + 'px';
+        if (phone.classList.contains('is-fixed') || phone.classList.contains('is-stuck-bottom') || !phone.style.top) {
+          phone.classList.remove('is-fixed', 'is-stuck-bottom');
+          if (isMobile) {
+            phone.style.top = (hero.offsetTop + 219 + phoneHeight / 2) + 'px';
+          } else {
+            const heroCenter = hero.offsetTop + heroRect.height / 2;
+            phone.style.top = heroCenter + 'px';
+          }
+          phone.style.removeProperty('bottom');
         }
-        phone.style.removeProperty('bottom');
       }
       // Phase 3: Slide 5 / Block 2 complete (stage bottom reaches viewport bottom) -> phone docks in place on Block 2
       else if (stageBottomY <= vh) {
-        phone.classList.remove('is-fixed');
-        phone.classList.add('is-stuck-bottom');
-        phone.style.top = (stage.offsetHeight - fixedCenterY) + 'px';
-        phone.style.removeProperty('bottom');
+        if (!phone.classList.contains('is-stuck-bottom')) {
+          phone.classList.remove('is-fixed');
+          phone.classList.add('is-stuck-bottom');
+          phone.style.top = (stage.offsetHeight - fixedCenterY) + 'px';
+          phone.style.removeProperty('bottom');
+        }
       }
       // Phase 2: In between hero center & stage bottom -> phone pinned fixed at target center
       else {
-        phone.classList.add('is-fixed');
-        phone.classList.remove('is-stuck-bottom');
-        phone.style.removeProperty('top');
-        phone.style.removeProperty('bottom');
+        if (!phone.classList.contains('is-fixed')) {
+          phone.classList.add('is-fixed');
+          phone.classList.remove('is-stuck-bottom');
+          phone.style.removeProperty('top');
+          phone.style.removeProperty('bottom');
+        }
       }
     };
 
-    window.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update, { passive: true });
+    const scheduleUpdate = () => {
+      if (!isScheduled) {
+        isScheduled = true;
+        rafId = requestAnimationFrame(update);
+      }
+    };
+
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate, { passive: true });
     update();
 
     return () => {
-      window.removeEventListener('scroll', update);
-      window.removeEventListener('resize', update);
+      if (rafId) cancelAnimationFrame(rafId);
+      window.removeEventListener('scroll', scheduleUpdate);
+      window.removeEventListener('resize', scheduleUpdate);
     };
   }, [ready]);
 

@@ -1906,11 +1906,16 @@ main {
 }
 
 @media (max-width: 640px) {
+  /* Hardware Accelerated Stable Pinned Phone */
   .pinned-phone-wrap {
     z-index: 50 !important;
     display: flex !important;
     margin-top: 0 !important;
     transform: translate3d(-50%, -50%, 0) !important;
+    will-change: transform, top !important;
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden !important;
+    transform-style: preserve-3d !important;
   }
 
   .pinned-phone-wrap.is-fixed {
@@ -1940,6 +1945,9 @@ main {
     height: 600px !important;
     max-height: 600px !important;
     aspect-ratio: 294 / 600 !important;
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden !important;
+    transform-style: preserve-3d !important;
   }
 
   .pinned-phone-screen-slot {
@@ -1951,10 +1959,53 @@ main {
     border-radius: 28px !important;
     overflow: hidden !important;
     pointer-events: none !important;
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden !important;
+  }
+
+  /* Disable expensive GPU blur animation on screen transition for mobile */
+  .pinned-phone-screen-slot.slot-hero {
+    filter: none !important;
+    transition: opacity 200ms ease !important;
   }
 
   .pinned-phone-img {
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.12)) drop-shadow(0 8px 16px rgba(4, 12, 38, 0.18)) drop-shadow(0 20px 32px rgba(2, 8, 28, 0.22)) !important;
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden !important;
+  }
+
+  /* Fix flickering & lag on Hero Background Frame on mobile */
+  .hero-bg-wrapper {
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden !important;
+    transform: translate3d(0, 0, 0) !important;
+  }
+
+  .hero-figma-canvas {
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden !important;
+    transform: translate3d(0, 0, 0) !important;
+  }
+
+  /* Remove mix-blend-mode noise on mobile to eliminate GPU redraw flicker */
+  .figma-bg-noise {
+    display: none !important;
+  }
+
+  /* Stop continuous heavy GPU blur re-computations on mobile */
+  .hero-figma-canvas.is-ready .figma-bg-ellipse.ellipse-3,
+  .hero-figma-canvas.is-ready .figma-bg-ellipse.ellipse-6,
+  .hero-figma-canvas.is-ready .figma-bg-ellipse.ellipse-4,
+  .hero-figma-canvas.is-ready .figma-bg-ellipse.ellipse-5,
+  .hero-figma-canvas.is-ready .figma-bg-ellipse.ellipse-animated,
+  .hero-figma-canvas.is-ready .figma-bg-ellipse.ellipse-orbiting,
+  .hero-figma-canvas.is-ready .figma-bg-ellipse.ellipse-bottom-sweep {
+    animation: none !important;
+    filter: blur(40px) !important;
+    will-change: auto !important;
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden !important;
   }
 }
 
