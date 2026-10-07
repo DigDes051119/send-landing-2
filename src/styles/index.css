@@ -4018,46 +4018,159 @@ footer,
     display: block !important;
   }
 
+  /* Mobile Block 2 Design (Exact Figma mobile-2 / Node 185:1158) */
   .block2-typography {
-    position: absolute !important;
-    inset: 0 !important;
-    pointer-events: none !important;
-    user-select: none !important;
-    z-index: 1 !important;
-    display: block !important;
-  }
-
-  .block2-typography-layer {
-    position: absolute !important;
-    inset: 0 !important;
-    pointer-events: none !important;
-    display: block !important;
-    opacity: 0;
-    transition: opacity 500ms ease;
-  }
-
-  .block2-typography-layer.is-active {
-    opacity: 1;
-  }
-
-  .block2-word {
-    position: absolute !important;
-    font-family: 'Onest', -apple-system, BlinkMacSystemFont, sans-serif !important;
-    font-size: clamp(1.8rem, 8vw, 2.8rem) !important;
-    line-height: 1.15 !important;
-    font-weight: 400 !important;
-    text-transform: uppercase !important;
-    white-space: nowrap !important;
-    pointer-events: none !important;
-  }
-
-  .block2-floating-layers {
     display: none !important;
   }
 
+  /* Active Floating Orbiting Cards around Phone on Mobile */
+  .block2-floating-layers {
+    display: block !important;
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    pointer-events: none !important;
+    overflow: hidden !important;
+    z-index: 52 !important;
+  }
+
+  .block2-floating-item {
+    transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 450ms ease !important;
+    will-change: transform, opacity !important;
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden !important;
+  }
+
+  /* Slide 1 (Figma 185:1158 mobile-2) */
+  .slide-img-s1-bubble {
+    left: 3.5% !important;
+    top: 12.2% !important;
+    width: clamp(160px, 53vw, 215px) !important;
+    max-width: none !important;
+  }
+
+  .slide-img-s1-input {
+    left: 50% !important;
+    top: 21.5% !important;
+    width: clamp(200px, 70vw, 280px) !important;
+    max-width: none !important;
+  }
+
+  .slide-img-s1-location {
+    left: 46% !important;
+    top: 40.3% !important;
+    width: clamp(200px, 72vw, 290px) !important;
+    max-width: none !important;
+  }
+
+  .slide-img-s1-search {
+    left: -14% !important;
+    top: 57.7% !important;
+    width: clamp(200px, 74vw, 295px) !important;
+    max-width: none !important;
+  }
+
+  /* Slide 2 */
+  .slide-img-s2-reactions {
+    left: 4% !important;
+    top: 16% !important;
+    width: clamp(170px, 58vw, 255px) !important;
+    max-width: none !important;
+  }
+
+  .slide-img-s2-bubble {
+    left: 48% !important;
+    top: 24% !important;
+    width: clamp(180px, 62vw, 265px) !important;
+    max-width: none !important;
+  }
+
+  .slide-img-s2-tabs {
+    left: 45% !important;
+    top: 56% !important;
+    width: clamp(180px, 62vw, 265px) !important;
+    max-width: none !important;
+  }
+
+  /* Slide 3 */
+  .slide-img-s3-photo1 {
+    left: 6% !important;
+    top: 13% !important;
+    width: clamp(110px, 36vw, 155px) !important;
+    max-width: none !important;
+  }
+
+  .slide-img-s3-photo2 {
+    left: -5% !important;
+    top: 48% !important;
+    width: clamp(140px, 45vw, 195px) !important;
+    max-width: none !important;
+  }
+
+  .slide-img-s3-photo3 {
+    left: 48% !important;
+    top: 54% !important;
+    width: clamp(120px, 38vw, 165px) !important;
+    max-width: none !important;
+  }
+
+  /* Slide 4 */
+  .slide-img-s4-username {
+    left: 4% !important;
+    top: 10% !important;
+    width: clamp(190px, 65vw, 275px) !important;
+    max-width: none !important;
+  }
+
+  .slide-img-s4-country {
+    left: 50% !important;
+    top: 18% !important;
+    width: clamp(180px, 62vw, 265px) !important;
+    max-width: none !important;
+  }
+
+  .slide-img-s4-phone {
+    left: -6% !important;
+    top: 55% !important;
+    width: clamp(190px, 65vw, 280px) !important;
+    max-width: none !important;
+  }
+
+  .slide-img-s4-voice {
+    left: 46% !important;
+    top: 57% !important;
+    width: clamp(180px, 62vw, 265px) !important;
+    max-width: none !important;
+  }
+
+  /* Slide 5 */
+  .slide-img-s5-silent {
+    left: 50% !important;
+    top: 22% !important;
+    width: clamp(180px, 62vw, 265px) !important;
+    max-width: none !important;
+  }
+
+  .slide-img-s5-input {
+    left: -8% !important;
+    top: 55% !important;
+    width: clamp(190px, 65vw, 280px) !important;
+    max-width: none !important;
+  }
+
+  .slide-img-s5-mute {
+    left: 48% !important;
+    top: 58% !important;
+    width: clamp(180px, 62vw, 265px) !important;
+    max-width: none !important;
+  }
+
+  /* Typography Card at Bottom (Exact Figma Frame 427321498 in 185:1158) */
   .block2-info-card {
     position: absolute !important;
-    bottom: 14px !important;
+    bottom: 24px !important;
     top: auto !important;
     left: 50% !important;
     right: auto !important;
@@ -4065,17 +4178,19 @@ footer,
     width: 350px !important;
     max-width: calc(100% - 32px) !important;
     min-height: auto !important;
-    padding: 12px 16px !important;
-    border-radius: 20px !important;
-    background: rgba(255, 255, 255, 0.95) !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
-    box-shadow: 0 8px 32px rgba(10, 30, 80, 0.12) !important;
-    border: 1px solid rgba(0, 0, 0, 0.04) !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+    border: none !important;
     z-index: 60 !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 8px !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 0 !important;
     box-sizing: border-box !important;
     transition: transform 600ms cubic-bezier(0.19, 1, 0.22, 1),
                 opacity 500ms cubic-bezier(0.19, 1, 0.22, 1) !important;
@@ -4083,33 +4198,71 @@ footer,
 
   .block2-info-card.is-future {
     opacity: 0 !important;
-    transform: translate3d(-50%, 20px, 0) scale(0.96) !important;
+    transform: translate3d(-50%, 15px, 0) !important;
     pointer-events: none !important;
   }
 
   .block2-info-card.is-active {
     opacity: 1 !important;
-    transform: translate3d(-50%, 0, 0) scale(1) !important;
+    transform: translate3d(-50%, 0, 0) !important;
   }
 
   .block2-card-content {
-    min-height: 48px;
+    min-height: 80px !important;
+    width: 100% !important;
+    text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  .block2-card-slide-layer {
+    align-items: center !important;
+    text-align: center !important;
+    width: 100% !important;
+  }
+
+  .block2-card-title-wrap {
+    justify-content: center !important;
+    text-align: center !important;
+    width: 100% !important;
+    display: flex !important;
+  }
+
+  .block2-card-desc-wrap {
+    justify-content: center !important;
+    text-align: center !important;
+    width: 100% !important;
+    display: flex !important;
   }
 
   .block2-card-title {
-    font-size: 16px !important;
-    line-height: 20px !important;
+    font-family: 'Onest', system-ui, sans-serif !important;
+    font-size: 24px !important;
+    font-weight: 400 !important;
+    line-height: 1.2 !important;
+    color: #151515 !important;
+    text-align: center !important;
+    margin: 0 0 8px 0 !important;
   }
 
   .block2-card-description {
-    font-size: 12.5px !important;
-    line-height: 16px !important;
-    color: #8c919b !important;
+    font-family: 'Onest', system-ui, sans-serif !important;
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    line-height: 20.4px !important;
+    color: #151515 !important;
+    text-align: center !important;
+    margin: 0 !important;
   }
 
   .block2-progress-bars {
-    margin-top: 2px !important;
+    margin-top: 14px !important;
+    width: 140px !important;
     gap: 6px !important;
+    justify-content: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
   }
 
   .block2-progress-seg {
