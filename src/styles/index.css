@@ -1975,13 +1975,8 @@ main {
     backface-visibility: hidden !important;
   }
 
-  /* Fix flickering & lag on Hero Background Frame on mobile */
-  .hero-bg-wrapper {
-    -webkit-backface-visibility: hidden !important;
-    backface-visibility: hidden !important;
-    transform: translate3d(0, 0, 0) !important;
-  }
-
+  /* Fix flickering on Hero Background Frame on mobile */
+  .hero-bg-wrapper,
   .hero-figma-canvas {
     -webkit-backface-visibility: hidden !important;
     backface-visibility: hidden !important;
@@ -1993,19 +1988,141 @@ main {
     display: none !important;
   }
 
-  /* Stop continuous heavy GPU blur re-computations on mobile */
-  .hero-figma-canvas.is-ready .figma-bg-ellipse.ellipse-3,
-  .hero-figma-canvas.is-ready .figma-bg-ellipse.ellipse-6,
-  .hero-figma-canvas.is-ready .figma-bg-ellipse.ellipse-4,
-  .hero-figma-canvas.is-ready .figma-bg-ellipse.ellipse-5,
-  .hero-figma-canvas.is-ready .figma-bg-ellipse.ellipse-animated,
-  .hero-figma-canvas.is-ready .figma-bg-ellipse.ellipse-orbiting,
-  .hero-figma-canvas.is-ready .figma-bg-ellipse.ellipse-bottom-sweep {
-    animation: none !important;
-    filter: blur(40px) !important;
-    will-change: auto !important;
+  /* Complete set of all 7 Ellipses for Mobile Hero Plate (matching Desktop richness) */
+  .hero-figma-canvas .figma-bg-ellipse {
+    opacity: 1 !important;
+    will-change: transform, opacity !important;
     -webkit-backface-visibility: hidden !important;
     backface-visibility: hidden !important;
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* 1. Ellipse 3: Top luminous blue arc */
+  .hero-figma-canvas .figma-bg-ellipse.ellipse-3 {
+    top: -20% !important;
+    left: 50% !important;
+    width: 220% !important;
+    height: 65% !important;
+    background: radial-gradient(ellipse at 50% 50%, rgba(48, 99, 247, 1) 0%, rgba(48, 99, 247, 0.4) 45%, rgba(48, 99, 247, 0) 75%) !important;
+    filter: blur(55px) !important;
+    opacity: 0.92 !important;
+    animation: floatArcTop 10s ease-in-out infinite alternate !important;
+  }
+
+  /* 2. Ellipse 6: Bottom luminous blue arc */
+  .hero-figma-canvas .figma-bg-ellipse.ellipse-6 {
+    bottom: -18% !important;
+    left: 50% !important;
+    width: 220% !important;
+    height: 65% !important;
+    background: radial-gradient(ellipse at 50% 50%, rgba(48, 99, 247, 1) 0%, rgba(48, 99, 247, 0.4) 45%, rgba(48, 99, 247, 0) 75%) !important;
+    filter: blur(55px) !important;
+    opacity: 0.92 !important;
+    animation: floatArcBottom 11s ease-in-out infinite alternate !important;
+  }
+
+  /* 3. Ellipse 4: Left glow orb (illuminates left side of mobile plate) */
+  .hero-figma-canvas .figma-bg-ellipse.ellipse-4 {
+    top: 20% !important;
+    left: -25% !important;
+    width: 260px !important;
+    height: 320px !important;
+    background: radial-gradient(circle at center, rgba(80, 130, 255, 0.95) 0%, rgba(48, 99, 247, 0.65) 45%, rgba(48, 99, 247, 0) 75%) !important;
+    filter: blur(45px) !important;
+    opacity: 0.88 !important;
+    animation: floatOrbLeft 7.5s ease-in-out infinite alternate !important;
+  }
+
+  /* 4. Ellipse 5: Right glow orb (illuminates right side of mobile plate) */
+  .hero-figma-canvas .figma-bg-ellipse.ellipse-5 {
+    top: 35% !important;
+    right: -25% !important;
+    width: 260px !important;
+    height: 320px !important;
+    background: radial-gradient(circle at center, rgba(80, 130, 255, 0.95) 0%, rgba(48, 99, 247, 0.65) 45%, rgba(48, 99, 247, 0) 75%) !important;
+    filter: blur(45px) !important;
+    opacity: 0.88 !important;
+    animation: floatOrbRight 8s ease-in-out infinite alternate !important;
+  }
+
+  /* 5. Ellipse Animated: Dynamic floating gradient orb in center */
+  .hero-figma-canvas .figma-bg-ellipse.ellipse-animated {
+    top: 25% !important;
+    left: 10% !important;
+    width: 280px !important;
+    height: 280px !important;
+    background: radial-gradient(circle at 50% 50%, rgba(96, 165, 250, 0.85) 0%, rgba(48, 99, 247, 0.5) 45%, rgba(48, 99, 247, 0) 75%) !important;
+    filter: blur(50px) !important;
+    opacity: 0.82 !important;
+    animation: floatGlowEllipse 8.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate !important;
+  }
+
+  /* 6. Ellipse Orbiting: Full mobile plate circulating orb */
+  .hero-figma-canvas .figma-bg-ellipse.ellipse-orbiting {
+    top: 35% !important;
+    left: 25% !important;
+    width: 240px !important;
+    height: 240px !important;
+    background: radial-gradient(circle at 50% 50%, rgba(30, 100, 255, 0.9) 0%, rgba(26, 86, 240, 0.6) 40%, rgba(15, 60, 210, 0.3) 65%, rgba(10, 45, 180, 0) 80%) !important;
+    filter: blur(45px) !important;
+    opacity: 0.78 !important;
+    animation: orbitHeroBlockMobile 12s ease-in-out infinite !important;
+  }
+
+  /* 7. Ellipse Bottom Sweep: Bottom sweeping wave */
+  .hero-figma-canvas .figma-bg-ellipse.ellipse-bottom-sweep {
+    bottom: -8% !important;
+    left: -20% !important;
+    width: 140% !important;
+    height: 200px !important;
+    background: radial-gradient(ellipse at 50% 50%, rgba(30, 100, 255, 0.8) 0%, rgba(26, 86, 240, 0.55) 40%, rgba(15, 60, 210, 0.25) 65%, rgba(10, 45, 180, 0) 85%) !important;
+    filter: blur(45px) !important;
+    opacity: 0.72 !important;
+    animation: sweepBottomPlateMobile 10s ease-in-out infinite alternate !important;
+  }
+
+  @keyframes orbitHeroBlockMobile {
+    0% {
+      transform: translate3d(-35%, -40%, 0) scale(1) rotate(0deg);
+      opacity: 0.65;
+    }
+    25% {
+      transform: translate3d(25%, -25%, 0) scale(1.15) rotate(90deg);
+      opacity: 0.85;
+    }
+    50% {
+      transform: translate3d(20%, 35%, 0) scale(0.95) rotate(180deg);
+      opacity: 0.7;
+    }
+    75% {
+      transform: translate3d(-30%, 25%, 0) scale(1.1) rotate(270deg);
+      opacity: 0.8;
+    }
+    100% {
+      transform: translate3d(-35%, -40%, 0) scale(1) rotate(360deg);
+      opacity: 0.65;
+    }
+  }
+
+  @keyframes sweepBottomPlateMobile {
+    0% {
+      transform: translate3d(-15%, 0, 0) scale(1);
+      opacity: 0.55;
+    }
+    50% {
+      transform: translate3d(15%, -4%, 0) scale(1.1);
+      opacity: 0.75;
+    }
+    100% {
+      transform: translate3d(-10%, 2%, 0) scale(0.95);
+      opacity: 0.6;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-figma-canvas .figma-bg-ellipse {
+      animation: none !important;
+    }
   }
 }
 
