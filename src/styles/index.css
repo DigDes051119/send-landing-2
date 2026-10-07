@@ -1906,12 +1906,6 @@ main {
 }
 
 @media (max-width: 640px) {
-  /* Stable Mobile Header Positioning (Exact Figma 175:1153: top 32px, height 64px -> bottom 96px) */
-  .site-header,
-  .site-header.is-scrolled {
-    padding: 32px 20px 0 !important;
-  }
-
   /* Hardware Accelerated Stable Pinned Phone on Mobile */
   .pinned-phone-wrap {
     z-index: 50 !important;
@@ -1923,10 +1917,10 @@ main {
     backface-visibility: hidden !important;
   }
 
-  /* Fixed state with exact 20px offset from header (header bottom: 32px + 64px = 96px -> top: 116px) */
+  /* Fixed state with exact 20px offset from header (header bottom: 24px + 64px = 88px -> top: 108px) */
   .pinned-phone-wrap.is-fixed {
     position: fixed !important;
-    top: 116px !important;
+    top: 108px !important;
     left: 50% !important;
     transform: translate3d(-50%, 0, 0) !important;
     z-index: 50 !important;

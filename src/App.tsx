@@ -267,16 +267,16 @@ export const App: React.FC = () => {
 
       // 3. Phone Pinned Positioning States
       const stageBottomY = stageRect.bottom;
-      const fixedCenterY = isMobile ? 116 : (vh / 2);
+      const fixedCenterY = isMobile ? 108 : (vh / 2);
 
       if (isMobile) {
-        // Mobile: exact 20px gap below header (header bottom: 32px + 64px = 96px -> top: 116px)
+        // Mobile: exact 20px gap below header (header bottom: 24px + 64px = 88px -> top: 108px)
         if (stageBottomY <= vh) {
           // Phase 3: Docked at bottom of Block 2
           if (!phone.classList.contains('is-stuck-bottom')) {
             phone.classList.remove('is-fixed');
             phone.classList.add('is-stuck-bottom');
-            phone.style.top = (stage.offsetHeight - (vh - 116)) + 'px';
+            phone.style.top = (stage.offsetHeight - (vh - 108)) + 'px';
             phone.style.removeProperty('bottom');
           }
         } else {
