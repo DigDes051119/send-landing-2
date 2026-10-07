@@ -604,10 +604,7 @@ export const App: React.FC = () => {
         const targetFixedTop = 52;
         const mobilePinScrollThreshold = initialMobilePhoneTop - targetFixedTop;
 
-        const isStuck = phone.classList.contains('is-stuck-bottom');
-        const shouldBeStuck = isStuck
-          ? stageBottomY <= vh + 50 // 50px hysteresis buffer prevents boundary oscillation jitter
-          : stageBottomY <= vh;
+        const isStuck = stageBottomY <= vh;
 
         if (window.scrollY < mobilePinScrollThreshold) {
           // Phase 1: Inside Hero, phone stays below white speech bubble plate
@@ -616,9 +613,9 @@ export const App: React.FC = () => {
             phone.style.top = initialMobilePhoneTop + 'px';
             phone.style.removeProperty('bottom');
           }
-        } else if (shouldBeStuck) {
+        } else if (isStuck) {
           // Phase 3: Docked at bottom of Block 2
-          if (!isStuck) {
+          if (!phone.classList.contains('is-stuck-bottom')) {
             phone.classList.remove('is-fixed');
             phone.classList.add('is-stuck-bottom');
             phone.style.top = (stage.offsetHeight - (vh - targetFixedTop)) + 'px';

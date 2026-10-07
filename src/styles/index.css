@@ -5893,41 +5893,7 @@ footer,
     display: block !important;
   }
 
-  /* --- Floating cards: only active slide is composited & visible --- */
-  .mobile-floating-card {
-    will-change: auto !important;
-    filter: none !important;
-    -webkit-backface-visibility: visible !important;
-    backface-visibility: visible !important;
-  }
-
-  /* Hidden states: visibility is discrete — stays visible for the whole 1400ms
-     exit animation, then the card drops out of rendering entirely */
-  .mobile-floating-card,
-  .mobile-floating-card.is-future,
-  .mobile-floating-card.is-past,
-  .mobile-floating-card.is-active {
-    transition: transform 1400ms cubic-bezier(0.19, 1, 0.22, 1),
-                opacity 950ms cubic-bezier(0.19, 1, 0.22, 1),
-                visibility 1400ms linear !important;
-  }
-
-  .mobile-floating-card.is-future,
-  .mobile-floating-card.is-past {
-    visibility: hidden !important;
-  }
-
-  .mobile-floating-card.is-active {
-    visibility: visible !important;
-    will-change: transform, opacity !important;
-  }
-
-  /* Light shadow only for the few active cards lying over the phone */
-  .mobile-floating-card.card-front.is-active {
-    filter: drop-shadow(0 10px 20px rgba(10, 30, 80, 0.16)) !important;
-  }
-
-  /* No infinite float animation on hidden cards */
+  /* Stop infinite float animation on non-active cards on mobile to preserve GPU power */
   .mobile-floating-card:not(.is-active) .mobile-floating-float-wrap {
     animation: none !important;
   }
