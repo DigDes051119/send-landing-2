@@ -4208,7 +4208,7 @@ footer,
   .mobile-pinned-info-card-wrap {
     display: block !important;
     position: absolute !important;
-    top: 518px !important;
+    top: 532px !important;
     bottom: auto !important;
     left: 50% !important;
     right: auto !important;
@@ -4322,7 +4322,7 @@ footer,
 
   @media (max-height: 680px) {
     .mobile-pinned-info-card-wrap {
-      top: 508px !important;
+      top: 518px !important;
       bottom: auto !important;
     }
   }
