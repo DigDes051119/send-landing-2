@@ -394,16 +394,22 @@ const SLIDES: SlideData[] = [
   },
 ];
 
-export const ChatsBlockSection: React.FC<ChatsBlockSectionProps> = ({
-  sectionRef,
+export interface Block2InfoCardProps {
+  activeSlide?: number;
+  slideProgress?: number;
+  isEntered?: boolean;
+  onSelectSlide?: (index: number) => void;
+  className?: string;
+}
+
+export const Block2InfoCard: React.FC<Block2InfoCardProps> = ({
   activeSlide = 0,
   slideProgress = 0,
   isEntered = false,
   onSelectSlide,
+  className = '',
 }) => {
   const safeActiveIndex = Math.min(Math.max(activeSlide, 0), SLIDES.length - 1);
-  const activeSlideData = SLIDES[safeActiveIndex];
-
   const slideLayersRef = useRef<(HTMLDivElement | null)[]>([]);
   const [contentHeight, setContentHeight] = useState<number | undefined>(undefined);
 
@@ -428,6 +434,117 @@ export const ChatsBlockSection: React.FC<ChatsBlockSectionProps> = ({
     ro.observe(activeEl);
     return () => ro.disconnect();
   }, [safeActiveIndex]);
+
+  return (
+    <article
+      className={`block2-info-card ${isEntered ? 'is-active' : 'is-future'} ${className}`}
+    >
+      <div
+        className="block2-card-content"
+        style={{ height: contentHeight ? `${contentHeight}px` : undefined }}
+      >
+        {SLIDES.map((slide, slideIdx) => {
+          const isCurrent = isEntered && slideIdx === safeActiveIndex;
+          const isPast = isEntered && slideIdx < safeActiveIndex;
+          const statusClass = isCurrent ? 'is-active' : isPast ? 'is-past' : 'is-future';
+
+          const titleWords = slide.title.trim().split(/\s+/);
+          const descWords = slide.description.trim().split(/\s+/);
+
+          return (
+            <div
+              key={slide.id}
+              ref={(el) => {
+                slideLayersRef.current[slideIdx] = el;
+              }}
+              className={`block2-card-slide-layer ${statusClass}`}
+              aria-hidden={!isCurrent}
+            >
+              <div className="block2-card-title-wrap">
+                <h2 className="block2-card-title">
+                  {titleWords.map((word, wIdx) => {
+                    const delayIn = 200 + wIdx * 70; // 200ms, 270ms, 340ms, 410ms
+                    const currentDelay = isCurrent ? `${delayIn}ms` : '0ms';
+
+                    return (
+                      <React.Fragment key={wIdx}>
+                        <span
+                          className={`block2-card-word ${statusClass}`}
+                          style={{ transitionDelay: currentDelay }}
+                        >
+                          {word}
+                        </span>
+                        {wIdx < titleWords.length - 1 ? ' ' : ''}
+                      </React.Fragment>
+                    );
+                  })}
+                </h2>
+              </div>
+              <div className="block2-card-desc-wrap">
+                <p className="block2-card-description">
+                  {descWords.map((dword, dwIdx) => {
+                    const dDelayIn = 200 + (titleWords.length * 70) + (dwIdx * 14);
+                    const currentDDelay = isCurrent ? `${dDelayIn}ms` : '0ms';
+
+                    return (
+                      <React.Fragment key={dwIdx}>
+                        <span
+                          className={`block2-card-desc-word ${statusClass}`}
+                          style={{ transitionDelay: currentDDelay }}
+                        >
+                          {dword}
+                        </span>
+                        {dwIdx < descWords.length - 1 ? ' ' : ''}
+                      </React.Fragment>
+                    );
+                  })}
+                </p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* 5 Progress / Feature Step Bars with Loading Animation */}
+      <div className="block2-progress-bars" aria-label={`Слайд ${safeActiveIndex + 1} из 5`}>
+        {SLIDES.map((_, idx) => {
+          let fillPercent = 0;
+          if (idx < safeActiveIndex) {
+            fillPercent = 100;
+          } else if (idx === safeActiveIndex) {
+            fillPercent = Math.min(Math.max(slideProgress * 100, 0), 100);
+          } else {
+            fillPercent = 0;
+          }
+
+          return (
+            <button
+              type="button"
+              key={idx}
+              className={`block2-progress-seg ${idx === safeActiveIndex ? 'active' : ''} ${idx < safeActiveIndex ? 'filled' : ''}`}
+              onClick={() => onSelectSlide?.(idx)}
+              aria-label={`Перейти к шагу ${idx + 1}`}
+            >
+              <span
+                className="block2-progress-fill"
+                style={{ width: `${fillPercent}%` }}
+              />
+            </button>
+          );
+        })}
+      </div>
+    </article>
+  );
+};
+
+export const ChatsBlockSection: React.FC<ChatsBlockSectionProps> = ({
+  sectionRef,
+  activeSlide = 0,
+  slideProgress = 0,
+  isEntered = false,
+  onSelectSlide,
+}) => {
+  const safeActiveIndex = Math.min(Math.max(activeSlide, 0), SLIDES.length - 1);
 
   // Chaotic Organic Cursor Parallax Engine for Floating Elements
   useEffect(() => {
@@ -611,104 +728,14 @@ export const ChatsBlockSection: React.FC<ChatsBlockSectionProps> = ({
           </div>
 
           {/* 3. Top-Right Info Feature Card with Smooth Dynamic Height & Layered Staggered Lateral Reveal */}
-          <article
-            className={`block2-info-card ${isEntered ? 'is-active' : 'is-future'}`}
-          >
-            <div
-              className="block2-card-content"
-              style={{ height: contentHeight ? `${contentHeight}px` : undefined }}
-            >
-              {SLIDES.map((slide, slideIdx) => {
-                const isCurrent = isEntered && slideIdx === safeActiveIndex;
-                const isPast = isEntered && slideIdx < safeActiveIndex;
-                const statusClass = isCurrent ? 'is-active' : isPast ? 'is-past' : 'is-future';
-
-                const titleWords = slide.title.trim().split(/\s+/);
-                const descWords = slide.description.trim().split(/\s+/);
-
-                return (
-                  <div
-                    key={slide.id}
-                    ref={(el) => {
-                      slideLayersRef.current[slideIdx] = el;
-                    }}
-                    className={`block2-card-slide-layer ${statusClass}`}
-                    aria-hidden={!isCurrent}
-                  >
-                    <div className="block2-card-title-wrap">
-                      <h2 className="block2-card-title">
-                        {titleWords.map((word, wIdx) => {
-                          const delayIn = 200 + wIdx * 70; // 200ms, 270ms, 340ms, 410ms
-                          const currentDelay = isCurrent ? `${delayIn}ms` : '0ms';
-
-                          return (
-                            <React.Fragment key={wIdx}>
-                              <span
-                                className={`block2-card-word ${statusClass}`}
-                                style={{ transitionDelay: currentDelay }}
-                              >
-                                {word}
-                              </span>
-                              {wIdx < titleWords.length - 1 ? ' ' : ''}
-                            </React.Fragment>
-                          );
-                        })}
-                      </h2>
-                    </div>
-                    <div className="block2-card-desc-wrap">
-                      <p className="block2-card-description">
-                        {descWords.map((dword, dwIdx) => {
-                          const dDelayIn = 200 + (titleWords.length * 70) + (dwIdx * 14);
-                          const currentDDelay = isCurrent ? `${dDelayIn}ms` : '0ms';
-
-                          return (
-                            <React.Fragment key={dwIdx}>
-                              <span
-                                className={`block2-card-desc-word ${statusClass}`}
-                                style={{ transitionDelay: currentDDelay }}
-                              >
-                                {dword}
-                              </span>
-                              {dwIdx < descWords.length - 1 ? ' ' : ''}
-                            </React.Fragment>
-                          );
-                        })}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* 5 Progress / Feature Step Bars with Loading Animation */}
-            <div className="block2-progress-bars" aria-label={`Слайд ${safeActiveIndex + 1} из 5`}>
-              {SLIDES.map((_, idx) => {
-                let fillPercent = 0;
-                if (idx < safeActiveIndex) {
-                  fillPercent = 100;
-                } else if (idx === safeActiveIndex) {
-                  fillPercent = Math.min(Math.max(slideProgress * 100, 0), 100);
-                } else {
-                  fillPercent = 0;
-                }
-
-                return (
-                  <button
-                    type="button"
-                    key={idx}
-                    className={`block2-progress-seg ${idx === safeActiveIndex ? 'active' : ''} ${idx < safeActiveIndex ? 'filled' : ''}`}
-                    onClick={() => onSelectSlide?.(idx)}
-                    aria-label={`Перейти к шагу ${idx + 1}`}
-                  >
-                    <span
-                      className="block2-progress-fill"
-                      style={{ width: `${fillPercent}%` }}
-                    />
-                  </button>
-                );
-              })}
-            </div>
-          </article>
+          <div className="desktop-block2-info-card-wrap">
+            <Block2InfoCard
+              activeSlide={safeActiveIndex}
+              slideProgress={slideProgress}
+              isEntered={isEntered}
+              onSelectSlide={onSelectSlide}
+            />
+          </div>
         </div>
       </div>
     </section>

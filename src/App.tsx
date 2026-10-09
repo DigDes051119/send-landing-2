@@ -3,7 +3,7 @@ import Lenis from 'lenis';
 import { LoaderCurtain } from './components/LoaderCurtain';
 import { SiteHeader } from './components/SiteHeader';
 import { HeroSection } from './components/HeroSection';
-import { ChatsBlockSection } from './components/ChatsBlockSection';
+import { ChatsBlockSection, Block2InfoCard } from './components/ChatsBlockSection';
 import { KeyAdvantagesSection } from './components/KeyAdvantagesSection';
 import { FaqSection } from './components/FaqSection';
 import { InstallSection } from './components/InstallSection';
@@ -837,9 +837,8 @@ export const App: React.FC = () => {
           <div
             className={`pinned-phone-wrap ${ready ? 'is-ready' : ''} ${isBlock2Entered ? 'is-block2-entered' : ''}`}
             ref={phoneWrapRef}
-            aria-hidden="true"
           >
-            <div className={`pinned-phone-entrance-box ${ready ? 'is-entered' : 'is-entering'}`}>
+            <div className={`pinned-phone-entrance-box ${ready ? 'is-entered' : 'is-entering'}`} aria-hidden="true">
               {/* Mobile floating cards BEHIND phone */}
               <div className="mobile-floating-layer layer-back" aria-hidden="true">
                 {MOBILE_FLOATING_SLIDES.map((slide, sIdx) => {
@@ -1049,6 +1048,16 @@ export const App: React.FC = () => {
                   );
                 })}
               </div>
+            </div>
+
+            {/* Mobile Block 2 Info Card: Fixed directly together with phone */}
+            <div className="mobile-pinned-info-card-wrap">
+              <Block2InfoCard
+                activeSlide={activeSlide}
+                slideProgress={slideProgress}
+                isEntered={isBlock2Entered}
+                onSelectSlide={handleSelectSlide}
+              />
             </div>
           </div>
 
