@@ -1951,8 +1951,6 @@ main {
     left: 50% !important;
     transform: translate3d(-50%, 0, 0) !important;
     z-index: 50 !important;
-    height: calc(100vh - 46px) !important;
-    height: calc(100svh - 46px) !important;
     width: 100% !important;
     max-width: 100% !important;
     pointer-events: none !important;
@@ -1963,8 +1961,6 @@ main {
     left: 50% !important;
     transform: translate3d(-50%, 0, 0) !important;
     z-index: 50 !important;
-    height: calc(100vh - 46px) !important;
-    height: calc(100svh - 46px) !important;
     width: 100% !important;
     max-width: 100% !important;
     pointer-events: none !important;
@@ -4208,13 +4204,12 @@ footer,
     display: none !important;
   }
 
-  /* Typography Card at Bottom (Exact Figma Frame 427321498 in 185:1158) - Fixed together with Phone, 20px higher towards phone */
+  /* Typography Card at Bottom (Exact Figma Frame 427321498 in 185:1158) - Fixed together with Phone, anchored below phone */
   .mobile-pinned-info-card-wrap {
     display: block !important;
     position: absolute !important;
-    bottom: 80px !important;
-    bottom: max(80px, calc(56px + env(safe-area-inset-bottom, 0px))) !important;
-    top: auto !important;
+    top: 518px !important;
+    bottom: auto !important;
     left: 50% !important;
     right: auto !important;
     transform: translate3d(-50%, 0, 0) !important;
@@ -4327,8 +4322,8 @@ footer,
 
   @media (max-height: 680px) {
     .mobile-pinned-info-card-wrap {
-      bottom: 48px !important;
-      bottom: max(48px, calc(30px + env(safe-area-inset-bottom, 0px))) !important;
+      top: 508px !important;
+      bottom: auto !important;
     }
   }
 }
