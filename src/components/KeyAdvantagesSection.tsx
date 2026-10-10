@@ -4,7 +4,9 @@ interface AdvCardProps {
   cardClass: string;
   titleClass: string;
   title: string;
+  mobileTitle?: string;
   subtitles: string[];
+  mobileSubtitle?: string;
   videoSrc: string;
   dyVar: string;
   opVar: string;
@@ -15,7 +17,9 @@ const KeyAdvCardItem: React.FC<AdvCardProps> = ({
   cardClass,
   titleClass,
   title,
+  mobileTitle,
   subtitles,
+  mobileSubtitle,
   videoSrc,
   dyVar,
   opVar,
@@ -58,14 +62,24 @@ const KeyAdvCardItem: React.FC<AdvCardProps> = ({
       } as React.CSSProperties}
     >
       <div className="key-adv-card-subtitles">
-        {subtitles.map((sub, idx) => (
-          <p key={idx} className="key-adv-subtitle-item">
-            {sub}
+        <div className="key-adv-subtitles-desktop">
+          {subtitles.map((sub, idx) => (
+            <p key={idx} className="key-adv-subtitle-item">
+              {sub}
+            </p>
+          ))}
+        </div>
+        <div className="key-adv-subtitles-mobile">
+          <p className="key-adv-subtitle-item">
+            {mobileSubtitle || subtitles[subtitles.length - 1]}
           </p>
-        ))}
+        </div>
       </div>
 
-      <h3 className={`key-adv-card-title ${titleClass}`}>{title}</h3>
+      <h3 className={`key-adv-card-title ${titleClass}`}>
+        <span className="key-adv-title-desktop">{title}</span>
+        <span className="key-adv-title-mobile">{mobileTitle || title}</span>
+      </h3>
 
       <div className="key-adv-card-video-wrap" aria-hidden="true">
         <video
@@ -94,10 +108,11 @@ export const KeyAdvantagesSection: React.FC = () => {
     const stage = stageRef.current;
     if (!section || !stage) return;
 
-    const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth <= 1024;
+    const vwCheck = typeof window !== 'undefined' ? window.innerWidth : 1920;
+    const isTablet = vwCheck > 640 && vwCheck <= 1024;
 
-    if (isMobileOrTablet) {
-      // Mobile & tablet: cards flow naturally via static CSS. Zero scroll listener overhead.
+    if (isTablet) {
+      // Tablet: cards flow naturally via static CSS
       stage.style.removeProperty('transform');
       stage.style.removeProperty('transform-origin');
       section.style.setProperty('--c3-dy', '0px');
@@ -115,7 +130,7 @@ export const KeyAdvantagesSection: React.FC = () => {
       section.style.setProperty('--w2-op', '1');
 
       const handleResize = () => {
-        if (window.innerWidth > 1024) {
+        if (window.innerWidth > 1024 || window.innerWidth <= 640) {
           window.location.reload();
         }
       };
@@ -126,26 +141,7 @@ export const KeyAdvantagesSection: React.FC = () => {
     const updateScaleAndScroll = () => {
       const vh = window.innerHeight;
       const vw = window.innerWidth;
-
-      // Responsive Stage Scaling on Desktop so lowered cards are never cropped vertically or horizontally
-      if (vw > 1024) {
-        const STAGE_W = 1920;
-        const STAGE_H = 1140; // Extended height so lowest card never touches or gets cut off at bottom
-        const scaleW = vw / STAGE_W;
-        const scaleH = (vh - 32) / STAGE_H;
-        const scale = Math.min(1, Math.min(scaleW, scaleH));
-        stage.style.transform = `scale(${scale.toFixed(4)})`;
-        stage.style.transformOrigin = 'center center';
-      } else {
-        return;
-      }
-
-      const rect = section.getBoundingClientRect();
-      const scrollable = Math.max(rect.height - vh, 1);
-      const scrolled = -rect.top;
-
-      // Normalized scroll progress inside this sticky section: 0 to 1
-      const p = Math.min(Math.max(scrolled / scrollable, 0), 1);
+      const isMobile = vw <= 640;
 
       // Smooth cubic ease-out
       const ease = (t: number) => {
@@ -154,52 +150,115 @@ export const KeyAdvantagesSection: React.FC = () => {
       };
       const clamp = (val: number) => Math.min(Math.max(val, 0), 1);
 
-      // Large initial travel distance so cards visibly emerge from below the canvas
-      const RISE_DIST = 850;
+      const rect = section.getBoundingClientRect();
+      const scrollable = Math.max(rect.height - vh, 1);
+      const scrolled = -rect.top;
 
-      // 1. Background typography reveals first (p: 0.00 to 0.12)
-      // "КЛЮЧЕВЫЕ" on left slides from -50px, "ПРЕИМУЩЕСТВА" on right slides from +50px
-      const pw = ease(p / 0.12);
-      section.style.setProperty('--w1-dx', `${((1 - pw) * -50).toFixed(1)}px`);
-      section.style.setProperty('--w1-op', `${clamp(pw * 1.5).toFixed(3)}`);
-      section.style.setProperty('--w2-dx', `${((1 - pw) * 50).toFixed(1)}px`);
-      section.style.setProperty('--w2-op', `${clamp(pw * 1.5).toFixed(3)}`);
+      // Normalized scroll progress inside this sticky section: 0 to 1
+      const p = Math.min(Math.max(scrolled / scrollable, 0), 1);
 
-      // 2. Card 3 (Right, chit.mp4) - First to emerge:
-      // Entrance: p from 0.08 to 0.32
-      const p3In = ease((p - 0.08) / 0.24);
-      const dy3In = (1 - p3In) * RISE_DIST;
-      // Parallax upward drift once entered: p from 0.32 to 0.90 (moves up by -95px)
-      const p3Drift = ease((p - 0.32) / 0.58);
-      const dy3Drift = p3In >= 1 ? -95 * p3Drift : 0;
-      const c3Dy = dy3In + dy3Drift;
-      section.style.setProperty('--c3-dy', `${c3Dy.toFixed(1)}px`);
-      section.style.setProperty('--c3-op', `${clamp(p3In * 2).toFixed(3)}`);
-      section.style.setProperty('--c3-pe', p3In > 0.8 ? 'auto' : 'none');
+      if (!isMobile) {
+        // Desktop: Responsive Stage Scaling so lowered cards are never cropped
+        const STAGE_W = 1920;
+        const STAGE_H = 1140;
+        const scaleW = vw / STAGE_W;
+        const scaleH = (vh - 32) / STAGE_H;
+        const scale = Math.min(1, Math.min(scaleW, scaleH));
+        stage.style.transform = `scale(${scale.toFixed(4)})`;
+        stage.style.transformOrigin = 'center center';
 
-      // 3. Card 2 (Middle, rot.mp4) - Second to emerge:
-      // Entrance: p from 0.34 to 0.58
-      const p2In = ease((p - 0.34) / 0.24);
-      const dy2In = (1 - p2In) * RISE_DIST;
-      // Parallax upward drift once entered: p from 0.58 to 0.90 (moves up by -80px)
-      const p2Drift = ease((p - 0.58) / 0.32);
-      const dy2Drift = p2In >= 1 ? -80 * p2Drift : 0;
-      const c2Dy = dy2In + dy2Drift;
-      section.style.setProperty('--c2-dy', `${c2Dy.toFixed(1)}px`);
-      section.style.setProperty('--c2-op', `${clamp(p2In * 2).toFixed(3)}`);
-      section.style.setProperty('--c2-pe', p2In > 0.8 ? 'auto' : 'none');
+        const RISE_DIST = 850;
 
-      // 4. Card 1 (Left, lock.mp4) - Third to emerge:
-      // Entrance: p from 0.60 to 0.82
-      const p1In = ease((p - 0.60) / 0.22);
-      const dy1In = (1 - p1In) * RISE_DIST;
-      // Parallax upward drift once entered: p from 0.82 to 0.94 (moves up by -65px)
-      const p1Drift = ease((p - 0.82) / 0.12);
-      const dy1Drift = p1In >= 1 ? -65 * p1Drift : 0;
-      const c1Dy = dy1In + dy1Drift;
-      section.style.setProperty('--c1-dy', `${c1Dy.toFixed(1)}px`);
-      section.style.setProperty('--c1-op', `${clamp(p1In * 2).toFixed(3)}`);
-      section.style.setProperty('--c1-pe', p1In > 0.8 ? 'auto' : 'none');
+        // 1. Background typography reveals first (p: 0.00 to 0.12)
+        const pw = ease(p / 0.12);
+        section.style.setProperty('--w1-dx', `${((1 - pw) * -50).toFixed(1)}px`);
+        section.style.setProperty('--w1-op', `${clamp(pw * 1.5).toFixed(3)}`);
+        section.style.setProperty('--w2-dx', `${((1 - pw) * 50).toFixed(1)}px`);
+        section.style.setProperty('--w2-op', `${clamp(pw * 1.5).toFixed(3)}`);
+
+        // 2. Card 3 (Right, chit.mp4) - First to emerge:
+        // Entrance: p from 0.08 to 0.32
+        const p3In = ease((p - 0.08) / 0.24);
+        const dy3In = (1 - p3In) * RISE_DIST;
+        // Parallax upward drift once entered: p from 0.32 to 0.90 (moves up by -95px)
+        const p3Drift = ease((p - 0.32) / 0.58);
+        const dy3Drift = p3In >= 1 ? -95 * p3Drift : 0;
+        const c3Dy = dy3In + dy3Drift;
+        section.style.setProperty('--c3-dy', `${c3Dy.toFixed(1)}px`);
+        section.style.setProperty('--c3-op', `${clamp(p3In * 2).toFixed(3)}`);
+        section.style.setProperty('--c3-pe', p3In > 0.8 ? 'auto' : 'none');
+
+        // 3. Card 2 (Middle, rot.mp4) - Second to emerge:
+        // Entrance: p from 0.34 to 0.58
+        const p2In = ease((p - 0.34) / 0.24);
+        const dy2In = (1 - p2In) * RISE_DIST;
+        // Parallax upward drift once entered: p from 0.58 to 0.90 (moves up by -80px)
+        const p2Drift = ease((p - 0.58) / 0.32);
+        const dy2Drift = p2In >= 1 ? -80 * p2Drift : 0;
+        const c2Dy = dy2In + dy2Drift;
+        section.style.setProperty('--c2-dy', `${c2Dy.toFixed(1)}px`);
+        section.style.setProperty('--c2-op', `${clamp(p2In * 2).toFixed(3)}`);
+        section.style.setProperty('--c2-pe', p2In > 0.8 ? 'auto' : 'none');
+
+        // 4. Card 1 (Left, lock.mp4) - Third to emerge:
+        // Entrance: p from 0.60 to 0.82
+        const p1In = ease((p - 0.60) / 0.22);
+        const dy1In = (1 - p1In) * RISE_DIST;
+        // Parallax upward drift once entered: p from 0.82 to 0.94 (moves up by -65px)
+        const p1Drift = ease((p - 0.82) / 0.12);
+        const dy1Drift = p1In >= 1 ? -65 * p1Drift : 0;
+        const c1Dy = dy1In + dy1Drift;
+        section.style.setProperty('--c1-dy', `${c1Dy.toFixed(1)}px`);
+        section.style.setProperty('--c1-op', `${clamp(p1In * 2).toFixed(3)}`);
+        section.style.setProperty('--c1-pe', p1In > 0.8 ? 'auto' : 'none');
+      } else {
+        // Mobile: Dedicated physics matching Figma mobile-3 + desktop scroll logic
+        stage.style.removeProperty('transform');
+        stage.style.removeProperty('transform-origin');
+
+        const RISE_DIST = Math.min(vh * 0.7, 450);
+
+        // 1. Mobile Headings reveal (p: 0.00 to 0.12)
+        const pw = ease(p / 0.12);
+        section.style.setProperty('--w1-dx', `${((1 - pw) * -35).toFixed(1)}px`);
+        section.style.setProperty('--w1-op', `${clamp(pw * 1.5).toFixed(3)}`);
+        section.style.setProperty('--w2-dx', `${((1 - pw) * 35).toFixed(1)}px`);
+        section.style.setProperty('--w2-op', `${clamp(pw * 1.5).toFixed(3)}`);
+
+        // 2. Card 3 (chit.mp4 - "Общайтесь легко")
+        // Entrance: p 0.08..0.30, Exits upward when Card 2 enters (p 0.36..0.56)
+        const p3In = ease((p - 0.08) / 0.22);
+        const dy3In = (1 - p3In) * RISE_DIST;
+        const p3Exit = ease((p - 0.36) / 0.20);
+        const dy3Exit = p > 0.36 ? -380 * p3Exit : 0;
+        const c3Dy = dy3In + dy3Exit;
+        const c3Op = Math.min(clamp(p3In * 2), p > 0.36 ? clamp((1 - p3Exit) * 2) : 1);
+        section.style.setProperty('--c3-dy', `${c3Dy.toFixed(1)}px`);
+        section.style.setProperty('--c3-op', `${c3Op.toFixed(3)}`);
+        section.style.setProperty('--c3-pe', c3Op > 0.5 ? 'auto' : 'none');
+
+        // 3. Card 2 (rot.mp4 - "Абсолютное уважение к тайне общения")
+        // Entrance: p 0.36..0.58, Exits upward when Card 1 enters (p 0.64..0.84)
+        const p2In = ease((p - 0.36) / 0.22);
+        const dy2In = (1 - p2In) * RISE_DIST;
+        const p2Exit = ease((p - 0.64) / 0.20);
+        const dy2Exit = p > 0.64 ? -380 * p2Exit : 0;
+        const c2Dy = dy2In + dy2Exit;
+        const c2Op = Math.min(clamp(p2In * 2), p > 0.64 ? clamp((1 - p2Exit) * 2) : 1);
+        section.style.setProperty('--c2-dy', `${c2Dy.toFixed(1)}px`);
+        section.style.setProperty('--c2-op', `${c2Op.toFixed(3)}`);
+        section.style.setProperty('--c2-pe', c2Op > 0.5 ? 'auto' : 'none');
+
+        // 4. Card 1 (lock.mp4 - "Полный контроль над перепиской")
+        // Entrance: p 0.64..0.86, Remains settled
+        const p1In = ease((p - 0.64) / 0.22);
+        const dy1In = (1 - p1In) * RISE_DIST;
+        const c1Dy = dy1In;
+        const c1Op = clamp(p1In * 2);
+        section.style.setProperty('--c1-dy', `${c1Dy.toFixed(1)}px`);
+        section.style.setProperty('--c1-op', `${c1Op.toFixed(3)}`);
+        section.style.setProperty('--c1-pe', c1Op > 0.5 ? 'auto' : 'none');
+      }
     };
 
     const handleScroll = () => {
@@ -235,7 +294,8 @@ export const KeyAdvantagesSection: React.FC = () => {
               opacity: 'var(--w2-op, 1)',
             }}
           >
-            ПРЕИМУЩЕСТВА
+            <span className="key-adv-heading-desktop">ПРЕИМУЩЕСТВА</span>
+            <span className="key-adv-heading-mobile">преимущества</span>
           </span>
           <span 
             className="key-adv-word-dark"
@@ -244,7 +304,8 @@ export const KeyAdvantagesSection: React.FC = () => {
               opacity: 'var(--w1-op, 1)',
             }}
           >
-            КЛЮЧЕВЫЕ
+            <span className="key-adv-heading-desktop">КЛЮЧЕВЫЕ</span>
+            <span className="key-adv-heading-mobile">ключевые</span>
           </span>
         </div>
 
@@ -256,10 +317,12 @@ export const KeyAdvantagesSection: React.FC = () => {
               cardClass="card-1"
               titleClass="title-card-1"
               title="Полный контроль над перепиской"
+              mobileTitle="Полный контроль над перепиской"
               subtitles={[
                 'Приложение разворачивается на независимой, защищенной платформе',
                 'Никакие сторонние корпорации или рекламные трекеры не имеют доступа к вашей истории общения'
               ]}
+              mobileSubtitle="Никакие сторонние корпорации или рекламные трекеры не имеют доступа к вашей истории общения"
               videoSrc="/video/lock.mp4"
               dyVar="--c1-dy"
               opVar="--c1-op"
@@ -271,10 +334,12 @@ export const KeyAdvantagesSection: React.FC = () => {
               cardClass="card-2"
               titleClass="title-card-2"
               title="Абсолютное уважение к тайне общения"
+              mobileTitle="Абсолютное уважение к тайне общения"
               subtitles={[
                 'Даже администраторы платформы не могут читать ваши личные чаты',
                 'Им доступны только технические настройки и сообщения, на которые вы сами отправили жалобу при столкновении со спамом'
               ]}
+              mobileSubtitle="Администраторам доступны только технические настройки и сообщения, на которые вы сами отправили жалобу при столкновении со спамом"
               videoSrc="/video/rot.mp4"
               dyVar="--c2-dy"
               opVar="--c2-op"
@@ -286,10 +351,12 @@ export const KeyAdvantagesSection: React.FC = () => {
               cardClass="card-3"
               titleClass="title-card-3"
               title="Защита ваших данных на устройстве"
+              mobileTitle="Общайтесь легко"
               subtitles={[
                 'Локальная база данных на вашем телефоне полностью зашифрована',
                 'Приложение строго запрещает логировать текст ваших сообщений или коды подтверждения для исключения утечек'
               ]}
+              mobileSubtitle="Приложение строго запрещает логировать текст ваших сообщений или коды подтверждения для исключения утечек"
               videoSrc="/video/chit.mp4"
               dyVar="--c3-dy"
               opVar="--c3-op"
@@ -301,4 +368,5 @@ export const KeyAdvantagesSection: React.FC = () => {
     </section>
   );
 };
+
 
