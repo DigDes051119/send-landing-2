@@ -548,7 +548,7 @@ export const FaqSection: React.FC = () => {
 
     // Drop position in mid-air center, above the floor pile
     const dropX = mobile ? (window.innerWidth - startW) / 2 : 1920 / 2 - startW / 2;
-    const dropY = mobile ? Math.max(80, (boundsRef.current.bottom || 560) - 180) : 380;
+    const dropY = mobile ? (info ? info.targetY + (info.targetH - startH) / 2 : 220) : 380;
     const dropAngle = (Math.random() - 0.5) * 0.14;
 
     // Header-menu cubic-bezier(0.16, 1, 0.3, 1) transition: snappy initial velocity with cushioned glide
@@ -585,7 +585,7 @@ export const FaqSection: React.FC = () => {
       const section = sectionRef.current;
       const rect = section?.getBoundingClientRect();
       const vh = window.innerHeight;
-      const isStillInFaq = rect && rect.top <= 60 && rect.bottom >= vh * 0.35;
+      const isStillInFaq = rect && rect.top <= (mobile ? 80 : 60) && rect.bottom >= vh * 0.35;
 
       if (body && engineRef.current) {
         Matter.Body.setPosition(body, {
@@ -598,7 +598,7 @@ export const FaqSection: React.FC = () => {
         if (isStillInFaq && isPhysicsActiveRef.current) {
           Matter.Body.setVelocity(body, {
             x: (Math.random() - 0.5) * 1.5,
-            y: mobile ? 2.5 : 5.5, // Natural downward drop velocity onto pile
+            y: mobile ? 2.0 : 5.5, // Natural downward drop velocity onto pile
           });
           Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.05);
           Matter.Sleeping.set(body, false);
@@ -613,6 +613,7 @@ export const FaqSection: React.FC = () => {
       }
 
       if (origEl) {
+        origEl.style.transform = `translate3d(${dropX.toFixed(2)}px, ${dropY.toFixed(2)}px, 0) rotate(${dropAngle.toFixed(4)}rad)`;
         origEl.style.opacity = '1';
       }
 
@@ -799,7 +800,8 @@ export const FaqSection: React.FC = () => {
           const dropA_H = prevCap.height;
           const dropA_Radius = dropA_H / 2;
           const dropA_X = mobile ? (window.innerWidth - dropA_W) / 2 : 1920 / 2 - dropA_W / 2;
-          const dropA_Y = mobile ? Math.max(80, (boundsRef.current.bottom || 560) - 180) : 380;
+          const prevInfo = morphStartInfoRef.current;
+          const dropA_Y = mobile ? (prevInfo ? prevInfo.targetY + (prevInfo.targetH - dropA_H) / 2 : 220) : 380;
           const dropA_Angle = (Math.random() - 0.5) * 0.14;
 
           closeCard.style.transition =
@@ -840,13 +842,14 @@ export const FaqSection: React.FC = () => {
               prevBody.collisionFilter.mask = 0xFFFFFFFF;
               Matter.Body.setVelocity(prevBody, {
                 x: (Math.random() - 0.5) * 1.5,
-                y: mobile ? 2.5 : 5.5,
+                y: mobile ? 2.0 : 5.5,
               });
               Matter.Body.setAngularVelocity(prevBody, (Math.random() - 0.5) * 0.05);
               Matter.Sleeping.set(prevBody, false);
             }
 
             if (prevOrigEl) {
+              prevOrigEl.style.transform = `translate3d(${dropA_X.toFixed(2)}px, ${dropA_Y.toFixed(2)}px, 0) rotate(${dropA_Angle.toFixed(4)}rad)`;
               prevOrigEl.style.opacity = '1';
             }
 
@@ -881,7 +884,7 @@ export const FaqSection: React.FC = () => {
       const startRadius = startH / 2;
 
       const targetW = mobile ? Math.min(360, window.innerWidth - 32) : 1516;
-      const targetH = mobile ? Math.min(520, window.innerHeight - 80) : 648;
+      const targetH = mobile ? Math.min(340, window.innerHeight - 80) : 648;
       const targetX = mobile ? (window.innerWidth - targetW) / 2 : 202;
       const targetY = mobile ? Math.max(24, (window.innerHeight - targetH) / 2) : 141;
       const targetRadius = mobile ? 32 : 50;
