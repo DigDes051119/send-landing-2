@@ -216,7 +216,10 @@ export const KeyAdvantagesSection: React.FC = () => {
         stage.style.removeProperty('transform');
         stage.style.removeProperty('transform-origin');
 
-        const RISE_DIST = Math.min(vh * 0.7, 450);
+        const cardW = Math.min(339, vw - 32);
+        const cardStep = cardW + 20; // 339px card + 20px vertical gap
+
+        const RISE_DIST = Math.min(vh * 0.45, 300);
 
         // 1. Mobile Headings reveal (p: 0.00 to 0.12)
         const pw = ease(p / 0.12);
@@ -225,39 +228,38 @@ export const KeyAdvantagesSection: React.FC = () => {
         section.style.setProperty('--w2-dx', `${((1 - pw) * 35).toFixed(1)}px`);
         section.style.setProperty('--w2-op', `${clamp(pw * 1.5).toFixed(3)}`);
 
-        // 2. Card 3 (chit.mp4 - "Общайтесь легко")
-        // Entrance: p 0.08..0.30, Exits upward when Card 2 enters (p 0.36..0.56)
-        const p3In = ease((p - 0.08) / 0.22);
-        const dy3In = (1 - p3In) * RISE_DIST;
-        const p3Exit = ease((p - 0.36) / 0.20);
-        const dy3Exit = p > 0.36 ? -380 * p3Exit : 0;
-        const c3Dy = dy3In + dy3Exit;
-        const c3Op = Math.min(clamp(p3In * 2), p > 0.36 ? clamp((1 - p3Exit) * 2) : 1);
-        section.style.setProperty('--c3-dy', `${c3Dy.toFixed(1)}px`);
-        section.style.setProperty('--c3-op', `${c3Op.toFixed(3)}`);
-        section.style.setProperty('--c3-pe', c3Op > 0.5 ? 'auto' : 'none');
+        // Vertical Column Translation: pans the column smoothly as each card's turn arrives
+        const pScroll1 = ease((p - 0.32) / 0.24);
+        const pScroll2 = ease((p - 0.58) / 0.24);
+        const stageScrollY = -(cardStep * pScroll1 + cardStep * pScroll2);
+        section.style.setProperty('--stage-scroll-y', `${stageScrollY.toFixed(1)}px`);
 
-        // 3. Card 2 (rot.mp4 - "Абсолютное уважение к тайне общения")
-        // Entrance: p 0.36..0.58, Exits upward when Card 1 enters (p 0.64..0.84)
-        const p2In = ease((p - 0.36) / 0.22);
-        const dy2In = (1 - p2In) * RISE_DIST;
-        const p2Exit = ease((p - 0.64) / 0.20);
-        const dy2Exit = p > 0.64 ? -380 * p2Exit : 0;
-        const c2Dy = dy2In + dy2Exit;
-        const c2Op = Math.min(clamp(p2In * 2), p > 0.64 ? clamp((1 - p2Exit) * 2) : 1);
-        section.style.setProperty('--c2-dy', `${c2Dy.toFixed(1)}px`);
-        section.style.setProperty('--c2-op', `${c2Op.toFixed(3)}`);
-        section.style.setProperty('--c2-pe', c2Op > 0.5 ? 'auto' : 'none');
+        // 2. Card 3 (chit.mp4 - "Общайтесь легко") - Order 1 (Top in vertical column)
+        // Emerges first: p 0.08..0.32
+        const p3In = ease((p - 0.08) / 0.24);
+        const dy3 = (1 - p3In) * RISE_DIST;
+        const op3 = clamp(p3In * 2);
+        section.style.setProperty('--c3-dy', `${dy3.toFixed(1)}px`);
+        section.style.setProperty('--c3-op', `${op3.toFixed(3)}`);
+        section.style.setProperty('--c3-pe', op3 > 0.8 ? 'auto' : 'none');
 
-        // 4. Card 1 (lock.mp4 - "Полный контроль над перепиской")
-        // Entrance: p 0.64..0.86, Remains settled
-        const p1In = ease((p - 0.64) / 0.22);
-        const dy1In = (1 - p1In) * RISE_DIST;
-        const c1Dy = dy1In;
-        const c1Op = clamp(p1In * 2);
-        section.style.setProperty('--c1-dy', `${c1Dy.toFixed(1)}px`);
-        section.style.setProperty('--c1-op', `${c1Op.toFixed(3)}`);
-        section.style.setProperty('--c1-pe', c1Op > 0.5 ? 'auto' : 'none');
+        // 3. Card 2 (rot.mp4 - "Абсолютное уважение к тайне общения") - Order 2 (Middle in vertical column)
+        // Emerges second: p 0.34..0.58
+        const p2In = ease((p - 0.34) / 0.24);
+        const dy2 = (1 - p2In) * RISE_DIST;
+        const op2 = clamp(p2In * 2);
+        section.style.setProperty('--c2-dy', `${dy2.toFixed(1)}px`);
+        section.style.setProperty('--c2-op', `${op2.toFixed(3)}`);
+        section.style.setProperty('--c2-pe', op2 > 0.8 ? 'auto' : 'none');
+
+        // 4. Card 1 (lock.mp4 - "Полный контроль над перепиской") - Order 3 (Bottom in vertical column)
+        // Emerges third: p 0.60..0.84
+        const p1In = ease((p - 0.60) / 0.22);
+        const dy1 = (1 - p1In) * RISE_DIST;
+        const op1 = clamp(p1In * 2);
+        section.style.setProperty('--c1-dy', `${dy1.toFixed(1)}px`);
+        section.style.setProperty('--c1-op', `${op1.toFixed(3)}`);
+        section.style.setProperty('--c1-pe', op1 > 0.8 ? 'auto' : 'none');
       }
     };
 
