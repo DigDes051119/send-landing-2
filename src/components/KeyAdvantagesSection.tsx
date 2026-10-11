@@ -217,7 +217,9 @@ export const KeyAdvantagesSection: React.FC = () => {
         stage.style.removeProperty('transform-origin');
 
         const cardW = Math.min(339, vw - 32);
-        const cardStep = cardW + 20; // 339px card + 20px vertical gap
+        const firstCard = stage.querySelector('.key-adv-card') as HTMLElement;
+        const cardH = firstCard && firstCard.offsetHeight > 0 ? firstCard.offsetHeight : (cardW + 110);
+        const cardStep = cardH + 20; // actual card height + 20px vertical gap
 
         const RISE_DIST = Math.min(vh * 0.45, 300);
 
