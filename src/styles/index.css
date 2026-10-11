@@ -4817,13 +4817,13 @@ footer,
     order: 3; /* Bottom card: lock ("Полный контроль над перепиской") */
   }
 
-  /* Bento Card: narrower (320px) and taller (380px) */
+  /* Bento Card: narrower (320px) and taller (420px) with video height untouched */
   .key-adv-card {
     position: relative;
     left: auto !important;
     top: auto !important;
     width: min(320px, calc(100vw - 36px));
-    height: 380px;
+    height: 420px;
     background-color: #ffffff;
     border-radius: 1.905rem; /* 30.4856px */
     padding: 1.5rem 1.375rem 0; /* 24px top, 22px sides */
