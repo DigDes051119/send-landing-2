@@ -4883,7 +4883,7 @@ footer,
     max-width: 100% !important;
   }
 
-  /* Video wrap & video: anchored at bottom inside plaque with cleanly rounded corners at the top (and bottom) matching plaque */
+  /* Video wrap & video: anchored at bottom inside plaque with significantly stronger rounded top corners */
   .key-adv-card-video-wrap {
     position: absolute;
     left: 0;
@@ -4894,31 +4894,31 @@ footer,
     z-index: 1;
     pointer-events: none;
     overflow: hidden !important;
-    border-radius: 1.905rem !important; /* 30.5px matching plaque */
-    border-top-left-radius: 1.905rem !important;
-    border-top-right-radius: 1.905rem !important;
+    border-radius: 2.75rem 2.75rem 1.905rem 1.905rem !important; /* Stronger 44px top radius */
+    border-top-left-radius: 2.75rem !important;
+    border-top-right-radius: 2.75rem !important;
     border-bottom-left-radius: 1.905rem !important;
     border-bottom-right-radius: 1.905rem !important;
     background-color: transparent !important;
     isolation: isolate;
     transform: translateZ(0);
-    -webkit-clip-path: inset(0 0 0 0 round 1.905rem) !important;
-    clip-path: inset(0 0 0 0 round 1.905rem) !important;
+    -webkit-clip-path: inset(0 0 0 0 round 2.75rem 2.75rem 1.905rem 1.905rem) !important;
+    clip-path: inset(0 0 0 0 round 2.75rem 2.75rem 1.905rem 1.905rem) !important;
     mask-image: none !important;
     -webkit-mask-image: none !important;
   }
 
-  /* Protective top overlay with matching rounded corners ensuring zero black corner leakage */
+  /* Protective top overlay matching stronger rounded corners */
   .key-adv-card-video-wrap::after {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 2.25rem; /* ~36px */
+    height: 2.75rem; /* ~44px */
     background: linear-gradient(to bottom, #ffffff 0%, rgba(255, 255, 255, 0.95) 40%, rgba(255, 255, 255, 0) 100%);
-    border-top-left-radius: 1.905rem;
-    border-top-right-radius: 1.905rem;
+    border-top-left-radius: 2.75rem;
+    border-top-right-radius: 2.75rem;
     pointer-events: none;
     z-index: 2;
   }
@@ -4935,17 +4935,17 @@ footer,
     object-position: center bottom;
     display: block;
     pointer-events: none;
-    border-radius: 1.905rem !important;
-    border-top-left-radius: 1.905rem !important;
-    border-top-right-radius: 1.905rem !important;
+    border-radius: 2.75rem 2.75rem 1.905rem 1.905rem !important;
+    border-top-left-radius: 2.75rem !important;
+    border-top-right-radius: 2.75rem !important;
     border-bottom-left-radius: 1.905rem !important;
     border-bottom-right-radius: 1.905rem !important;
     background-color: transparent !important;
     overflow: hidden !important;
     transform: scale(1.15) !important;
     transform-origin: center bottom !important;
-    -webkit-clip-path: inset(0 0 0 0 round 1.905rem) !important;
-    clip-path: inset(0 0 0 0 round 1.905rem) !important;
+    -webkit-clip-path: inset(0 0 0 0 round 2.75rem 2.75rem 1.905rem 1.905rem) !important;
+    clip-path: inset(0 0 0 0 round 2.75rem 2.75rem 1.905rem 1.905rem) !important;
     mask-image: none !important;
     -webkit-mask-image: none !important;
   }
