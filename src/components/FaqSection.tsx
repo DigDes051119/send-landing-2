@@ -407,8 +407,9 @@ export const FaqSection: React.FC = () => {
       if (floatPos) {
         Matter.Body.setPosition(b, { x: floatPos.x, y: floatPos.y });
         Matter.Body.setAngle(b, floatPos.angle);
-        const vx = (Math.random() - 0.5) * 1.8;
-        const vy = 1.0 + Math.random() * 2.0;
+        const mobile = window.innerWidth < 768;
+        const vx = mobile ? (idx % 2 === 0 ? -1 : 1) * (0.6 + Math.random() * 0.6) : (Math.random() - 0.5) * 1.8;
+        const vy = mobile ? (1.0 + idx * 0.35) : (1.0 + Math.random() * 2.0);
         const vRot = (Math.random() - 0.5) * 0.04;
         Matter.Body.setVelocity(b, { x: vx, y: vy });
         Matter.Body.setAngularVelocity(b, vRot);
@@ -541,13 +542,13 @@ export const FaqSection: React.FC = () => {
 
     const info = morphStartInfoRef.current;
     const mobile = window.innerWidth < 768;
-    const startW = info?.startW ?? (mobile ? Math.min(cap.width * 0.65, window.innerWidth - 48) : cap.width);
-    const startH = info?.startH ?? (mobile ? 50 : cap.height);
+    const startW = info?.startW ?? cap.width;
+    const startH = info?.startH ?? cap.height;
     const startRadius = info?.startRadius ?? (startH / 2);
 
     // Drop position in mid-air center, above the floor pile
     const dropX = mobile ? (window.innerWidth - startW) / 2 : 1920 / 2 - startW / 2;
-    const dropY = mobile ? 220 : 380;
+    const dropY = mobile ? Math.max(80, (boundsRef.current.bottom || 560) - 180) : 380;
     const dropAngle = (Math.random() - 0.5) * 0.14;
 
     // Header-menu cubic-bezier(0.16, 1, 0.3, 1) transition: snappy initial velocity with cushioned glide
@@ -596,10 +597,10 @@ export const FaqSection: React.FC = () => {
 
         if (isStillInFaq && isPhysicsActiveRef.current) {
           Matter.Body.setVelocity(body, {
-            x: (Math.random() - 0.5) * 2.2,
-            y: 5.5, // Natural downward drop velocity onto pile
+            x: (Math.random() - 0.5) * 1.5,
+            y: mobile ? 2.5 : 5.5, // Natural downward drop velocity onto pile
           });
-          Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.08);
+          Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.05);
           Matter.Sleeping.set(body, false);
 
           // Ensure gravity is running
@@ -659,8 +660,8 @@ export const FaqSection: React.FC = () => {
     const floatLeft = cap.floatingX - cap.width / 2;
     const floatTop = cap.floatingY - cap.height / 2 + parallaxY;
     const mobile = window.innerWidth < 768;
-    const capsuleW = mobile ? Math.min(cap.width * 0.65, window.innerWidth - 48) : cap.width;
-    const capsuleH = mobile ? 50 : cap.height;
+    const capsuleW = cap.width;
+    const capsuleH = cap.height;
     const capsuleRadius = capsuleH / 2;
 
     // Animate back to live floating position in the constellation
@@ -721,6 +722,7 @@ export const FaqSection: React.FC = () => {
   // Expand capsule into center card; if another capsule is open, smoothly collapse it while expanding new one
   const handleExpand = useCallback(
     (idx: number) => {
+      if (wasDraggingRef.current) return;
       const cap = currentCapsulesRef.current[idx];
       if (!cap) return;
 
@@ -797,7 +799,7 @@ export const FaqSection: React.FC = () => {
           const dropA_H = prevCap.height;
           const dropA_Radius = dropA_H / 2;
           const dropA_X = mobile ? (window.innerWidth - dropA_W) / 2 : 1920 / 2 - dropA_W / 2;
-          const dropA_Y = mobile ? 220 : 380;
+          const dropA_Y = mobile ? Math.max(80, (boundsRef.current.bottom || 560) - 180) : 380;
           const dropA_Angle = (Math.random() - 0.5) * 0.14;
 
           closeCard.style.transition =
@@ -837,10 +839,10 @@ export const FaqSection: React.FC = () => {
               Matter.Body.setAngle(prevBody, dropA_Angle);
               prevBody.collisionFilter.mask = 0xFFFFFFFF;
               Matter.Body.setVelocity(prevBody, {
-                x: (Math.random() - 0.5) * 2.2,
-                y: 5.5,
+                x: (Math.random() - 0.5) * 1.5,
+                y: mobile ? 2.5 : 5.5,
               });
-              Matter.Body.setAngularVelocity(prevBody, (Math.random() - 0.5) * 0.08);
+              Matter.Body.setAngularVelocity(prevBody, (Math.random() - 0.5) * 0.05);
               Matter.Sleeping.set(prevBody, false);
             }
 
@@ -874,15 +876,15 @@ export const FaqSection: React.FC = () => {
         startAngle = fp.angle;
       }
 
-      const startW = mobile ? Math.min(cap.width * 0.65, window.innerWidth - 48) : cap.width;
-      const startH = mobile ? 50 : cap.height;
+      const startW = cap.width;
+      const startH = cap.height;
       const startRadius = startH / 2;
 
-      const targetW = mobile ? Math.min(1516, window.innerWidth - 32) : 1516;
-      const targetH = mobile ? 480 : 648;
+      const targetW = mobile ? Math.min(360, window.innerWidth - 32) : 1516;
+      const targetH = mobile ? Math.min(520, window.innerHeight - 80) : 648;
       const targetX = mobile ? (window.innerWidth - targetW) / 2 : 202;
-      const targetY = mobile ? 80 : 141;
-      const targetRadius = mobile ? 36 : 50;
+      const targetY = mobile ? Math.max(24, (window.innerHeight - targetH) / 2) : 141;
+      const targetRadius = mobile ? 32 : 50;
 
       morphStartInfoRef.current = {
         idx,
@@ -1060,12 +1062,15 @@ export const FaqSection: React.FC = () => {
         setIsTitleVisible(false);
       }
 
-      // 3. Trigger Physics Drop when fully scrolled to 4th block (rect.top <= 40px)
-      if (rect.top <= 40 && rect.bottom >= vh * 0.35) {
+      // 3. Trigger Physics Drop when fully scrolled to 4th block
+      const isMobileScreen = window.innerWidth < 768;
+      const dropThreshold = isMobileScreen ? 80 : 40;
+      const resetThreshold = isMobileScreen ? 220 : 80;
+      if (rect.top <= dropThreshold && rect.bottom >= vh * 0.35) {
         if (!isPhysicsActiveRef.current && !isTeleportingToFaqRef.current) {
           triggerPhysicsDrop();
         }
-      } else if (rect.top > 80) {
+      } else if (rect.top > resetThreshold) {
         if (isPhysicsActiveRef.current && !isTeleportingToFaqRef.current) {
           resetToFloating();
         }
@@ -1338,23 +1343,23 @@ export const FaqSection: React.FC = () => {
     // Create Capsule Rigid Bodies
     const capsules: FaqCapsuleData[] = mobile
       ? DESKTOP_CAPSULES.map((cap, i) => {
-          const mobW = Math.min(cap.width * 0.65, vw - 48);
-          const mobH = 50;
+          const mobW = Math.min(cap.width * 0.58, vw - 44);
+          const mobH = 46;
           const mobFloatingYs = [
-            stageH * 0.16,
-            stageH * 0.24,
-            stageH * 0.54,
-            stageH * 0.62,
-            stageH * 0.70,
-            stageH * 0.78,
+            stageH * 0.14,
+            stageH * 0.26,
+            stageH * 0.48,
+            stageH * 0.60,
+            stageH * 0.72,
+            stageH * 0.84,
           ];
           const mobFloatingXs = [
-            vw / 2 - 25,
-            vw / 2 + 20,
-            vw / 2 - 20,
-            vw / 2 + 25,
-            vw / 2 - 15,
-            vw / 2 + 20,
+            vw * 0.45,
+            vw * 0.55,
+            vw * 0.44,
+            vw * 0.56,
+            vw * 0.45,
+            vw * 0.55,
           ];
           return {
             ...cap,
@@ -1377,9 +1382,9 @@ export const FaqSection: React.FC = () => {
       const body = Bodies.rectangle(cap.floatingX, cap.floatingY, cap.width, cap.height, {
         chamfer: { radius: cap.height / 2 },
         angle: cap.floatingAngle,
-        restitution: 0.25,
-        friction: 0.85,
-        frictionAir: 0.02,
+        restitution: mobile ? 0.3 : 0.25,
+        friction: mobile ? 0.25 : 0.85,
+        frictionAir: mobile ? 0.03 : 0.02,
         density: 0.0025,
       });
       bodies.push(body);
@@ -1397,41 +1402,43 @@ export const FaqSection: React.FC = () => {
         const halfW = cap.width / 2;
         const halfH = cap.height / 2;
 
-        const minX = gridLeft + halfW;
-        const maxX = gridRight - halfW;
-        const minY = ceilingY + halfH;
-        const maxY = floorY - halfH;
+        if (!mobile) {
+          const minX = gridLeft + halfW;
+          const maxX = gridRight - halfW;
+          const minY = ceilingY + halfH;
+          const maxY = floorY - halfH;
 
-        let clamped = false;
-        let nx = b.position.x;
-        let ny = b.position.y;
-        let vx = b.velocity.x;
-        let vy = b.velocity.y;
+          let clamped = false;
+          let nx = b.position.x;
+          let ny = b.position.y;
+          let vx = b.velocity.x;
+          let vy = b.velocity.y;
 
-        // Hard boundary protection: prevent any capsule from leaving the grid width
-        if (nx < minX) {
-          nx = minX;
-          vx = Math.abs(vx) * 0.4;
-          clamped = true;
-        } else if (nx > maxX) {
-          nx = maxX;
-          vx = -Math.abs(vx) * 0.4;
-          clamped = true;
-        }
+          // Hard boundary protection: prevent any capsule from leaving the grid width
+          if (nx < minX) {
+            nx = minX;
+            vx = Math.abs(vx) * 0.4;
+            clamped = true;
+          } else if (nx > maxX) {
+            nx = maxX;
+            vx = -Math.abs(vx) * 0.4;
+            clamped = true;
+          }
 
-        if (ny > maxY) {
-          ny = maxY;
-          vy = -Math.abs(vy) * 0.2;
-          clamped = true;
-        } else if (ny < minY) {
-          ny = minY;
-          vy = Math.abs(vy) * 0.4;
-          clamped = true;
-        }
+          if (ny > maxY) {
+            ny = maxY;
+            vy = -Math.abs(vy) * 0.2;
+            clamped = true;
+          } else if (ny < minY) {
+            ny = minY;
+            vy = Math.abs(vy) * 0.4;
+            clamped = true;
+          }
 
-        if (clamped) {
-          Body.setPosition(b, { x: nx, y: ny });
-          Body.setVelocity(b, { x: vx, y: vy });
+          if (clamped) {
+            Body.setPosition(b, { x: nx, y: ny });
+            Body.setVelocity(b, { x: vx, y: vy });
+          }
         }
 
         const el = capsuleRefs.current[idx];
@@ -1757,6 +1764,22 @@ export const FaqSection: React.FC = () => {
 
                   {/* Full card content shown when expanded */}
                   <div ref={morphFullViewRef} className="faq-morph-full-view">
+                    {/* Mobile top-right close icon button */}
+                    <button
+                      type="button"
+                      className="faq-expanded-close-icon-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCollapse();
+                      }}
+                      aria-label="Закрыть"
+                    >
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3D3D3D" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                      </svg>
+                    </button>
+
                     <div className="faq-expanded-top">
                       <h3 ref={morphQuestionRef} className="faq-expanded-question">
                         {activeCapsule?.fullQuestion || activeCapsule?.text}
@@ -1821,6 +1844,13 @@ export const FaqSection: React.FC = () => {
                   </div>
 
                   <div ref={closingFullViewRef} className="faq-morph-full-view">
+                    <div className="faq-expanded-close-icon-btn" style={{ pointerEvents: 'none' }}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3D3D3D" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                      </svg>
+                    </div>
+
                     <div className="faq-expanded-top">
                       <h3 ref={closingQuestionRef} className="faq-expanded-question" />
                       <p ref={closingAnswerRef} className="faq-expanded-answer" />
@@ -1869,8 +1899,8 @@ export const FaqSection: React.FC = () => {
               ref={(el) => (capsuleRefs.current[idx] = el)}
               className="faq-capsule"
               style={{
-                width: isMobile ? `min(${cap.width * 0.65}px, calc(100vw - 48px))` : `${cap.width}px`,
-                height: isMobile ? '50px' : `${cap.height}px`,
+                width: isMobile ? `min(${cap.width * 0.58}px, calc(100vw - 44px))` : `${cap.width}px`,
+                height: isMobile ? '46px' : `${cap.height}px`,
               }}
               tabIndex={0}
               role="button"
