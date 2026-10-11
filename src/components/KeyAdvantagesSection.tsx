@@ -299,7 +299,7 @@ export const KeyAdvantagesSection: React.FC = () => {
             }}
           >
             <span className="key-adv-heading-desktop">ПРЕИМУЩЕСТВА</span>
-            <span className="key-adv-heading-mobile">преимущества</span>
+            <span className="key-adv-heading-mobile">ПРЕИМУЩЕСТВА</span>
           </span>
           <span 
             className="key-adv-word-dark"
@@ -309,7 +309,7 @@ export const KeyAdvantagesSection: React.FC = () => {
             }}
           >
             <span className="key-adv-heading-desktop">КЛЮЧЕВЫЕ</span>
-            <span className="key-adv-heading-mobile">ключевые</span>
+            <span className="key-adv-heading-mobile">КЛЮЧЕВЫЕ</span>
           </span>
         </div>
 

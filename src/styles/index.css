@@ -4746,12 +4746,12 @@ footer,
     top: auto !important;
     order: 1;
     font-family: 'Onest', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: clamp(2rem, 9.6vw, 2.375rem); /* 38px */
-    line-height: 1.275; /* 48.45px */
+    font-size: clamp(1.75rem, 8vw, 2.25rem); /* ~28px - 36px */
+    line-height: 1.25;
     font-weight: 400;
     color: #151515;
-    letter-spacing: 0;
-    text-transform: lowercase;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
     white-space: nowrap;
     will-change: transform, opacity;
     transition: transform 90ms ease-out, opacity 90ms ease-out;
@@ -4766,12 +4766,12 @@ footer,
     order: 2;
     margin-left: 1.5rem; /* 24px stagger matching Figma coordinates */
     font-family: 'Onest', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: clamp(2rem, 9.6vw, 2.375rem); /* 38px */
-    line-height: 1.275; /* 48.45px */
+    font-size: clamp(1.75rem, 8vw, 2.25rem); /* ~28px - 36px */
+    line-height: 1.25;
     font-weight: 400;
     color: #a4a5c8;
-    letter-spacing: 0;
-    text-transform: lowercase;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
     white-space: nowrap;
     will-change: transform, opacity;
     transition: transform 90ms ease-out, opacity 90ms ease-out;
@@ -4817,17 +4817,16 @@ footer,
     order: 3; /* Bottom card: lock ("Полный контроль над перепиской") */
   }
 
-  /* Figma mobile-3 Bento Card: height equal to video height (square aspect-ratio 1:1) */
+  /* Bento Card: narrower (320px) and taller (380px) */
   .key-adv-card {
     position: relative;
     left: auto !important;
     top: auto !important;
-    width: min(339px, calc(100vw - 32px));
-    height: min(339px, calc(100vw - 32px));
-    aspect-ratio: 1 / 1;
+    width: min(320px, calc(100vw - 36px));
+    height: 380px;
     background-color: #ffffff;
     border-radius: 1.905rem; /* 30.4856px */
-    padding: 1.5rem; /* 24px */
+    padding: 1.5rem 1.375rem 0; /* 24px top, 22px sides */
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -4874,31 +4873,33 @@ footer,
     z-index: 2;
     pointer-events: none;
     font-family: 'Onest', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: 1.5rem; /* 24px */
-    line-height: 1.15; /* ~27px */
+    font-size: 1.4375rem; /* 23px */
+    line-height: 1.15;
     font-weight: 400;
     color: #151515;
-    margin-top: 0.875rem; /* 14px */
+    margin-top: 0.75rem; /* 12px */
     margin-bottom: 0;
     letter-spacing: 0;
     max-width: 100% !important;
   }
 
-  /* Video wrap & video: full width of plaque, height equal to plaque (aspect-ratio 1:1) */
+  /* Video wrap & video: full width of plaque, anchored at bottom, all 4 corners rounded by 30.5px */
   .key-adv-card-video-wrap {
     position: absolute;
     left: 0;
     bottom: 0;
     width: 100%;
-    height: 100%;
     aspect-ratio: 1 / 1;
     margin: 0;
     z-index: 1;
     pointer-events: none;
     overflow: hidden;
-    border-radius: 1.905rem;
-    -webkit-mask-image: none;
-    mask-image: none;
+    border-radius: 1.905rem; /* 30.5px on all corners */
+    background-color: transparent;
+    isolation: isolate;
+    transform: translateZ(0);
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+    mask-image: -webkit-radial-gradient(white, black);
   }
 
   .key-adv-card-video {
@@ -4914,7 +4915,9 @@ footer,
     object-position: center bottom;
     display: block;
     pointer-events: none;
-    border-radius: 1.905rem;
+    border-radius: 1.905rem; /* 30.5px on all corners */
+    background-color: transparent;
+    overflow: hidden;
   }
 }
 
