@@ -4883,7 +4883,7 @@ footer,
     max-width: 100% !important;
   }
 
-  /* Video wrap & video: full width of plaque, anchored at bottom, all 4 corners rounded by 30.5px */
+  /* Video wrap & video: full width of plaque, anchored at bottom, smooth top opacity gradient (0% to 100%) to eliminate black corner defect */
   .key-adv-card-video-wrap {
     position: absolute;
     left: 0;
@@ -4898,8 +4898,20 @@ footer,
     background-color: transparent;
     isolation: isolate;
     transform: translateZ(0);
-    -webkit-mask-image: -webkit-radial-gradient(white, black);
-    mask-image: -webkit-radial-gradient(white, black);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 20px, #000 65px, #000 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, transparent 20px, #000 65px, #000 100%);
+  }
+
+  .key-adv-card-video-wrap::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3.5rem; /* ~56px */
+    background: linear-gradient(to bottom, #ffffff 0%, rgba(255, 255, 255, 0.95) 25%, transparent 100%);
+    z-index: 2;
+    pointer-events: none;
   }
 
   .key-adv-card-video {
@@ -4918,6 +4930,8 @@ footer,
     border-radius: 1.905rem; /* 30.5px on all corners */
     background-color: transparent;
     overflow: hidden;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 20px, #000 65px, #000 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, transparent 20px, #000 65px, #000 100%);
   }
 }
 
