@@ -883,11 +883,11 @@ export const FaqSection: React.FC = () => {
       const startH = cap.height;
       const startRadius = startH / 2;
 
-      const targetW = mobile ? Math.min(360, window.innerWidth - 32) : 1516;
-      const targetH = mobile ? Math.min(340, window.innerHeight - 80) : 648;
+      const targetW = mobile ? Math.min(339, window.innerWidth - 32) : 1516;
+      const targetH = mobile ? 358 : 648;
       const targetX = mobile ? (window.innerWidth - targetW) / 2 : 202;
-      const targetY = mobile ? Math.max(24, (window.innerHeight - targetH) / 2) : 141;
-      const targetRadius = mobile ? 32 : 50;
+      const targetY = mobile ? Math.max(20, (window.innerHeight - targetH) / 2) : 141;
+      const targetRadius = mobile ? 50 : 50;
 
       morphStartInfoRef.current = {
         idx,
