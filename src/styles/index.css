@@ -5516,6 +5516,20 @@ footer,
     box-shadow: 0 10px 36px -8px rgba(0, 0, 0, 0.08);
   }
 
+  .faq-morph-capsule-view {
+    padding: 0 16px !important;
+  }
+
+  .faq-morph-capsule-view .faq-capsule-text,
+  .faq-morph-card .faq-capsule-text {
+    font-size: 14.5px !important;
+    line-height: 1.275 !important;
+  }
+
+  .faq-morph-card .faq-capsule-gradient-overlay {
+    border-radius: 23px !important;
+  }
+
   .faq-morph-full-view {
     padding: 32px 31px 24px 32px;
     display: flex;
