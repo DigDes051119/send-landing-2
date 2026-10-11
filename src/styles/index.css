@@ -4883,13 +4883,13 @@ footer,
     max-width: 100% !important;
   }
 
-  /* Video wrap & video: anchored at bottom inside plaque with significantly stronger rounded top corners */
+  /* Video wrap & video: anchored at bottom inside plaque, cropped by 5px from top with rounded top corners */
   .key-adv-card-video-wrap {
     position: absolute;
     left: 0;
     bottom: 0;
     width: 100%;
-    aspect-ratio: 1 / 1;
+    height: calc(min(320px, calc(100vw - 36px)) - 5px) !important;
     margin: 0;
     z-index: 1;
     pointer-events: none;
@@ -4928,8 +4928,7 @@ footer,
     left: 0;
     bottom: 0;
     width: 100%;
-    height: 100%;
-    max-width: 100%;
+    height: min(320px, calc(100vw - 36px));
     aspect-ratio: 1 / 1;
     object-fit: contain;
     object-position: center bottom;
