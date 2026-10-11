@@ -4734,7 +4734,7 @@ footer,
     pointer-events: none;
     user-select: none;
     z-index: 1;
-    margin-top: 0.75rem;
+    margin-top: 2rem; /* 32px (0.75rem + 20px) - lowered by exactly 20px */
     margin-bottom: 1.25rem;
     padding-left: 1.5rem;
     box-sizing: border-box;
