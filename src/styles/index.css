@@ -4904,15 +4904,29 @@ footer,
     transform: translateZ(0);
     -webkit-clip-path: inset(0 0 0 0 round 1.905rem) !important;
     clip-path: inset(0 0 0 0 round 1.905rem) !important;
-    -webkit-mask-image: -webkit-radial-gradient(white, black);
     mask-image: none !important;
+    -webkit-mask-image: none !important;
+  }
+
+  /* Protective top overlay with matching rounded corners ensuring zero black corner leakage */
+  .key-adv-card-video-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2.25rem; /* ~36px */
+    background: linear-gradient(to bottom, #ffffff 0%, rgba(255, 255, 255, 0.95) 40%, rgba(255, 255, 255, 0) 100%);
+    border-top-left-radius: 1.905rem;
+    border-top-right-radius: 1.905rem;
+    pointer-events: none;
+    z-index: 2;
   }
 
   .key-adv-card-video {
     position: absolute;
     left: 0;
     bottom: 0;
-    transform: none;
     width: 100%;
     height: 100%;
     max-width: 100%;
@@ -4928,10 +4942,12 @@ footer,
     border-bottom-right-radius: 1.905rem !important;
     background-color: transparent !important;
     overflow: hidden !important;
+    transform: scale(1.15) !important;
+    transform-origin: center bottom !important;
     -webkit-clip-path: inset(0 0 0 0 round 1.905rem) !important;
     clip-path: inset(0 0 0 0 round 1.905rem) !important;
-    -webkit-mask-image: -webkit-radial-gradient(white, black);
     mask-image: none !important;
+    -webkit-mask-image: none !important;
   }
 }
 
