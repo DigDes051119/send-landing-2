@@ -161,7 +161,7 @@ export const MenuOverlay: React.FC<MenuOverlayProps> = ({ isOpen, onClose, onOpe
             onClick={handleClose}
           >
             <svg
-              className={`mobile-morph-icon ${active ? 'is-menu-open' : ''}`}
+              className="mobile-close-cross-icon"
               width="24"
               height="24"
               viewBox="0 0 24 24"
@@ -169,32 +169,8 @@ export const MenuOverlay: React.FC<MenuOverlayProps> = ({ isOpen, onClose, onOpe
               xmlns="http://www.w3.org/2000/svg"
               aria-hidden="true"
             >
-              <line
-                className="morph-bar morph-bar-top"
-                x1="3"
-                y1="6"
-                x2="21"
-                y2="6"
-                stroke="#3063F7"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-              />
-              <line
-                className="morph-bar morph-bar-mid"
-                x1="3"
-                y1="12"
-                x2="21"
-                y2="12"
-                stroke="#3063F7"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-              />
-              <line
-                className="morph-bar morph-bar-bot"
-                x1="3"
-                y1="18"
-                x2="21"
-                y2="18"
+              <path
+                d="M5 5L19 19M19 5L5 19"
                 stroke="#3063F7"
                 strokeWidth="2.5"
                 strokeLinecap="round"

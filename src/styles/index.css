@@ -1532,21 +1532,24 @@ main {
   .morph-bar {
     transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1),
                 opacity 180ms cubic-bezier(0.16, 1, 0.3, 1);
-    transform-origin: 12px 12px;
+    transform-origin: center;
     will-change: transform, opacity;
   }
 
   .mobile-morph-icon.is-menu-open .morph-bar-top {
     transform: translateY(6px) rotate(45deg);
+    transform-origin: 12px 6px;
   }
 
   .mobile-morph-icon.is-menu-open .morph-bar-mid {
     opacity: 0;
     transform: scaleX(0);
+    transform-origin: 12px 12px;
   }
 
   .mobile-morph-icon.is-menu-open .morph-bar-bot {
     transform: translateY(-6px) rotate(-45deg);
+    transform-origin: 12px 18px;
   }
 
   .site-header .header-nav-inner,
@@ -3283,10 +3286,17 @@ footer,
     transform: scale(0.94) !important;
   }
 
-  .mobile-menu-close-btn svg {
+  .mobile-menu-close-btn svg,
+  .mobile-close-cross-icon {
     width: 24px;
     height: 24px;
     display: block;
+    overflow: visible;
+    transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .mobile-menu-close-btn:active .mobile-close-cross-icon {
+    transform: rotate(90deg) scale(0.92);
   }
 
   /* Main Nav Links (Figma 254:2009 - 32px Onest regular, #151515, 32px gap) */
@@ -3403,11 +3413,10 @@ footer,
 
   .mobile-menu-store-text {
     display: flex;
-    flex-direction: row;
-    align-items: baseline;
-    gap: 6px;
-    line-height: 1;
-    white-space: nowrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 2px;
   }
 
   .mobile-menu-store-sub {
@@ -3415,8 +3424,8 @@ footer,
     font-size: 14px;
     font-weight: 400;
     color: #3063f7;
-    line-height: 1;
-    white-space: nowrap;
+    line-height: 1.1;
+    letter-spacing: 0;
   }
 
   .mobile-menu-store-name {
@@ -3424,7 +3433,8 @@ footer,
     font-size: 16px;
     font-weight: 500;
     color: #3063f7;
-    line-height: 1;
+    line-height: 1.1;
+    letter-spacing: 0;
     white-space: nowrap;
   }
 }
