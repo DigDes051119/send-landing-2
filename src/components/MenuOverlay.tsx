@@ -273,7 +273,6 @@ export const MenuOverlay: React.FC<MenuOverlayProps> = ({ isOpen, onClose, onOpe
               </svg>
             </div>
             <div className="mobile-menu-store-text">
-              <span className="mobile-menu-store-sub">Скачать</span>
               <span className="mobile-menu-store-name">App Store</span>
             </div>
           </a>
@@ -305,7 +304,6 @@ export const MenuOverlay: React.FC<MenuOverlayProps> = ({ isOpen, onClose, onOpe
               </svg>
             </div>
             <div className="mobile-menu-store-text">
-              <span className="mobile-menu-store-sub">Скачать</span>
               <span className="mobile-menu-store-name">Google Play</span>
             </div>
           </a>
