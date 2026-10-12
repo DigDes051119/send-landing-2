@@ -125,15 +125,15 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
         <div
           className={`header-menu-capsule ${isScrolled ? 'collapsed' : ''}`}
           onClick={(e) => {
-            // Trigger onOpenMenu on mobile, or on desktop when collapsed and outside nav links
-            const isMobile = typeof window !== 'undefined' && window.innerWidth <= 640;
-            if (isMobile || (isScrolled && !(e.target as HTMLElement).closest('.nav-pill-item'))) {
+            // Trigger onOpenMenu on mobile or tablet, or on desktop when collapsed and outside nav links
+            const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth <= 1024;
+            if (isMobileOrTablet || (isScrolled && !(e.target as HTMLElement).closest('.nav-pill-item'))) {
               onOpenMenu?.();
             }
           }}
-          role={isScrolled ? 'button' : undefined}
-          tabIndex={isScrolled ? 0 : undefined}
-          aria-label={isScrolled ? 'Открыть меню' : undefined}
+          role="button"
+          tabIndex={0}
+          aria-label="Открыть меню"
         >
           {/* Staggered Burger Icon on desktop / Morphing Icon on mobile */}
           <div className={`capsule-burger-layer ${isMenuOpen ? 'is-menu-open' : ''}`} aria-hidden={!isScrolled}>
