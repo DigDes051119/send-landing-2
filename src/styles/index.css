@@ -2537,6 +2537,27 @@ footer,
   }
 }
 
+@media (max-width: 768px) {
+  #contact,
+  footer,
+  .site-footer {
+    margin-left: 0.75rem !important;
+    margin-right: 0.75rem !important;
+    margin-bottom: 0.75rem !important;
+    border-radius: var(--radius-card-lg, 2.75rem) !important;
+  }
+}
+
+@media (max-width: 360px) {
+  #contact,
+  footer,
+  .site-footer {
+    margin-left: 0.5rem !important;
+    margin-right: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+}
+
 .footer-columns-grid {
   padding: 0 0 3rem 0;
   display: flex;
