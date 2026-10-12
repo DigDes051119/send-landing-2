@@ -4823,22 +4823,39 @@ footer,
     display: block !important;
   }
 
-  /* Compact background words so they don't awkwardly wrap or collide across the phone */
+  /* Compact background words: strictly show active slide, hide past & future */
   .block2-word {
     font-size: clamp(2.4rem, 5.2vw, 4.2rem) !important;
-    line-height: 1.2 !important;
-    opacity: 0.85 !important;
+    line-height: 1.25 !important;
+  }
+
+  .block2-word.is-future {
+    opacity: 0 !important;
+    transform: translate3d(-35px, 0, 0) !important;
+    pointer-events: none !important;
+  }
+
+  .block2-word.is-past {
+    opacity: 0 !important;
+    transform: translate3d(30px, 0, 0) !important;
+    pointer-events: none !important;
+  }
+
+  .block2-word.is-active {
+    opacity: 1 !important;
+    transform: translate3d(0, 0, 0) !important;
+    pointer-events: auto !important;
   }
 
   /* Info card placed cleanly below the fixed header buttons */
   .desktop-block2-info-card-wrap {
-    top: 7rem !important; /* Clears fixed header store buttons */
-    right: clamp(1.5rem, 3.5vw, 2.5rem) !important;
+    top: 6.5rem !important; /* Clears fixed header store buttons */
+    right: clamp(1.25rem, 3vw, 2.5rem) !important;
     z-index: 60 !important;
   }
 
   .block2-info-card {
-    width: clamp(280px, 34vw, 380px) !important;
+    width: clamp(280px, 32vw, 360px) !important;
     padding: 1.25rem 1.5rem !important;
     border-radius: 1.5rem !important;
     background: rgba(255, 255, 255, 0.95) !important;
@@ -4857,93 +4874,47 @@ footer,
     line-height: 1.35 !important;
   }
 
-  /* Scale floating cards and keep them close to the center phone */
+  /* Sized floating cards on tablet */
   .block2-floating-item {
-    max-width: clamp(180px, 25vw, 290px) !important;
-    width: auto !important;
+    max-width: clamp(200px, 28vw, 320px) !important;
   }
 
   .block2-floating-img {
-    max-width: clamp(180px, 25vw, 290px) !important;
+    max-width: 100% !important;
     width: 100% !important;
     height: auto !important;
   }
 
-  /* Left floating items: position comfortably close to the phone */
-  .slide-img-bubble-top,
+  /* Nudge far-left elements comfortably closer towards center phone */
   .slide-img-search-import,
-  .slide-img-s2-context,
+  .slide-img-s5-input {
+    left: clamp(15%, 19vw, 22%) !important;
+  }
+
   .slide-img-s2-audio,
   .slide-img-s3-audio,
-  .slide-img-s3-photo2,
-  .slide-img-s4-country,
   .slide-img-s4-username,
-  .slide-img-s5-plus,
-  .slide-img-s5-input {
-    left: clamp(3%, calc(50% - 290px), 15%) !important;
+  .slide-img-s4-phone {
+    left: clamp(16%, 20vw, 23%) !important;
   }
 
-  /* Right floating items: position comfortably close to the phone */
-  .slide-img-input-bar,
-  .slide-img-location-card,
-  .slide-img-s2-bubble,
-  .slide-img-s2-tabs,
-  .slide-img-s3-photo1,
-  .slide-img-s3-photo3,
-  .slide-img-s4-phone,
-  .slide-img-s4-voice,
-  .slide-img-s5-toggle,
-  .slide-img-s5-silent {
-    left: clamp(52%, calc(50% + 50px), 58%) !important;
-  }
-
-  /* Controlled vertical positions so items don't push off the screen */
-  .slide-img-bubble-top,
-  .slide-img-s2-audio,
-  .slide-img-s3-audio,
-  .slide-img-s4-country,
-  .slide-img-s5-plus {
-    top: clamp(12%, 16vh, 20%) !important;
-  }
-
-  .slide-img-input-bar,
-  .slide-img-s2-bubble,
-  .slide-img-s3-photo1,
-  .slide-img-s4-phone,
-  .slide-img-s5-silent {
-    top: clamp(20%, 25vh, 30%) !important;
-  }
-
-  .slide-img-search-import,
-  .slide-img-s2-context,
-  .slide-img-s3-photo2,
-  .slide-img-s4-username,
-  .slide-img-s5-input {
-    top: clamp(56%, 62vh, 68%) !important;
-  }
-
-  .slide-img-location-card,
-  .slide-img-s2-tabs,
-  .slide-img-s3-photo3,
-  .slide-img-s4-voice,
-  .slide-img-s5-toggle {
-    top: clamp(62%, 68vh, 74%) !important;
-  }
-
-  /* Scaled burst animations on tablet to prevent elements flying off the screen */
+  /* Controlled burst animations on tablet to prevent elements flying off the screen */
   .block2-floating-item.is-future {
-    transform: translate3d(calc(var(--dx-in, 0px) * 0.4), calc(var(--dy-in, 0px) * 0.4), 0) scale(0.25) !important;
+    transform: translate3d(calc(var(--dx-in, 0px) * 0.35), calc(var(--dy-in, 0px) * 0.35), 0) scale(0.25) !important;
     opacity: 0 !important;
+    pointer-events: none !important;
   }
 
   .block2-floating-item.is-past {
-    transform: translate3d(calc(var(--dx-out, 0px) * 0.4), calc(var(--dy-out, 0px) * 0.4), 0) scale(1.05) !important;
+    transform: translate3d(calc(var(--dx-out, 0px) * 0.35), calc(var(--dy-out, 0px) * 0.35), 0) scale(1.05) !important;
     opacity: 0 !important;
+    pointer-events: none !important;
   }
 
   .block2-floating-item.is-active {
     transform: translate3d(0, 0, 0) scale(1) !important;
     opacity: var(--target-opacity, 1) !important;
+    pointer-events: auto !important;
   }
 }
 
@@ -5529,22 +5500,24 @@ footer,
   /* Stage retains desktop 1920x1140 canvas and scales down smoothly via JS transform */
   .key-advantages-stage {
     position: relative;
-    width: 100%;
-    max-width: 120rem;
-    height: 71.25rem;
-    min-height: 71.25rem;
+    width: 120rem !important;
+    max-width: 120rem !important;
+    height: 71.25rem !important;
+    min-height: 71.25rem !important;
     margin: 0 auto;
     background: transparent;
     overflow: visible;
     z-index: 2;
     pointer-events: none;
+    flex-shrink: 0 !important;
   }
 
   .key-advantages-cards {
-    position: relative;
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
-    pointer-events: none;
+    pointer-events: auto;
   }
 
   /* Background Typography - scaled smoothly for tablet viewports */

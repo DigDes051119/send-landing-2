@@ -108,40 +108,11 @@ export const KeyAdvantagesSection: React.FC = () => {
     const stage = stageRef.current;
     if (!section || !stage) return;
 
-    const vwCheck = typeof window !== 'undefined' ? window.innerWidth : 1920;
-    const isTablet = vwCheck > 640 && vwCheck <= 1024;
-
-    if (isTablet) {
-      // Tablet: cards flow naturally via static CSS
-      stage.style.removeProperty('transform');
-      stage.style.removeProperty('transform-origin');
-      section.style.setProperty('--c3-dy', '0px');
-      section.style.setProperty('--c3-op', '1');
-      section.style.setProperty('--c3-pe', 'auto');
-      section.style.setProperty('--c2-dy', '0px');
-      section.style.setProperty('--c2-op', '1');
-      section.style.setProperty('--c2-pe', 'auto');
-      section.style.setProperty('--c1-dy', '0px');
-      section.style.setProperty('--c1-op', '1');
-      section.style.setProperty('--c1-pe', 'auto');
-      section.style.setProperty('--w1-dx', '0px');
-      section.style.setProperty('--w1-op', '1');
-      section.style.setProperty('--w2-dx', '0px');
-      section.style.setProperty('--w2-op', '1');
-
-      const handleResize = () => {
-        if (window.innerWidth > 1024 || window.innerWidth <= 640) {
-          window.location.reload();
-        }
-      };
-      window.addEventListener('resize', handleResize, { passive: true });
-      return () => window.removeEventListener('resize', handleResize);
-    }
-
     const updateScaleAndScroll = () => {
       const vh = window.innerHeight;
       const vw = window.innerWidth;
       const isMobile = vw <= 640;
+      const isTablet = vw > 640 && vw <= 1024;
 
       // Smooth cubic ease-out
       const ease = (t: number) => {
@@ -158,10 +129,10 @@ export const KeyAdvantagesSection: React.FC = () => {
       const p = Math.min(Math.max(scrolled / scrollable, 0), 1);
 
       if (!isMobile) {
-        // Desktop: Responsive Stage Scaling so lowered cards are never cropped
+        // Desktop & Tablet: Responsive Stage Scaling so lowered cards are never cropped
         const STAGE_W = 1920;
         const STAGE_H = 1140;
-        const scaleW = vw / STAGE_W;
+        const scaleW = isTablet ? (vw - 48) / STAGE_W : vw / STAGE_W;
         const scaleH = (vh - 32) / STAGE_H;
         const scale = Math.min(1, Math.min(scaleW, scaleH));
         stage.style.transform = `scale(${scale.toFixed(4)})`;
