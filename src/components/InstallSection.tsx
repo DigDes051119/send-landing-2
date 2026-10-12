@@ -17,7 +17,8 @@ export const InstallSection: React.FC<InstallSectionProps> = ({
   const cardAppStoreRef = useRef<HTMLDivElement>(null);
   const cardGooglePlayRef = useRef<HTMLDivElement>(null);
 
-  const [activeMobileIconIdx, setActiveMobileIconIdx] = useState<number>(0);
+  const [activeMobileIconIdx, setActiveMobileIconIdx] = useState<number>(-1);
+  const activeMobileIconIdxRef = useRef<number>(-1);
 
   // Flying morph cards mounted in portal directly on document.body (fixed viewport layer)
   const flyingASRef = useRef<HTMLDivElement>(null);
@@ -437,7 +438,7 @@ export const InstallSection: React.FC<InstallSectionProps> = ({
     };
   }, [onDockChange, playDock, playUndock]);
 
-  // Mobile: sequential playback of icons in turn on scroll & auto-cycle when in view
+  // Mobile: purely scroll-driven animation of icons (emerges from left on entrance, retreats on exit/scroll above)
   useEffect(() => {
     const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth <= 1024;
     if (!isMobileOrTablet) return;
@@ -446,61 +447,50 @@ export const InstallSection: React.FC<InstallSectionProps> = ({
     if (!section) return;
 
     let isSectionInView = false;
-    let cycleTimer: ReturnType<typeof setInterval> | null = null;
-    let scrollTimeout: ReturnType<typeof setTimeout> | null = null;
+    let rafId: number | null = null;
 
-    const startCycle = () => {
-      if (cycleTimer) clearInterval(cycleTimer);
-      cycleTimer = setInterval(() => {
-        if (!isSectionInView) return;
-        setActiveMobileIconIdx((prev) => (prev + 1) % 3);
-      }, 2400);
-    };
+    const updateActiveCardOnScroll = () => {
+      const card0 = cardWebRef.current;
+      const card1 = cardAppStoreRef.current;
+      const card2 = cardGooglePlayRef.current;
 
-    const stopCycle = () => {
-      if (cycleTimer) {
-        clearInterval(cycleTimer);
-        cycleTimer = null;
+      if (!card0 || !card1 || !card2) return;
+
+      const vh = window.innerHeight;
+      const r0 = card0.getBoundingClientRect();
+      const r1 = card1.getBoundingClientRect();
+      const r2 = card2.getBoundingClientRect();
+
+      const prevIdx = activeMobileIconIdxRef.current;
+      let targetIdx = -1;
+
+      if (r2.bottom < vh * 0.12) {
+        // Scrolled past all cards into footer
+        targetIdx = -1;
+      } else if (prevIdx === 2 ? r2.top <= vh * 0.65 : r2.top <= vh * 0.58) {
+        // Scrolled down to Card 2 (Google Play)
+        targetIdx = 2;
+      } else if (prevIdx === 1 ? r1.top <= vh * 0.65 : r1.top <= vh * 0.58) {
+        // Scrolled down to Card 1 (App Store)
+        targetIdx = 1;
+      } else if (prevIdx === 0 ? r0.top <= vh * 0.78 : r0.top <= vh * 0.74) {
+        // Scrolled down to Card 0 (Send Web)
+        targetIdx = 0;
+      } else {
+        // Scrolled above Card 0 (back into FAQ above)
+        targetIdx = -1;
+      }
+
+      if (targetIdx !== activeMobileIconIdxRef.current) {
+        activeMobileIconIdxRef.current = targetIdx;
+        setActiveMobileIconIdx(targetIdx);
       }
     };
 
-    // Determine which card is currently closest to the focal center of the mobile screen
     const handleScroll = () => {
       if (!isSectionInView) return;
-
-      const focalY = window.innerHeight * 0.48;
-      const cards: (HTMLElement | null)[] = [
-        cardWebRef.current,
-        cardAppStoreRef.current,
-        cardGooglePlayRef.current,
-      ];
-
-      let closestIdx = -1;
-      let minDistance = Infinity;
-
-      cards.forEach((card, idx) => {
-        if (!card) return;
-        const rect = card.getBoundingClientRect();
-        const cardCenter = rect.top + rect.height / 2;
-        const dist = Math.abs(cardCenter - focalY);
-        if (dist < minDistance && rect.bottom > 60 && rect.top < window.innerHeight - 60) {
-          minDistance = dist;
-          closestIdx = idx;
-        }
-      });
-
-      if (closestIdx !== -1 && minDistance < window.innerHeight * 0.55) {
-        setActiveMobileIconIdx(closestIdx);
-      }
-
-      // Reset auto-cycle interval so user sees the current card's icon before auto-advancing
-      stopCycle();
-      if (scrollTimeout) clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        if (isSectionInView) {
-          startCycle();
-        }
-      }, 1800);
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(updateActiveCardOnScroll);
     };
 
     const observer = new IntersectionObserver(
@@ -508,18 +498,21 @@ export const InstallSection: React.FC<InstallSectionProps> = ({
         const entry = entries[0];
         if (entry && entry.isIntersecting) {
           isSectionInView = true;
-          handleScroll();
-          startCycle();
+          updateActiveCardOnScroll();
         } else {
           isSectionInView = false;
-          stopCycle();
+          if (activeMobileIconIdxRef.current !== -1) {
+            activeMobileIconIdxRef.current = -1;
+            setActiveMobileIconIdx(-1);
+          }
         }
       },
-      { threshold: 0.05 }
+      { threshold: 0.02 }
     );
 
     observer.observe(section);
     window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll, { passive: true });
     const lenis = (window as any).lenis;
     if (lenis) {
       lenis.on('scroll', handleScroll);
@@ -527,9 +520,9 @@ export const InstallSection: React.FC<InstallSectionProps> = ({
 
     return () => {
       observer.disconnect();
-      stopCycle();
-      if (scrollTimeout) clearTimeout(scrollTimeout);
+      if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
       if (lenis) {
         lenis.off('scroll', handleScroll);
       }
