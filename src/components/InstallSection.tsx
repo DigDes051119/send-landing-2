@@ -13,8 +13,11 @@ export const InstallSection: React.FC<InstallSectionProps> = ({
   onOpenModal,
 }) => {
   const sectionRef = useRef<HTMLElement>(null);
+  const cardWebRef = useRef<HTMLElement>(null);
   const cardAppStoreRef = useRef<HTMLDivElement>(null);
   const cardGooglePlayRef = useRef<HTMLDivElement>(null);
+
+  const [activeMobileIconIdx, setActiveMobileIconIdx] = useState<number>(0);
 
   // Flying morph cards mounted in portal directly on document.body (fixed viewport layer)
   const flyingASRef = useRef<HTMLDivElement>(null);
@@ -434,6 +437,105 @@ export const InstallSection: React.FC<InstallSectionProps> = ({
     };
   }, [onDockChange, playDock, playUndock]);
 
+  // Mobile: sequential playback of icons in turn on scroll & auto-cycle when in view
+  useEffect(() => {
+    const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth <= 1024;
+    if (!isMobileOrTablet) return;
+
+    const section = sectionRef.current;
+    if (!section) return;
+
+    let isSectionInView = false;
+    let cycleTimer: ReturnType<typeof setInterval> | null = null;
+    let scrollTimeout: ReturnType<typeof setTimeout> | null = null;
+
+    const startCycle = () => {
+      if (cycleTimer) clearInterval(cycleTimer);
+      cycleTimer = setInterval(() => {
+        if (!isSectionInView) return;
+        setActiveMobileIconIdx((prev) => (prev + 1) % 3);
+      }, 2400);
+    };
+
+    const stopCycle = () => {
+      if (cycleTimer) {
+        clearInterval(cycleTimer);
+        cycleTimer = null;
+      }
+    };
+
+    // Determine which card is currently closest to the focal center of the mobile screen
+    const handleScroll = () => {
+      if (!isSectionInView) return;
+
+      const focalY = window.innerHeight * 0.48;
+      const cards: (HTMLElement | null)[] = [
+        cardWebRef.current,
+        cardAppStoreRef.current,
+        cardGooglePlayRef.current,
+      ];
+
+      let closestIdx = -1;
+      let minDistance = Infinity;
+
+      cards.forEach((card, idx) => {
+        if (!card) return;
+        const rect = card.getBoundingClientRect();
+        const cardCenter = rect.top + rect.height / 2;
+        const dist = Math.abs(cardCenter - focalY);
+        if (dist < minDistance && rect.bottom > 60 && rect.top < window.innerHeight - 60) {
+          minDistance = dist;
+          closestIdx = idx;
+        }
+      });
+
+      if (closestIdx !== -1 && minDistance < window.innerHeight * 0.55) {
+        setActiveMobileIconIdx(closestIdx);
+      }
+
+      // Reset auto-cycle interval so user sees the current card's icon before auto-advancing
+      stopCycle();
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        if (isSectionInView) {
+          startCycle();
+        }
+      }, 1800);
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry && entry.isIntersecting) {
+          isSectionInView = true;
+          handleScroll();
+          startCycle();
+        } else {
+          isSectionInView = false;
+          stopCycle();
+        }
+      },
+      { threshold: 0.05 }
+    );
+
+    observer.observe(section);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    const lenis = (window as any).lenis;
+    if (lenis) {
+      lenis.on('scroll', handleScroll);
+    }
+
+    return () => {
+      observer.disconnect();
+      stopCycle();
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      window.removeEventListener('scroll', handleScroll);
+      if (lenis) {
+        lenis.off('scroll', handleScroll);
+      }
+    };
+  }, []);
+
   return (
     <>
       <section
@@ -445,8 +547,14 @@ export const InstallSection: React.FC<InstallSectionProps> = ({
         <div className="install-stage">
           {/* Card: Send Web (Figma Group 23 / 156:1171) */}
           <article
-            className="install-plate install-plate-web"
+            ref={cardWebRef}
+            className={`install-plate install-plate-web ${activeMobileIconIdx === 0 ? 'is-icon-active' : ''}`}
             aria-label="Send Web — Очень скоро"
+            onClick={() => {
+              if (typeof window !== 'undefined' && window.innerWidth <= 1024) {
+                setActiveMobileIconIdx(0);
+              }
+            }}
           >
             <div className="install-plate-top">
               <span className="install-plate-title">Send Web</span>
@@ -489,8 +597,13 @@ export const InstallSection: React.FC<InstallSectionProps> = ({
             {/* Card 1: App Store (Figma Rectangle 161124268) */}
             <div
               ref={cardAppStoreRef}
-              className="install-plate install-plate-appstore"
+              className={`install-plate install-plate-appstore ${activeMobileIconIdx === 1 ? 'is-icon-active' : ''}`}
               style={{ opacity: 0 }}
+              onClick={() => {
+                if (typeof window !== 'undefined' && window.innerWidth <= 1024) {
+                  setActiveMobileIconIdx(1);
+                }
+              }}
             >
               <div className="install-plate-top">
                 <span className="install-plate-title">App Store</span>
@@ -553,8 +666,13 @@ export const InstallSection: React.FC<InstallSectionProps> = ({
             {/* Card 2: Google Play (Figma Rectangle 161124267) */}
             <div
               ref={cardGooglePlayRef}
-              className="install-plate install-plate-googleplay"
+              className={`install-plate install-plate-googleplay ${activeMobileIconIdx === 2 ? 'is-icon-active' : ''}`}
               style={{ opacity: 0 }}
+              onClick={() => {
+                if (typeof window !== 'undefined' && window.innerWidth <= 1024) {
+                  setActiveMobileIconIdx(2);
+                }
+              }}
             >
               <div className="install-plate-top">
                 <span className="install-plate-title">Google Play</span>
