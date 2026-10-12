@@ -79,10 +79,7 @@ export default defineConfig(() => {
     plugins: [react(), apiMiddleware(), searchMetadata(siteUrl)],
     server: {
       port: 5173,
-      host: true,
-      watch: {
-        ignored: ['**/public/video/**', '**/*.mp4']
-      }
+      host: true
     }
   };
 });

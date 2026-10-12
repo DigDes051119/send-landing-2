@@ -33,6 +33,9 @@ const KeyAdvCardItem: React.FC<AdvCardProps> = ({
     const card = cardRef.current;
     if (!video || !card) return;
 
+    // Ensure immediate playback if permitted
+    video.play().catch(() => {});
+
     // Only play video when visible in viewport to prevent mobile GPU and memory lag
     const observer = new IntersectionObserver(
       (entries) => {
@@ -43,7 +46,7 @@ const KeyAdvCardItem: React.FC<AdvCardProps> = ({
           video.pause();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.05 }
     );
 
     observer.observe(card);
@@ -87,12 +90,13 @@ const KeyAdvCardItem: React.FC<AdvCardProps> = ({
           src={videoSrc}
           loop
           muted
-          playsInline
           autoPlay
+          playsInline
           preload="auto"
           className="key-adv-card-video"
         >
-          <source src={videoSrc} type="video/mp4" />
+          <source src={videoSrc} type="video/webm" />
+          <source src={videoSrc.replace('.webm', '.mp4')} type="video/mp4" />
         </video>
       </div>
     </article>
@@ -288,7 +292,7 @@ export const KeyAdvantagesSection: React.FC = () => {
         {/* 3 Staggered White Bento Cards Stage */}
         <div ref={stageRef} className="key-advantages-stage">
           <div className="key-advantages-cards">
-            {/* Card 1 - Left: lock.mp4 (Appears 3rd) */}
+            {/* Card 1 - Left: lock.webm (Appears 3rd) */}
             <KeyAdvCardItem
               cardClass="card-1"
               titleClass="title-card-1"
@@ -299,13 +303,13 @@ export const KeyAdvantagesSection: React.FC = () => {
                 'Никакие сторонние корпорации или рекламные трекеры не имеют доступа к вашей истории общения'
               ]}
               mobileSubtitle="Никакие сторонние корпорации или рекламные трекеры не имеют доступа к вашей истории общения"
-              videoSrc="/video/lock.mp4"
+              videoSrc="/video/lock.webm"
               dyVar="--c1-dy"
               opVar="--c1-op"
               peVar="--c1-pe"
             />
 
-            {/* Card 2 - Middle: rot.mp4 (Appears 2nd) */}
+            {/* Card 2 - Middle: rot.webm (Appears 2nd) */}
             <KeyAdvCardItem
               cardClass="card-2"
               titleClass="title-card-2"
@@ -316,13 +320,13 @@ export const KeyAdvantagesSection: React.FC = () => {
                 'Им доступны только технические настройки и сообщения, на которые вы сами отправили жалобу при столкновении со спамом'
               ]}
               mobileSubtitle="Администраторам доступны только технические настройки и сообщения, на которые вы сами отправили жалобу при столкновении со спамом"
-              videoSrc="/video/rot.mp4"
+              videoSrc="/video/rot.webm"
               dyVar="--c2-dy"
               opVar="--c2-op"
               peVar="--c2-pe"
             />
 
-            {/* Card 3 - Right: chit.mp4 (Appears 1st) */}
+            {/* Card 3 - Right: chit.webm (Appears 1st) */}
             <KeyAdvCardItem
               cardClass="card-3"
               titleClass="title-card-3"
@@ -333,7 +337,7 @@ export const KeyAdvantagesSection: React.FC = () => {
                 'Приложение строго запрещает логировать текст ваших сообщений или коды подтверждения для исключения утечек'
               ]}
               mobileSubtitle="Приложение строго запрещает логировать текст ваших сообщений или коды подтверждения для исключения утечек"
-              videoSrc="/video/chit.mp4"
+              videoSrc="/video/chit.webm"
               dyVar="--c3-dy"
               opVar="--c3-op"
               peVar="--c3-pe"
