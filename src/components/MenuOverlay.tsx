@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { SendLogo } from './SendLogo';
 
 interface MenuOverlayProps {
@@ -11,9 +11,11 @@ interface MenuOverlayProps {
 export const MenuOverlay: React.FC<MenuOverlayProps> = ({ isOpen, onClose, onOpenModal, onNavigate }) => {
   const [mounted, setMounted] = useState(isOpen);
   const [active, setActive] = useState(false);
+  const isClosingRef = useRef(false);
 
   useEffect(() => {
     if (isOpen) {
+      isClosingRef.current = false;
       setMounted(true);
       const raf = requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -25,23 +27,39 @@ export const MenuOverlay: React.FC<MenuOverlayProps> = ({ isOpen, onClose, onOpe
       setActive(false);
       const timer = setTimeout(() => {
         setMounted(false);
-      }, 400);
+      }, 380);
       return () => clearTimeout(timer);
     }
   }, [isOpen]);
 
   if (!mounted && !isOpen) return null;
 
+  const handleClose = () => {
+    if (isClosingRef.current) return;
+    isClosingRef.current = true;
+    setActive(false);
+    setTimeout(() => {
+      isClosingRef.current = false;
+      onClose();
+    }, 350);
+  };
+
   const handleItemClick = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
-    onClose();
-    if (onNavigate) {
-      onNavigate(id);
-    } else if ((window as any).scrollToSection) {
-      (window as any).scrollToSection(id);
-    } else {
-      (window as any).lenis?.scrollTo(`#${id}`, { offset: -60, duration: 1.0 });
-    }
+    if (isClosingRef.current) return;
+    isClosingRef.current = true;
+    setActive(false);
+    setTimeout(() => {
+      isClosingRef.current = false;
+      onClose();
+      if (onNavigate) {
+        onNavigate(id);
+      } else if ((window as any).scrollToSection) {
+        (window as any).scrollToSection(id);
+      } else {
+        (window as any).lenis?.scrollTo(`#${id}`, { offset: -60, duration: 1.0 });
+      }
+    }, 350);
   };
 
   return (
@@ -50,7 +68,7 @@ export const MenuOverlay: React.FC<MenuOverlayProps> = ({ isOpen, onClose, onOpe
       {/* DESKTOP MENU (min-width: 641px): EXACT UNTOUCHED DESKTOP VIEW  */}
       {/* ============================================================== */}
       <div className="menu-desktop-wrapper">
-        <div className="menu-backdrop" id="menu-backdrop" onClick={onClose}></div>
+        <div className="menu-backdrop" id="menu-backdrop" onClick={handleClose}></div>
         <div className="menu-panel" id="menu-panel">
           <div className="menu-top-row">
             <div className="menu-brand">
@@ -62,7 +80,7 @@ export const MenuOverlay: React.FC<MenuOverlayProps> = ({ isOpen, onClose, onOpe
               className="menu-close-btn"
               id="menu-close-btn"
               aria-label="Close navigation overlay"
-              onClick={onClose}
+              onClick={handleClose}
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M6 6l12 12M18 6L6 18"/>
@@ -152,7 +170,7 @@ export const MenuOverlay: React.FC<MenuOverlayProps> = ({ isOpen, onClose, onOpe
             className="mobile-menu-close-btn"
             id="mobile-menu-close-btn"
             aria-label="Закрыть меню"
-            onClick={onClose}
+            onClick={handleClose}
           >
             <svg
               className={`mobile-morph-icon ${active ? 'is-menu-open' : ''}`}
