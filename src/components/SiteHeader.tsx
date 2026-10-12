@@ -7,6 +7,7 @@ interface SiteHeaderProps {
   ready?: boolean;
   onNavigate?: (sectionId: string) => void;
   isStoreDocked?: boolean;
+  isMenuOpen?: boolean;
 }
 
 const navItems = [
@@ -22,6 +23,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
   ready = true,
   onNavigate,
   isStoreDocked = false,
+  isMenuOpen = false,
 }) => {
   const [activeNav, setActiveNav] = useState('hero');
   const [isScrolled, setIsScrolled] = useState(false);
@@ -133,10 +135,10 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
           tabIndex={isScrolled ? 0 : undefined}
           aria-label={isScrolled ? 'Открыть меню' : undefined}
         >
-          {/* Staggered Burger Icon (Figma 37:301 / 37:319) - slides in with kinetic bezier */}
-          <div className="capsule-burger-layer" aria-hidden={!isScrolled}>
+          {/* Staggered Burger Icon on desktop / Morphing Icon on mobile */}
+          <div className={`capsule-burger-layer ${isMenuOpen ? 'is-menu-open' : ''}`} aria-hidden={!isScrolled}>
             <svg
-              className="bars-staggered-icon"
+              className="bars-staggered-icon desktop-only-burger"
               width="24"
               height="24"
               viewBox="0 0 24 24"
@@ -160,6 +162,47 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
                 d="M17.5 16L1.5 16C0.67 16 0 16.67 0 17.5C0 18.33 0.67 19 1.5 19L17.5 19C18.33 19 19 18.33 19 17.5C19 16.67 18.33 16 17.5 16Z"
                 fill="#3063F7"
                 transform="translate(0, 2.5)"
+              />
+            </svg>
+
+            <svg
+              className={`mobile-morph-icon ${isMenuOpen ? 'is-menu-open' : ''}`}
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <line
+                className="morph-bar morph-bar-top"
+                x1="3"
+                y1="6"
+                x2="21"
+                y2="6"
+                stroke="#3063F7"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              />
+              <line
+                className="morph-bar morph-bar-mid"
+                x1="3"
+                y1="12"
+                x2="21"
+                y2="12"
+                stroke="#3063F7"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              />
+              <line
+                className="morph-bar morph-bar-bot"
+                x1="3"
+                y1="18"
+                x2="21"
+                y2="18"
+                stroke="#3063F7"
+                strokeWidth="2.5"
+                strokeLinecap="round"
               />
             </svg>
           </div>

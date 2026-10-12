@@ -828,6 +828,7 @@ export const App: React.FC = () => {
         ready={ready}
         onNavigate={scrollToSection}
         isStoreDocked={isStoreDocked}
+        isMenuOpen={isMenuOpen}
       />
 
       {/* Main Page Shell */}

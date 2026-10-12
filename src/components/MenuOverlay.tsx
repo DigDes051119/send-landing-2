@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { SendLogo } from './SendLogo';
 
 interface MenuOverlayProps {
@@ -9,7 +9,28 @@ interface MenuOverlayProps {
 }
 
 export const MenuOverlay: React.FC<MenuOverlayProps> = ({ isOpen, onClose, onOpenModal, onNavigate }) => {
-  if (!isOpen) return null;
+  const [mounted, setMounted] = useState(isOpen);
+  const [active, setActive] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setMounted(true);
+      const raf = requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setActive(true);
+        });
+      });
+      return () => cancelAnimationFrame(raf);
+    } else {
+      setActive(false);
+      const timer = setTimeout(() => {
+        setMounted(false);
+      }, 400);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
+
+  if (!mounted && !isOpen) return null;
 
   const handleItemClick = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
@@ -24,7 +45,7 @@ export const MenuOverlay: React.FC<MenuOverlayProps> = ({ isOpen, onClose, onOpe
   };
 
   return (
-    <aside id="menu-overlay" className="open" aria-label="Navigation Overlay">
+    <aside id="menu-overlay" className={active ? 'open' : ''} aria-label="Navigation Overlay">
       {/* ============================================================== */}
       {/* DESKTOP MENU (min-width: 641px): EXACT UNTOUCHED DESKTOP VIEW  */}
       {/* ============================================================== */}
@@ -113,7 +134,7 @@ export const MenuOverlay: React.FC<MenuOverlayProps> = ({ isOpen, onClose, onOpe
       {/* ============================================================== */}
       {/* MOBILE MENU (max-width: 640px): EXACT FIGMA FRAME 254:1965     */}
       {/* ============================================================== */}
-      <div className="mobile-menu-screen" aria-label="Мобильное меню">
+      <div className={`mobile-menu-screen ${active ? 'is-active' : ''}`} aria-label="Мобильное меню">
         {/* Giant Vertical Typography on the right: SEND Messenger (Figma 254:2032) */}
         <div className="mobile-menu-bg-text-wrap" aria-hidden="true">
           <img
@@ -123,7 +144,7 @@ export const MenuOverlay: React.FC<MenuOverlayProps> = ({ isOpen, onClose, onOpe
           />
         </div>
 
-        {/* Top Close Button (Figma 254:1969 - 64x64px white circle, blue cross) */}
+        {/* Top Close Button (Figma 254:1969 - 64x64px white circle, morphing icon) */}
         <div className="mobile-menu-header">
           <button
             type="button"
@@ -133,17 +154,44 @@ export const MenuOverlay: React.FC<MenuOverlayProps> = ({ isOpen, onClose, onOpe
             onClick={onClose}
           >
             <svg
+              className={`mobile-morph-icon ${active ? 'is-menu-open' : ''}`}
               width="24"
               height="24"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#3063F7"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              xmlns="http://www.w3.org/2000/svg"
               aria-hidden="true"
             >
-              <path d="M5 5L19 19M19 5L5 19" />
+              <line
+                className="morph-bar morph-bar-top"
+                x1="3"
+                y1="6"
+                x2="21"
+                y2="6"
+                stroke="#3063F7"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              />
+              <line
+                className="morph-bar morph-bar-mid"
+                x1="3"
+                y1="12"
+                x2="21"
+                y2="12"
+                stroke="#3063F7"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              />
+              <line
+                className="morph-bar morph-bar-bot"
+                x1="3"
+                y1="18"
+                x2="21"
+                y2="18"
+                stroke="#3063F7"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              />
             </svg>
           </button>
         </div>
