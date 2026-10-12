@@ -3103,6 +3103,10 @@ footer,
   display: none !important;
 }
 
+.mobile-menu-ticker-wrap {
+  display: none;
+}
+
 /* =============================================================
    Mobile Fullscreen Menu (Exact Figma Frame 254:1965)
    ============================================================= */
@@ -3171,33 +3175,68 @@ footer,
     opacity: 1;
   }
 
-  /* Decorative Vertical SEND Messenger background typography (Figma 254:2032) */
-  .mobile-menu-bg-text-wrap {
-    position: absolute;
-    top: -372px;
-    right: 11px;
-    width: 140px;
-    height: 1811px;
-    pointer-events: none;
-    user-select: none;
-    z-index: 1;
-    opacity: 0;
-    transform: translateY(30px);
+  /* Mobile Cyclical Background Typography (SEND MESSENGER - same as Hero block 1) */
+  .mobile-menu-ticker-wrap {
+    position: absolute !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    width: 140px !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+    user-select: none !important;
+    z-index: 1 !important;
+    display: flex !important;
+    justify-content: center !important;
+    opacity: 0 !important;
+    transform: translateY(24px) !important;
     transition: opacity 450ms cubic-bezier(0.16, 1, 0.3, 1) 100ms,
-                transform 450ms cubic-bezier(0.16, 1, 0.3, 1) 100ms;
-    overflow: hidden;
-    will-change: transform, opacity;
+                transform 450ms cubic-bezier(0.16, 1, 0.3, 1) 100ms !important;
+    will-change: transform, opacity !important;
   }
 
-  #menu-overlay.open .mobile-menu-bg-text-wrap {
-    opacity: 0.15;
-    transform: translateY(0);
+  #menu-overlay.open .mobile-menu-ticker-wrap {
+    opacity: 0.3 !important; /* Increased opacity per user request */
+    transform: translateY(0) !important;
   }
 
-  .mobile-menu-bg-text-img {
-    width: 100%;
-    height: auto;
-    display: block;
+  .mobile-menu-ticker-track {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    will-change: transform !important;
+    animation: mobileMenuTickerScroll 24s linear infinite !important;
+  }
+
+  .mobile-menu-ticker-text {
+    font-family: "Onest", system-ui, sans-serif !important;
+    font-size: 198px !important;
+    font-weight: 400 !important;
+    line-height: 1 !important;
+    color: #3063f7 !important;
+    letter-spacing: 0 !important;
+    text-transform: uppercase !important;
+    white-space: nowrap !important;
+    writing-mode: vertical-rl !important;
+    text-orientation: mixed !important;
+    padding: 90px 0 !important;
+    user-select: none !important;
+  }
+
+  @keyframes mobileMenuTickerScroll {
+    0% {
+      transform: translate3d(0, 0, 0);
+    }
+    100% {
+      transform: translate3d(0, -50%, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mobile-menu-ticker-track {
+      animation: none !important;
+    }
   }
 
   /* Top 64x64px white circle close button (Figma 254:1969) */

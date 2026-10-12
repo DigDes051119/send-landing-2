@@ -135,13 +135,14 @@ export const MenuOverlay: React.FC<MenuOverlayProps> = ({ isOpen, onClose, onOpe
       {/* MOBILE MENU (max-width: 640px): EXACT FIGMA FRAME 254:1965     */}
       {/* ============================================================== */}
       <div className={`mobile-menu-screen ${active ? 'is-active' : ''}`} aria-label="Мобильное меню">
-        {/* Giant Vertical Typography on the right: SEND Messenger (Figma 254:2032) */}
-        <div className="mobile-menu-bg-text-wrap" aria-hidden="true">
-          <img
-            src="/mobile-menu-text.png"
-            alt=""
-            className="mobile-menu-bg-text-img"
-          />
+        {/* Mobile Cyclical Background Text (SEND MESSENGER - same as Hero block 1) */}
+        <div className="mobile-menu-ticker-wrap" aria-hidden="true">
+          <div className="mobile-menu-ticker-track">
+            <span className="mobile-menu-ticker-text">SEND MESSENGER</span>
+            <span className="mobile-menu-ticker-text">SEND MESSENGER</span>
+            <span className="mobile-menu-ticker-text">SEND MESSENGER</span>
+            <span className="mobile-menu-ticker-text">SEND MESSENGER</span>
+          </div>
         </div>
 
         {/* Top Close Button (Figma 254:1969 - 64x64px white circle, morphing icon) */}
