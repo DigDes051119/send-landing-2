@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SendLogo } from './SendLogo';
 
 interface MenuOverlayProps {
@@ -11,11 +11,9 @@ interface MenuOverlayProps {
 export const MenuOverlay: React.FC<MenuOverlayProps> = ({ isOpen, onClose, onOpenModal, onNavigate }) => {
   const [mounted, setMounted] = useState(isOpen);
   const [active, setActive] = useState(false);
-  const isClosingRef = useRef(false);
 
   useEffect(() => {
     if (isOpen) {
-      isClosingRef.current = false;
       setMounted(true);
       const raf = requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -35,31 +33,21 @@ export const MenuOverlay: React.FC<MenuOverlayProps> = ({ isOpen, onClose, onOpe
   if (!mounted && !isOpen) return null;
 
   const handleClose = () => {
-    if (isClosingRef.current) return;
-    isClosingRef.current = true;
     setActive(false);
-    setTimeout(() => {
-      isClosingRef.current = false;
-      onClose();
-    }, 350);
+    onClose();
   };
 
   const handleItemClick = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
-    if (isClosingRef.current) return;
-    isClosingRef.current = true;
     setActive(false);
-    setTimeout(() => {
-      isClosingRef.current = false;
-      onClose();
-      if (onNavigate) {
-        onNavigate(id);
-      } else if ((window as any).scrollToSection) {
-        (window as any).scrollToSection(id);
-      } else {
-        (window as any).lenis?.scrollTo(`#${id}`, { offset: -60, duration: 1.0 });
-      }
-    }, 350);
+    onClose();
+    if (onNavigate) {
+      onNavigate(id);
+    } else if ((window as any).scrollToSection) {
+      (window as any).scrollToSection(id);
+    } else {
+      (window as any).lenis?.scrollTo(`#${id}`, { offset: -60, duration: 1.0 });
+    }
   };
 
   return (
@@ -291,6 +279,7 @@ export const MenuOverlay: React.FC<MenuOverlayProps> = ({ isOpen, onClose, onOpe
               </svg>
             </div>
             <div className="mobile-menu-store-text">
+              <span className="mobile-menu-store-sub">Скачать</span>
               <span className="mobile-menu-store-name">App Store</span>
             </div>
           </a>
@@ -301,10 +290,7 @@ export const MenuOverlay: React.FC<MenuOverlayProps> = ({ isOpen, onClose, onOpe
             className="mobile-menu-store-btn"
             id="mobile-menu-btn-googleplay"
             aria-label="Скачать в Google Play"
-            onClick={(e) => {
-              onClose();
-              handleItemClick(e, 'install');
-            }}
+            onClick={(e) => handleItemClick(e, 'install')}
           >
             <div className="mobile-menu-store-icon" aria-hidden="true">
               <svg
@@ -322,6 +308,7 @@ export const MenuOverlay: React.FC<MenuOverlayProps> = ({ isOpen, onClose, onOpe
               </svg>
             </div>
             <div className="mobile-menu-store-text">
+              <span className="mobile-menu-store-sub">Скачать</span>
               <span className="mobile-menu-store-name">Google Play</span>
             </div>
           </a>

@@ -468,7 +468,9 @@ export const App: React.FC = () => {
 
   const closeMenu = () => {
     setIsMenuOpen(false);
-    unlockScroll();
+    setTimeout(() => {
+      unlockScroll();
+    }, 350);
   };
 
   // Keyboard Escape Handler
