@@ -6274,10 +6274,41 @@ footer,
   }
 }
 
-@media (max-width: 639px) {
+@media (max-width: 768px) {
+  .install-stage {
+    padding: 0 1rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+  }
+
+  .install-plate-web {
+    position: static;
+    width: min(393px, calc(100vw - 32px)) !important;
+    max-width: 393px !important;
+    height: 380px !important;
+    margin: 0 0 16px 0;
+  }
+
   .install-cards-row {
-    right: 1.5rem;
-    top: 1rem;
+    position: static;
+    display: flex;
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    width: 100%;
+    gap: 16px;
+    margin: 0 0 32px 0;
+  }
+
+  .install-plate {
+    width: min(393px, calc(100vw - 32px)) !important;
+    max-width: 393px !important;
+    height: 380px !important;
+    border-radius: 36px;
+    padding: 24px;
+    opacity: 1 !important;
   }
 
   .install-hover-icon,
@@ -6291,9 +6322,45 @@ footer,
   }
 
   .install-bottom-row {
-    left: 1.5rem;
-    right: 1.5rem;
-    bottom: 2rem;
+    position: static;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    margin-top: 32px;
+    width: 100%;
+    max-width: 393px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0 0.5rem;
+    box-sizing: border-box;
+  }
+
+  .install-giant-text {
+    font-size: clamp(48px, 13vw, 84px);
+    line-height: 1.05;
+  }
+
+  .store-morph-overlay {
+    display: none !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .install-plate {
+    padding: 20px 16px;
+    height: 360px !important;
+  }
+
+  .install-action-btn,
+  .install-soon-pill {
+    font-size: 16px;
+    padding: 0 18px;
+    height: 48px;
+  }
+
+  .install-plate-title {
+    font-size: 22px;
   }
 }
 
